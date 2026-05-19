@@ -1,5 +1,23 @@
 import { useMemo, useState } from "react";
-import { Layers, Map as MapIcon, Route } from "lucide-react";
+import {
+  Church,
+  DoorOpen,
+  Dumbbell,
+  Flag,
+  Hammer,
+  Landmark,
+  Layers,
+  LockKeyhole,
+  Map as MapIcon,
+  MapPin,
+  MessageCircle,
+  PackageOpen,
+  Route,
+  ScrollText,
+  Sparkles,
+  Tent,
+  type LucideIcon
+} from "lucide-react";
 import mapServices from "../data/mapServices.json";
 import pois from "../data/pois.json";
 import regionTopography from "../data/regionTopography.json";
@@ -52,6 +70,7 @@ const layerLabels: Record<MapLayer, string> = {
 };
 
 export function MapPanel({ state }: Props) {
+  const [selectedServiceId, setSelectedServiceId] = useState<string | null>(null);
   const [layers, setLayers] = useState<Record<MapLayer, boolean>>({
     routes: true,
     services: true,
@@ -63,6 +82,7 @@ export function MapPanel({ state }: Props) {
   const zone = getCurrentZone(state);
   const zonePois = pois.filter((poi) => poi.zoneId === zone.id);
   const zoneServices = services.filter((entry) => entry.zoneId === zone.id);
+  const activeService = zoneServices.find((entry) => entry.id === selectedServiceId) ?? zoneServices[0];
   const lockedRegions = regions.filter((entry) => entry.locked);
   const currentRegion = regions.find((entry) => entry.zoneId === zone.id) ?? regions[0];
   const routePairs = useMemo(() => {
@@ -160,9 +180,17 @@ export function MapPanel({ state }: Props) {
               ? services
                   .filter((entry) => entry.kind === "preview")
                   .map((entry) => (
-                    <div className="service-pin preview" key={entry.id} style={{ left: `${entry.x}%`, top: `${entry.y}%` }}>
-                      <span>{getServiceCode(entry.kind)}</span>
-                    </div>
+                    <button
+                      className="service-pin preview"
+                      key={entry.id}
+                      style={{ left: `${entry.x}%`, top: `${entry.y}%` }}
+                      title={`${entry.label}: ${entry.summary}`}
+                      type="button"
+                    >
+                      <span className="service-pin-icon">
+                        <ServiceIcon kind={entry.kind} />
+                      </span>
+                    </button>
                   ))
               : null}
           </div>
@@ -193,14 +221,24 @@ export function MapPanel({ state }: Props) {
             ))}
             {layers.services
               ? zoneServices.map((entry) => (
-                  <div className={`service-pin ${entry.kind}`} key={entry.id} style={{ left: `${entry.x}%`, top: `${entry.y}%` }}>
-                    <span>{getServiceCode(entry.kind)}</span>
+                  <button
+                    className={`service-pin ${entry.kind} ${activeService?.id === entry.id ? "active" : ""}`}
+                    key={entry.id}
+                    style={{ left: `${entry.x}%`, top: `${entry.y}%` }}
+                    title={`${entry.label}: ${entry.summary}`}
+                    type="button"
+                    aria-label={`${entry.label}: ${entry.summary}`}
+                    onClick={() => setSelectedServiceId(entry.id)}
+                  >
+                    <span className="service-pin-icon">
+                      <ServiceIcon kind={entry.kind} />
+                    </span>
                     <small>{entry.label}</small>
-                  </div>
+                  </button>
                 ))
               : null}
           </div>
-          {layers.services ? <ServiceLegend services={zoneServices} /> : null}
+          {layers.services ? <ServiceLegend services={zoneServices} selectedService={activeService} onSelect={setSelectedServiceId} /> : null}
           <div className="locked-list">
             {lockedRegions.slice(0, 4).map((entry) => (
               <div className="locked-row" key={entry.id}>
@@ -215,7 +253,15 @@ export function MapPanel({ state }: Props) {
   );
 }
 
-function ServiceLegend({ services }: { services: MapService[] }) {
+function ServiceLegend({
+  services,
+  selectedService,
+  onSelect
+}: {
+  services: MapService[];
+  selectedService?: MapService;
+  onSelect: (id: string) => void;
+}) {
   if (services.length === 0) {
     return null;
   }
@@ -223,35 +269,45 @@ function ServiceLegend({ services }: { services: MapService[] }) {
   return (
     <div className="service-legend" aria-label="Map services">
       {services.map((entry) => (
-        <div className="service-legend-row" key={entry.id}>
-          <span className={`service-kind ${entry.kind}`}>{getServiceCode(entry.kind)}</span>
+        <button className={`service-legend-row ${selectedService?.id === entry.id ? "active" : ""}`} key={entry.id} type="button" onClick={() => onSelect(entry.id)}>
+          <span className={`service-kind ${entry.kind}`}>
+            <ServiceIcon kind={entry.kind} />
+          </span>
           <div>
             <strong>{entry.label}</strong>
             <p>{entry.summary}</p>
           </div>
-        </div>
+        </button>
       ))}
+      {selectedService ? (
+        <div className="service-detail">
+          <strong>{selectedService.label}</strong>
+          <p>{selectedService.summary}</p>
+          <small>{selectedService.sourceNote}</small>
+        </div>
+      ) : null}
     </div>
   );
 }
 
-function getServiceCode(kind: string) {
-  const codes: Record<string, string> = {
-    landmark: "LM",
-    trainer: "TR",
-    guild: "GB",
-    craft: "CR",
-    faction: "FX",
-    ledger: "LD",
-    rest: "RS",
-    social: "SO",
-    material: "MT",
-    shrine: "SH",
-    dungeon: "DG",
-    preview: "PV"
+function ServiceIcon({ kind }: { kind: string }) {
+  const icons: Record<string, LucideIcon> = {
+    landmark: Church,
+    trainer: Dumbbell,
+    guild: ScrollText,
+    craft: Hammer,
+    faction: Flag,
+    ledger: Landmark,
+    rest: Tent,
+    social: MessageCircle,
+    material: PackageOpen,
+    shrine: Sparkles,
+    dungeon: DoorOpen,
+    preview: LockKeyhole
   };
+  const Icon = icons[kind] ?? MapPin;
 
-  return codes[kind] ?? "POI";
+  return <Icon aria-hidden="true" size={13} strokeWidth={2.4} />;
 }
 
 function MapReadoutList({ label, values }: { label: string; values: string[] }) {

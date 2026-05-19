@@ -2735,8 +2735,7 @@ button {
 }
 
 .custom-map-plate .topography-region.active strong,
-.custom-map-plate .map-node.active small,
-.custom-map-plate .service-pin small {
+.custom-map-plate .map-node.active small {
   display: block;
   padding: 3px 6px;
   border: 1px solid rgba(248, 220, 167, 0.18);
@@ -2754,80 +2753,143 @@ button {
   display: flex;
   align-items: center;
   gap: 5px;
+  border: 0;
+  background: transparent;
   transform: translate(-50%, -50%);
   color: var(--bell-bone);
   font-size: 0.62rem;
   font-weight: 900;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+  cursor: pointer;
 }
 
-.service-pin > span,
+.service-pin-icon,
 .service-kind {
   display: grid;
   place-items: center;
-  min-width: 22px;
-  height: 22px;
-  border: 1px solid rgba(248, 220, 167, 0.36);
+  min-width: 24px;
+  height: 24px;
+  border: 1px solid rgba(248, 220, 167, 0.48);
   border-radius: 999px;
-  background: rgba(12, 9, 12, 0.82);
-  box-shadow: 0 0 0 3px rgba(12, 9, 12, 0.36), 0 10px 20px rgba(0, 0, 0, 0.34);
+  background:
+    linear-gradient(145deg, rgba(69, 26, 36, 0.92), rgba(18, 12, 14, 0.92)),
+    rgba(12, 9, 12, 0.82);
+  box-shadow:
+    0 0 0 3px rgba(56, 34, 22, 0.36),
+    inset 0 1px 5px rgba(248, 220, 167, 0.18),
+    0 10px 20px rgba(0, 0, 0, 0.34);
   color: var(--bell-wax);
-  font-size: 0.52rem;
 }
 
-.service-pin.trainer > span,
+.service-pin::before {
+  position: absolute;
+  top: 21px;
+  left: 12px;
+  width: 1px;
+  height: 14px;
+  content: "";
+  background: linear-gradient(180deg, rgba(248, 220, 167, 0.52), transparent);
+  transform: translateX(-50%);
+}
+
+.service-pin small {
+  display: block;
+  max-width: 86px;
+  padding: 4px 7px;
+  border: 1px solid rgba(91, 67, 39, 0.72);
+  border-radius: 2px;
+  background:
+    linear-gradient(180deg, rgba(232, 209, 157, 0.92), rgba(168, 125, 72, 0.88)),
+    rgba(215, 167, 86, 0.7);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.38);
+  color: #21140f;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 0.58rem;
+  line-height: 1.05;
+  text-shadow: none;
+  white-space: normal;
+}
+
+.service-pin:hover .service-pin-icon,
+.service-pin:focus-visible .service-pin-icon,
+.service-pin.active .service-pin-icon {
+  border-color: rgba(255, 232, 180, 0.84);
+  background:
+    linear-gradient(145deg, rgba(120, 43, 62, 0.98), rgba(31, 18, 18, 0.98)),
+    rgba(12, 9, 12, 0.82);
+  box-shadow:
+    0 0 0 4px rgba(215, 167, 86, 0.16),
+    inset 0 1px 6px rgba(255, 232, 180, 0.28),
+    0 10px 24px rgba(0, 0, 0, 0.45);
+}
+
+.service-pin:hover small,
+.service-pin:focus-visible small,
+.service-pin.active small {
+  background:
+    linear-gradient(180deg, rgba(255, 232, 180, 0.96), rgba(196, 149, 84, 0.94)),
+    rgba(215, 167, 86, 0.84);
+}
+
+.service-pin.trainer .service-pin-icon,
 .service-kind.trainer {
   border-color: rgba(215, 167, 86, 0.58);
 }
 
-.service-pin.guild > span,
+.service-pin.guild .service-pin-icon,
 .service-kind.guild {
   border-color: rgba(78, 163, 163, 0.58);
   color: #9bd9d9;
 }
 
-.service-pin.craft > span,
-.service-pin.material > span,
+.service-pin.craft .service-pin-icon,
+.service-pin.material .service-pin-icon,
 .service-kind.craft,
 .service-kind.material {
   border-color: rgba(124, 156, 92, 0.62);
   color: #b9d58d;
 }
 
-.service-pin.faction > span,
-.service-pin.ledger > span,
+.service-pin.faction .service-pin-icon,
+.service-pin.ledger .service-pin-icon,
 .service-kind.faction,
 .service-kind.ledger {
   border-color: rgba(141, 106, 217, 0.62);
   color: #d4c3ff;
 }
 
-.service-pin.shrine > span,
-.service-pin.rest > span,
+.service-pin.shrine .service-pin-icon,
+.service-pin.rest .service-pin-icon,
 .service-kind.shrine,
 .service-kind.rest {
   border-color: rgba(248, 220, 167, 0.68);
 }
 
-.service-pin.dungeon > span,
+.service-pin.dungeon .service-pin-icon,
 .service-kind.dungeon {
   border-color: rgba(182, 58, 84, 0.7);
   color: #ff9aaa;
 }
 
-.service-pin.preview > span,
+.service-pin.preview .service-pin-icon,
 .service-kind.preview {
   opacity: 0.62;
+}
+
+.world-map .service-pin small {
+  display: none;
 }
 
 .service-legend {
   display: grid;
   gap: 7px;
   margin-top: 10px;
-  border: 1px solid rgba(53, 41, 62, 0.82);
+  border: 1px solid rgba(182, 135, 76, 0.42);
   border-radius: 4px;
-  background: rgba(9, 8, 15, 0.42);
+  background:
+    linear-gradient(180deg, rgba(44, 30, 24, 0.72), rgba(15, 11, 13, 0.72)),
+    rgba(9, 8, 15, 0.42);
   padding: 9px;
 }
 
@@ -2836,6 +2898,21 @@ button {
   grid-template-columns: auto 1fr;
   gap: 8px;
   align-items: start;
+  width: 100%;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  background: transparent;
+  padding: 5px;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.service-legend-row:hover,
+.service-legend-row:focus-visible,
+.service-legend-row.active {
+  border-color: rgba(215, 167, 86, 0.28);
+  background: rgba(215, 167, 86, 0.08);
 }
 
 .service-legend-row strong {
@@ -2850,6 +2927,33 @@ button {
   color: var(--bell-ash);
   font-size: 0.69rem;
   line-height: 1.35;
+}
+
+.service-detail {
+  display: grid;
+  gap: 4px;
+  margin-top: 2px;
+  border: 1px solid rgba(248, 220, 167, 0.16);
+  border-radius: 3px;
+  background: rgba(13, 10, 12, 0.52);
+  padding: 8px;
+}
+
+.service-detail strong {
+  color: var(--bell-wax);
+  font-size: 0.74rem;
+}
+
+.service-detail p,
+.service-detail small {
+  margin: 0;
+  color: var(--bell-ash);
+  font-size: 0.69rem;
+  line-height: 1.35;
+}
+
+.service-detail small {
+  color: var(--bell-fog);
 }
 
 .quest-card {
@@ -3061,4 +3165,132 @@ button {
   .login-copy {
     min-height: 420px;
   }
+}
+
+/* Atlas refinement: keep the MMO shell dark, but let it feel drawn from the map art. */
+:root {
+  --atlas-ink: rgba(20, 13, 12, 0.92);
+  --atlas-ink-soft: rgba(42, 27, 22, 0.78);
+  --atlas-line: rgba(183, 135, 76, 0.42);
+  --atlas-paper: rgba(229, 201, 143, 0.1);
+  --atlas-paper-strong: rgba(229, 201, 143, 0.18);
+}
+
+.app-header,
+.channel-rail,
+.main-panel,
+.right-panel,
+.login-card,
+.creator-panel {
+  border-color: var(--atlas-line);
+  background:
+    repeating-linear-gradient(92deg, transparent 0 28px, rgba(229, 201, 143, 0.018) 29px 30px),
+    linear-gradient(180deg, rgba(38, 23, 21, 0.82), rgba(12, 9, 13, 0.9)),
+    var(--hud-glass);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 232, 180, 0.08),
+    0 22px 60px rgba(0, 0, 0, 0.32);
+}
+
+.panel,
+.feed-entry,
+.hud-tabs,
+.map-readout,
+.service-legend,
+.quest-card,
+.world-flag,
+.contact-row,
+.group-listing,
+.contract-card,
+.item-row,
+.activity-card {
+  border-color: rgba(183, 135, 76, 0.28);
+  background:
+    linear-gradient(180deg, rgba(48, 31, 26, 0.58), rgba(14, 10, 13, 0.72)),
+    rgba(10, 8, 12, 0.64);
+  box-shadow: inset 0 1px 0 rgba(255, 232, 180, 0.055);
+}
+
+.panel-title,
+.map-readout-title,
+.route-row > span,
+.hotbar-button span,
+.feed-entry header span:first-child,
+.realm-badge {
+  font-family: Georgia, "Times New Roman", serif;
+  letter-spacing: 0.08em;
+}
+
+.panel-title,
+.map-readout-title,
+.hud-tab-trigger[data-state="active"],
+.channel-button.active,
+.action-button:not(.quiet),
+.hotbar-button:hover,
+.hotbar-button:focus-visible {
+  color: var(--bell-wax);
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.75);
+}
+
+.hud-tab-list,
+.map-layer-row,
+.available-actions,
+.command-footer {
+  background:
+    linear-gradient(180deg, rgba(54, 35, 28, 0.68), rgba(10, 8, 12, 0.82)),
+    rgba(12, 9, 13, 0.72);
+  border-color: rgba(183, 135, 76, 0.24);
+}
+
+.hud-tab-trigger,
+.map-layer-button,
+.channel-button,
+.action-button,
+.hotbar-button,
+.send-button,
+.icon-button,
+.mode-button {
+  border-color: rgba(183, 135, 76, 0.3);
+  background:
+    linear-gradient(180deg, rgba(60, 39, 32, 0.54), rgba(17, 12, 17, 0.72)),
+    rgba(13, 10, 14, 0.68);
+}
+
+.hud-tab-trigger:hover,
+.map-layer-button:hover,
+.channel-button:hover,
+.action-button:hover,
+.hotbar-button:hover,
+.send-button:hover,
+.icon-button:hover,
+.mode-button:hover {
+  border-color: rgba(229, 184, 99, 0.52);
+  background:
+    linear-gradient(180deg, rgba(82, 50, 39, 0.64), rgba(27, 16, 18, 0.78)),
+    rgba(20, 13, 15, 0.72);
+}
+
+.command-input,
+.social-world-panel textarea,
+.save-tools textarea,
+.creator-panel input {
+  border-color: rgba(183, 135, 76, 0.34);
+  background:
+    linear-gradient(180deg, rgba(12, 8, 9, 0.92), rgba(28, 18, 18, 0.78)),
+    rgba(7, 6, 9, 0.82);
+  color: var(--bell-bone);
+}
+
+.custom-map-plate {
+  border-color: rgba(209, 159, 89, 0.56);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 232, 180, 0.12),
+    inset 0 0 40px rgba(7, 5, 6, 0.18),
+    0 14px 32px rgba(0, 0, 0, 0.28);
+}
+
+.custom-map-plate::after {
+  background:
+    linear-gradient(180deg, rgba(8, 7, 12, 0.01), rgba(8, 7, 12, 0.06)),
+    linear-gradient(90deg, rgba(8, 7, 12, 0.14), transparent 14%, transparent 86%, rgba(8, 7, 12, 0.14));
 }

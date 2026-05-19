@@ -2111,3 +2111,954 @@ button {
     animation-iteration-count: 1 !important;
   }
 }
+
+/* MMO client revamp */
+
+.app-root {
+  --scene-art: url("./assets/scenes/saint-veyra-cathedral.png");
+  --hud-glass: rgba(8, 7, 12, 0.76);
+  --hud-glass-strong: rgba(12, 10, 18, 0.9);
+  --hud-plate: rgba(23, 18, 28, 0.86);
+  --hud-border: rgba(224, 177, 94, 0.2);
+}
+
+.app-root.scene-fields {
+  --scene-art: url("./assets/scenes/hearthmere-fields.png");
+}
+
+.app-root.scene-shrine {
+  --scene-art: url("./assets/scenes/little-dawn-shrine.png");
+}
+
+.app-root.scene-cryptlet {
+  --scene-art: url("./assets/scenes/pilgrim-cryptlet.png");
+}
+
+.app-background {
+  background:
+    linear-gradient(90deg, rgba(5, 5, 9, 0.96), rgba(8, 7, 12, 0.72) 40%, rgba(5, 5, 9, 0.92)),
+    linear-gradient(180deg, rgba(6, 5, 10, 0.24), rgba(6, 5, 10, 0.94)),
+    var(--scene-art) center / cover no-repeat;
+}
+
+.app-background::after {
+  position: absolute;
+  inset: 0;
+  content: "";
+  background:
+    linear-gradient(90deg, rgba(230, 185, 111, 0.08) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(230, 185, 111, 0.05) 1px, transparent 1px);
+  background-size: 88px 88px;
+  mask-image: linear-gradient(180deg, transparent, black 18%, black 82%, transparent);
+  opacity: 0.18;
+  pointer-events: none;
+}
+
+.app-shell {
+  isolation: isolate;
+}
+
+.app-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  border-bottom: 1px solid rgba(224, 177, 94, 0.18);
+  background: linear-gradient(180deg, rgba(10, 8, 14, 0.96), rgba(10, 8, 14, 0.78));
+  box-shadow: 0 16px 44px rgba(0, 0, 0, 0.34);
+}
+
+.realm-badge,
+.login-realm-chip {
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid rgba(215, 167, 86, 0.28);
+  border-radius: 4px;
+  background: rgba(126, 31, 57, 0.22);
+  color: var(--bell-wax);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  padding: 5px 8px;
+  text-transform: uppercase;
+}
+
+.app-title {
+  letter-spacing: 0;
+  text-shadow: 0 0 24px rgba(215, 167, 86, 0.24);
+}
+
+.app-subtitle {
+  color: #d9ccbb;
+}
+
+.hud-stat-cluster {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  min-width: min(100%, 420px);
+}
+
+.hud-meter,
+.ai-status-chip {
+  border: 1px solid rgba(224, 177, 94, 0.18);
+  border-radius: 4px;
+  background: rgba(12, 10, 18, 0.68);
+  box-shadow: var(--inset-bell);
+  padding: 8px;
+}
+
+.hud-meter-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  color: var(--bell-ash);
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.hud-meter-top svg {
+  color: var(--bell-wax);
+}
+
+.hud-meter-top strong {
+  color: var(--bell-bone);
+  font-size: 0.74rem;
+}
+
+.hud-meter-track {
+  height: 7px;
+  overflow: hidden;
+  margin-top: 7px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.hud-meter-track span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+}
+
+.hud-meter.hp .hud-meter-track span {
+  background: linear-gradient(90deg, #7e1f39, #d24c68);
+}
+
+.hud-meter.oath .hud-meter-track span {
+  background: linear-gradient(90deg, #2f8084, #d7a756);
+}
+
+.ai-status-chip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--bell-fog);
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.ai-status-chip strong {
+  overflow: hidden;
+  max-width: 130px;
+  color: var(--bell-oath);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.header-actions {
+  justify-content: flex-start;
+}
+
+.save-status,
+.icon-button,
+.send-button,
+.select-trigger,
+.action-button,
+.hotbar-button,
+.hud-tab-trigger {
+  border-radius: 4px;
+}
+
+.icon-button {
+  border-color: rgba(224, 177, 94, 0.18);
+  background: rgba(12, 10, 18, 0.68);
+}
+
+.icon-button:hover {
+  border-color: rgba(215, 167, 86, 0.46);
+  color: var(--bell-bone);
+}
+
+.tooltip-content {
+  z-index: 60;
+  border: 1px solid rgba(224, 177, 94, 0.28);
+  border-radius: 4px;
+  background: rgba(10, 8, 14, 0.96);
+  box-shadow: var(--shadow-bell);
+  color: var(--bell-bone);
+  font-size: 0.74rem;
+  padding: 7px 9px;
+}
+
+.tooltip-arrow {
+  fill: rgba(10, 8, 14, 0.96);
+}
+
+.app-layout {
+  background: linear-gradient(90deg, rgba(9, 8, 15, 0.62), rgba(9, 8, 15, 0.34), rgba(9, 8, 15, 0.72));
+}
+
+.channel-rail,
+.main-panel,
+.right-panel {
+  background: var(--hud-glass);
+  backdrop-filter: blur(18px);
+}
+
+.channel-rail {
+  border-right: 1px solid rgba(224, 177, 94, 0.14);
+}
+
+.profile-card,
+.server-card,
+.panel,
+.available-actions,
+.feed-entry,
+.encounter-inner,
+.encounter-idle-inner,
+.hud-tabs {
+  border-color: rgba(224, 177, 94, 0.16);
+  background: var(--hud-plate);
+  box-shadow: var(--inset-bell), 0 18px 40px rgba(0, 0, 0, 0.2);
+}
+
+.server-card {
+  display: grid;
+  gap: 5px;
+  margin-bottom: 16px;
+  border: 1px solid rgba(224, 177, 94, 0.16);
+  border-radius: 4px;
+  padding: 12px;
+}
+
+.server-card span {
+  color: var(--bell-fog);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.server-card strong {
+  color: var(--bell-bone);
+  font-size: 1rem;
+}
+
+.server-card small {
+  color: var(--bell-ash);
+  line-height: 1.45;
+}
+
+.channel-button {
+  min-height: 42px;
+}
+
+.channel-button.active {
+  border-color: rgba(215, 167, 86, 0.55);
+  background: linear-gradient(90deg, rgba(126, 31, 57, 0.48), rgba(25, 20, 32, 0.85));
+  box-shadow: inset 3px 0 0 var(--bell-wax);
+}
+
+.law-card {
+  border-color: rgba(78, 163, 163, 0.22);
+  background: rgba(17, 31, 35, 0.58);
+}
+
+.main-panel {
+  position: relative;
+}
+
+.main-panel::before {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  content: "";
+  background:
+    linear-gradient(180deg, rgba(10, 8, 14, 0.16), rgba(10, 8, 14, 0.82)),
+    var(--scene-art) center / cover no-repeat;
+  opacity: 0.28;
+}
+
+.encounter-idle,
+.encounter-active {
+  border-bottom-color: rgba(224, 177, 94, 0.16);
+  background: rgba(10, 8, 14, 0.44);
+}
+
+.encounter-inner,
+.encounter-idle-inner {
+  margin: 12px;
+}
+
+.encounter-topline h2 {
+  letter-spacing: 0;
+}
+
+.intent-card {
+  border-color: rgba(215, 167, 86, 0.24);
+  background: linear-gradient(135deg, rgba(126, 31, 57, 0.28), rgba(23, 18, 28, 0.9));
+}
+
+.lane-box {
+  min-height: 96px;
+}
+
+.lane-box.player {
+  border-color: rgba(78, 163, 163, 0.74);
+  box-shadow: inset 0 0 0 1px rgba(78, 163, 163, 0.24), 0 12px 28px rgba(0, 0, 0, 0.22);
+}
+
+.narrative-feed {
+  padding: 12px;
+}
+
+.feed-stack {
+  gap: 10px;
+}
+
+.feed-entry {
+  border-left-width: 4px;
+}
+
+.feed-loot {
+  border-color: rgba(215, 167, 86, 0.38);
+  background: linear-gradient(135deg, rgba(215, 167, 86, 0.14), rgba(23, 18, 28, 0.94));
+}
+
+.feed-combat {
+  border-color: rgba(182, 58, 84, 0.42);
+}
+
+.feed-social {
+  border-color: rgba(78, 163, 163, 0.34);
+}
+
+.command-footer {
+  display: grid;
+  gap: 8px;
+  border-top-color: rgba(224, 177, 94, 0.18);
+  background: rgba(8, 7, 12, 0.9);
+  padding: 10px;
+}
+
+.hotbar-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.hotbar-button {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+  min-height: 42px;
+  border: 1px solid rgba(224, 177, 94, 0.18);
+  background: linear-gradient(180deg, rgba(42, 33, 50, 0.92), rgba(18, 14, 24, 0.92));
+  color: var(--bell-bone);
+  padding: 7px 8px;
+  text-align: left;
+}
+
+.hotbar-button small {
+  display: inline-flex;
+  height: 24px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(215, 167, 86, 0.32);
+  border-radius: 3px;
+  color: var(--bell-wax);
+  font-size: 0.72rem;
+  font-weight: 900;
+}
+
+.hotbar-button span {
+  overflow: hidden;
+  font-size: 0.76rem;
+  font-weight: 800;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.hotbar-button.primary {
+  border-color: rgba(215, 167, 86, 0.58);
+  background: linear-gradient(180deg, rgba(126, 31, 57, 0.86), rgba(58, 22, 39, 0.92));
+}
+
+.command-form {
+  gap: 8px;
+}
+
+.command-input {
+  border-color: rgba(224, 177, 94, 0.2);
+  background: rgba(6, 5, 10, 0.72);
+}
+
+.send-button {
+  border-color: rgba(215, 167, 86, 0.32);
+  background: linear-gradient(180deg, rgba(215, 167, 86, 0.26), rgba(126, 31, 57, 0.44));
+}
+
+.right-panel {
+  display: block;
+  padding: 10px;
+}
+
+.hud-tabs {
+  display: grid;
+  min-height: 0;
+  height: 100%;
+  grid-template-rows: auto minmax(0, 1fr);
+  overflow: hidden;
+  border: 1px solid rgba(224, 177, 94, 0.16);
+  border-radius: 4px;
+}
+
+.hud-tab-list {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+  border-bottom: 1px solid rgba(224, 177, 94, 0.14);
+  background: rgba(8, 7, 12, 0.7);
+  padding: 8px;
+}
+
+.hud-tab-trigger {
+  display: flex;
+  min-height: 36px;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  border: 1px solid transparent;
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--bell-ash);
+  font-size: 0.68rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.hud-tab-trigger span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.hud-tab-trigger[data-state="active"] {
+  border-color: rgba(215, 167, 86, 0.48);
+  background: rgba(126, 31, 57, 0.36);
+  color: var(--bell-bone);
+}
+
+.hud-scroll-area,
+.hud-scroll-viewport {
+  min-height: 0;
+  height: 100%;
+}
+
+.hud-scroll-viewport {
+  padding: 10px;
+}
+
+.hud-tab-content {
+  display: grid;
+  gap: 12px;
+}
+
+.hud-tab-content[data-state="inactive"] {
+  display: none;
+}
+
+.hud-scrollbar {
+  width: 8px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.hud-scroll-thumb {
+  border-radius: 999px;
+  background: rgba(215, 167, 86, 0.38);
+}
+
+.panel {
+  background: rgba(16, 13, 22, 0.88);
+}
+
+.panel-title,
+.available-title,
+.rail-section-title,
+.encounter-label {
+  letter-spacing: 0.12em;
+}
+
+.inventory-row {
+  position: relative;
+  overflow: hidden;
+}
+
+.inventory-row::before {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 4px;
+  content: "";
+  background: #b7aebd;
+}
+
+.inventory-row.rarity-common::before {
+  background: #e5e7eb;
+}
+
+.inventory-row.rarity-uncommon::before {
+  background: #22c55e;
+}
+
+.inventory-row.rarity-rare::before {
+  background: #3b82f6;
+}
+
+.inventory-row.rarity-epic::before {
+  background: #a855f7;
+}
+
+.inventory-row.rarity-mythic::before {
+  background: #f59e0b;
+}
+
+.inventory-row.rarity-legendary::before {
+  background: #ef4444;
+}
+
+.inventory-row.rarity-artifact::before {
+  background: #06b6d4;
+}
+
+.party-row.active {
+  border-color: rgba(78, 163, 163, 0.56);
+  background: linear-gradient(90deg, rgba(78, 163, 163, 0.18), rgba(23, 18, 28, 0.86));
+}
+
+.world-map .topography-region {
+  width: 18px;
+  max-width: 18px;
+  min-height: 18px;
+  padding: 0;
+  border-radius: 999px;
+}
+
+.world-map .topography-region strong,
+.world-map .topography-region small {
+  display: none;
+}
+
+.world-map .topography-region.active {
+  width: auto;
+  max-width: 132px;
+  min-height: 0;
+  padding: 6px 8px 6px 20px;
+  border-radius: 4px;
+}
+
+.world-map .topography-region.active strong,
+.world-map .topography-region.active small {
+  display: block;
+}
+
+.custom-map-plate {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 16 / 10;
+  height: auto;
+  min-height: 190px;
+  background-color: rgba(52, 38, 32, 0.82);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+.custom-map-plate::after {
+  position: absolute;
+  inset: 0;
+  content: "";
+  background: linear-gradient(180deg, rgba(8, 7, 12, 0.02), rgba(8, 7, 12, 0.1));
+  pointer-events: none;
+}
+
+.custom-map-plate.world-map::before,
+.custom-map-plate.node-map::before {
+  display: none;
+}
+
+.world-map.custom-map-plate {
+  background-image: url("./assets/maps/bellspire-world-atlas.png");
+}
+
+.topographic-node-map.zone-saint-veyra {
+  background-image: url("./assets/maps/saint-veyra-city-map.png");
+}
+
+.topographic-node-map.zone-hearthmere-fields {
+  background-image: url("./assets/maps/hearthmere-little-dawn-map.png");
+}
+
+.dungeon-ink-map.custom-map-plate {
+  background-image: url("./assets/maps/pilgrim-cryptlet-map.png");
+}
+
+.custom-map-plate .handdrawn-atlas,
+.custom-map-plate .topography-routes {
+  opacity: 0;
+}
+
+.custom-map-plate .topography-region,
+.custom-map-plate .map-node,
+.custom-map-plate .service-pin {
+  z-index: 2;
+}
+
+.custom-map-plate .topography-region strong,
+.custom-map-plate .topography-region small,
+.custom-map-plate .map-node small,
+.custom-map-plate .service-pin small {
+  display: none;
+}
+
+.custom-map-plate .topography-region.active strong,
+.custom-map-plate .map-node.active small,
+.custom-map-plate .service-pin small {
+  display: block;
+  padding: 3px 6px;
+  border: 1px solid rgba(248, 220, 167, 0.18);
+  border-radius: 4px;
+  background: rgba(12, 9, 12, 0.68);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.35);
+}
+
+.custom-map-plate .topography-region.active small {
+  display: none;
+}
+
+.service-pin {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transform: translate(-50%, -50%);
+  color: var(--bell-bone);
+  font-size: 0.62rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.service-pin > span,
+.service-kind {
+  display: grid;
+  place-items: center;
+  min-width: 22px;
+  height: 22px;
+  border: 1px solid rgba(248, 220, 167, 0.36);
+  border-radius: 999px;
+  background: rgba(12, 9, 12, 0.82);
+  box-shadow: 0 0 0 3px rgba(12, 9, 12, 0.36), 0 10px 20px rgba(0, 0, 0, 0.34);
+  color: var(--bell-wax);
+  font-size: 0.52rem;
+}
+
+.service-pin.trainer > span,
+.service-kind.trainer {
+  border-color: rgba(215, 167, 86, 0.58);
+}
+
+.service-pin.guild > span,
+.service-kind.guild {
+  border-color: rgba(78, 163, 163, 0.58);
+  color: #9bd9d9;
+}
+
+.service-pin.craft > span,
+.service-pin.material > span,
+.service-kind.craft,
+.service-kind.material {
+  border-color: rgba(124, 156, 92, 0.62);
+  color: #b9d58d;
+}
+
+.service-pin.faction > span,
+.service-pin.ledger > span,
+.service-kind.faction,
+.service-kind.ledger {
+  border-color: rgba(141, 106, 217, 0.62);
+  color: #d4c3ff;
+}
+
+.service-pin.shrine > span,
+.service-pin.rest > span,
+.service-kind.shrine,
+.service-kind.rest {
+  border-color: rgba(248, 220, 167, 0.68);
+}
+
+.service-pin.dungeon > span,
+.service-kind.dungeon {
+  border-color: rgba(182, 58, 84, 0.7);
+  color: #ff9aaa;
+}
+
+.service-pin.preview > span,
+.service-kind.preview {
+  opacity: 0.62;
+}
+
+.service-legend {
+  display: grid;
+  gap: 7px;
+  margin-top: 10px;
+  border: 1px solid rgba(53, 41, 62, 0.82);
+  border-radius: 4px;
+  background: rgba(9, 8, 15, 0.42);
+  padding: 9px;
+}
+
+.service-legend-row {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 8px;
+  align-items: start;
+}
+
+.service-legend-row strong {
+  display: block;
+  margin-bottom: 2px;
+  color: var(--bell-bone);
+  font-size: 0.72rem;
+}
+
+.service-legend-row p {
+  margin: 0;
+  color: var(--bell-ash);
+  font-size: 0.69rem;
+  line-height: 1.35;
+}
+
+.quest-card {
+  background: rgba(8, 7, 12, 0.32);
+}
+
+.quest-step.active {
+  border-color: rgba(215, 167, 86, 0.45);
+  background: rgba(215, 167, 86, 0.1);
+}
+
+.login-root {
+  align-items: stretch;
+  background:
+    linear-gradient(90deg, rgba(5, 5, 9, 0.92), rgba(9, 8, 15, 0.5), rgba(5, 5, 9, 0.88)),
+    linear-gradient(180deg, rgba(5, 5, 9, 0.22), rgba(5, 5, 9, 0.9)),
+    url("./assets/scenes/saint-veyra-cathedral.png") center / cover no-repeat;
+}
+
+.login-card {
+  width: min(1180px, 100%);
+  border-color: rgba(224, 177, 94, 0.2);
+  background: rgba(8, 7, 12, 0.68);
+  box-shadow: 0 28px 90px rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(18px);
+}
+
+.login-copy {
+  position: relative;
+  justify-content: end;
+  min-height: 560px;
+  background:
+    linear-gradient(180deg, rgba(8, 7, 12, 0.12), rgba(8, 7, 12, 0.82)),
+    url("./assets/scenes/saint-veyra-cathedral.png") center / cover no-repeat;
+}
+
+.login-copy::after {
+  position: absolute;
+  inset: 18px;
+  content: "";
+  border: 1px solid rgba(215, 167, 86, 0.2);
+  pointer-events: none;
+}
+
+.login-copy > * {
+  position: relative;
+  z-index: 1;
+}
+
+.login-copy h1 {
+  letter-spacing: 0;
+  text-shadow: 0 0 30px rgba(215, 167, 86, 0.28);
+}
+
+.login-realm-chip {
+  margin-bottom: auto;
+}
+
+.login-scene-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.login-scene-tags span {
+  border: 1px solid rgba(224, 177, 94, 0.2);
+  border-radius: 4px;
+  background: rgba(8, 7, 12, 0.64);
+  color: var(--bell-bone);
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 7px 9px;
+}
+
+.creator-panel {
+  border-left: 1px solid rgba(224, 177, 94, 0.16);
+  background: rgba(12, 10, 18, 0.86);
+}
+
+.field-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.field-hint {
+  min-height: 42px;
+  margin: 8px 0 0;
+  color: var(--bell-fog);
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+
+.class-lock {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 12px;
+  align-items: center;
+  border-color: rgba(78, 163, 163, 0.32);
+  background: linear-gradient(135deg, rgba(78, 163, 163, 0.14), rgba(126, 31, 57, 0.24));
+}
+
+.class-lock > div:last-child {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+
+.class-lock span,
+.class-lock strong,
+.class-lock small {
+  display: block;
+}
+
+.class-lock strong {
+  font-size: 1.05rem;
+}
+
+.class-lock-icon {
+  display: inline-flex;
+  width: 42px;
+  height: 42px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(215, 167, 86, 0.28);
+  border-radius: 4px;
+  color: var(--bell-wax);
+}
+
+.continue-card {
+  border-color: rgba(78, 163, 163, 0.34);
+  background: rgba(18, 42, 44, 0.58);
+}
+
+@media (min-width: 640px) {
+  .hud-stat-cluster {
+    grid-template-columns: minmax(120px, 1fr) minmax(120px, 1fr) 120px;
+  }
+
+  .hotbar-row {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .hud-tab-list {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .app-header {
+    grid-template-columns: minmax(230px, 0.8fr) minmax(360px, 1fr) minmax(300px, auto);
+    min-height: 86px;
+    align-items: center;
+  }
+
+  .app-layout {
+    grid-template-columns: 264px minmax(0, 1fr) 390px;
+  }
+
+  .channel-rail,
+  .right-panel {
+    max-height: calc(100vh - 86px);
+  }
+
+  .hotbar-row {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 767px) {
+  .app-header {
+    padding: 12px;
+  }
+
+  .main-panel {
+    order: 1;
+  }
+
+  .right-panel {
+    order: 2;
+  }
+
+  .channel-rail {
+    order: 3;
+  }
+
+  .icon-button span {
+    display: none;
+  }
+
+  .right-panel {
+    padding: 8px;
+  }
+
+  .hud-tabs {
+    max-height: 78vh;
+  }
+
+  .hud-tab-trigger {
+    font-size: 0;
+  }
+
+  .hud-tab-trigger svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .login-copy {
+    min-height: 420px;
+  }
+}

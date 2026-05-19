@@ -16,6 +16,7 @@ const icons = {
 
 export function ChannelRail({ state, onCommand }: Props) {
   const onlineCount = state.social.contacts.filter((contact) => contact.availability === "online").length;
+  const activeChannel = channels.find((channel) => channel.id === state.activeChannelId);
 
   return (
     <nav className="channel-rail">
@@ -29,6 +30,12 @@ export function ChannelRail({ state, onCommand }: Props) {
             Bulwark / {onlineCount} contacts online / local save v1
           </small>
         </div>
+      </div>
+
+      <div className="server-card">
+        <span>Current Channel</span>
+        <strong>{activeChannel?.label ?? "#unknown"}</strong>
+        <small>{activeChannel?.description ?? "The channel rail is listening."}</small>
       </div>
 
       <div className="rail-section-title">

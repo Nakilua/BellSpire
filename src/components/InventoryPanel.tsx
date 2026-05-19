@@ -14,7 +14,7 @@ export function InventoryPanel({ state }: Props) {
       </div>
       <div className="stack-sm">
         {state.inventory.map((item) => (
-          <div className="inventory-row" key={item.id}>
+          <div className={`inventory-row rarity-${(item.rarity ?? "unrated").toLowerCase()}`} key={item.id}>
             <div>
               <p>{item.name}</p>
               <small>

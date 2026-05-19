@@ -1,0 +1,136 @@
+[
+  {
+    "id": "saint-veyra-cathedral",
+    "zoneId": "saint-veyra",
+    "label": "Cathedral",
+    "kind": "landmark",
+    "x": 50,
+    "y": 42,
+    "summary": "Cathedral of the First Bell and central city landmark.",
+    "sourceNote": "Saint Veyra canon hub, Cathedral roads, and Cathedral of the First Bell references"
+  },
+  {
+    "id": "saint-veyra-training",
+    "zoneId": "saint-veyra",
+    "label": "Training",
+    "kind": "trainer",
+    "x": 68,
+    "y": 38,
+    "summary": "Class training halls and starter combat practice.",
+    "sourceNote": "Complete Data Workbook Zone_DB and curated Saint Veyra runtime services"
+  },
+  {
+    "id": "saint-veyra-guild-board",
+    "zoneId": "saint-veyra",
+    "label": "Guild Board",
+    "kind": "guild",
+    "x": 34,
+    "y": 34,
+    "summary": "Guild boards, starter contracts, and local social work.",
+    "sourceNote": "Saint Veyra guild board services and guild contract docs"
+  },
+  {
+    "id": "saint-veyra-crafting",
+    "zoneId": "saint-veyra",
+    "label": "Crafting",
+    "kind": "craft",
+    "x": 31,
+    "y": 56,
+    "summary": "Starter crafting services grouped as a source-safe hub label.",
+    "sourceNote": "Complete Data Workbook Zone_DB marks Saint Veyra as crafting foundation"
+  },
+  {
+    "id": "saint-veyra-faction-envoys",
+    "zoneId": "saint-veyra",
+    "label": "Envoys",
+    "kind": "faction",
+    "x": 74,
+    "y": 58,
+    "summary": "Faction envoy presence and Concord-facing social hooks.",
+    "sourceNote": "Complete Data Workbook Zone_DB marks Saint Veyra as faction envoy foundation"
+  },
+  {
+    "id": "saint-veyra-concord-offices",
+    "zoneId": "saint-veyra",
+    "label": "Concord",
+    "kind": "ledger",
+    "x": 51,
+    "y": 64,
+    "summary": "Concord paperwork, identity, and local realm admin flavor.",
+    "sourceNote": "Runtime topography landmarks list Concord offices"
+  },
+  {
+    "id": "hearthmere-field-rest",
+    "zoneId": "hearthmere-fields",
+    "poiId": "hearthmere-crossing",
+    "label": "Field Rest",
+    "kind": "rest",
+    "x": 27,
+    "y": 38,
+    "summary": "A safe-ish field rest stop on the Old Pilgrim Road.",
+    "sourceNote": "Hearthmere Fields POI services"
+  },
+  {
+    "id": "hearthmere-road-rumors",
+    "zoneId": "hearthmere-fields",
+    "poiId": "hearthmere-crossing",
+    "label": "Rumors",
+    "kind": "social",
+    "x": 40,
+    "y": 50,
+    "summary": "Road rumors from pilgrims, farmers, and Roadwarden chatter.",
+    "sourceNote": "Hearthmere Fields POI services and living-world road reports"
+  },
+  {
+    "id": "hearthmere-wax-beds",
+    "zoneId": "hearthmere-fields",
+    "label": "Wax Beds",
+    "kind": "material",
+    "x": 58,
+    "y": 42,
+    "summary": "Pilgrim wax beds used for shrine and road-seal upkeep.",
+    "sourceNote": "Hearthmere/Little Dawn map prompt and Pilgrim Wax item source"
+  },
+  {
+    "id": "little-dawn-shrine-rest",
+    "zoneId": "hearthmere-fields",
+    "poiId": "road-shrine-little-dawn",
+    "label": "Shrine Rest",
+    "kind": "shrine",
+    "x": 78,
+    "y": 40,
+    "summary": "Road Shrine of Little Dawn rest and Olla interaction point.",
+    "sourceNote": "Road Shrine of Little Dawn POI services"
+  },
+  {
+    "id": "little-dawn-dungeon-entry",
+    "zoneId": "hearthmere-fields",
+    "poiId": "road-shrine-little-dawn",
+    "label": "Dungeon",
+    "kind": "dungeon",
+    "x": 73,
+    "y": 67,
+    "summary": "Pilgrim Trial Cryptlet entry stair beneath the shrine.",
+    "sourceNote": "Road Shrine of Little Dawn and Pilgrim Trial Cryptlet POI services"
+  },
+  {
+    "id": "bellscar-coastwatch-preview",
+    "zoneId": "bellscar-coast",
+    "label": "Coastwatch Landing",
+    "kind": "preview",
+    "x": 36,
+    "y": 20,
+    "summary": "Preview service hub: inn, repair, mailbox, notice board, guild contract plank, and Roadwarden post.",
+    "sourceNote": "Complete workbook Bellscar rows and map topography audit"
+  },
+  {
+    "id": "nocturne-red-wax-preview",
+    "zoneId": "nocturne-vale",
+    "label": "Red Wax Embassy",
+    "kind": "preview",
+    "x": 76,
+    "y": 30,
+    "summary": "Preview service hub for contract vendors and etiquette training.",
+    "sourceNote": "Complete Data Workbook V1_1 Nocturne Vale expansion rows"
+  }
+]

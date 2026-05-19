@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { Layers, Map as MapIcon, Route } from "lucide-react";
+import mapServices from "../data/mapServices.json";
 import pois from "../data/pois.json";
 import regionTopography from "../data/regionTopography.json";
 import { getActiveDungeon, getCurrentRoom, getCurrentZone } from "../game/selectors";
@@ -29,7 +30,20 @@ interface RegionTopography {
   sourceNote: string;
 }
 
+interface MapService {
+  id: string;
+  zoneId: string;
+  poiId?: string;
+  label: string;
+  kind: string;
+  x: number;
+  y: number;
+  summary: string;
+  sourceNote: string;
+}
+
 const regions = regionTopography as RegionTopography[];
+const services = mapServices as MapService[];
 const layerLabels: Record<MapLayer, string> = {
   routes: "Routes",
   services: "Services",
@@ -48,6 +62,7 @@ export function MapPanel({ state }: Props) {
   const room = getCurrentRoom(state);
   const zone = getCurrentZone(state);
   const zonePois = pois.filter((poi) => poi.zoneId === zone.id);
+  const zoneServices = services.filter((entry) => entry.zoneId === zone.id);
   const lockedRegions = regions.filter((entry) => entry.locked);
   const currentRegion = regions.find((entry) => entry.zoneId === zone.id) ?? regions[0];
   const routePairs = useMemo(() => {
@@ -87,7 +102,7 @@ export function MapPanel({ state }: Props) {
       {dungeon && state.dungeon ? (
         <div>
           <p className="panel-copy">{dungeon.name}</p>
-          <div className="dungeon-ink-map" aria-label={`${dungeon.name} hand-drawn dungeon route`}>
+          <div className="dungeon-ink-map custom-map-plate" aria-label={`${dungeon.name} hand-drawn dungeon route`}>
             <DungeonAtlasInk activeIndex={state.dungeon.roomIndex} />
           </div>
           <div className="stack-sm">
@@ -117,7 +132,7 @@ export function MapPanel({ state }: Props) {
             ))}
           </div>
 
-          <div className="world-map" aria-label="Bellspire world topology">
+          <div className="world-map custom-map-plate" aria-label="Bellspire world topology">
             <WorldAtlasInk showDanger={layers.danger} showGuild={layers.guild} />
             {layers.routes ? (
               <svg className="topography-routes" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
@@ -141,6 +156,15 @@ export function MapPanel({ state }: Props) {
                 </div>
               );
             })}
+            {layers.services
+              ? services
+                  .filter((entry) => entry.kind === "preview")
+                  .map((entry) => (
+                    <div className="service-pin preview" key={entry.id} style={{ left: `${entry.x}%`, top: `${entry.y}%` }}>
+                      <span>{getServiceCode(entry.kind)}</span>
+                    </div>
+                  ))
+              : null}
           </div>
 
           <div className="map-readout">
@@ -155,7 +179,7 @@ export function MapPanel({ state }: Props) {
             {layers.guild ? <MapReadoutList label="Guild hooks" values={currentRegion.guildHooks} /> : null}
           </div>
 
-          <div className="node-map topographic-node-map">
+          <div className={`node-map topographic-node-map custom-map-plate zone-${zone.id}`}>
             <ZoneAtlasInk zoneId={zone.id} />
             {zonePois.map((poi) => (
               <div
@@ -167,7 +191,16 @@ export function MapPanel({ state }: Props) {
                 <small>{poi.name}</small>
               </div>
             ))}
+            {layers.services
+              ? zoneServices.map((entry) => (
+                  <div className={`service-pin ${entry.kind}`} key={entry.id} style={{ left: `${entry.x}%`, top: `${entry.y}%` }}>
+                    <span>{getServiceCode(entry.kind)}</span>
+                    <small>{entry.label}</small>
+                  </div>
+                ))
+              : null}
           </div>
+          {layers.services ? <ServiceLegend services={zoneServices} /> : null}
           <div className="locked-list">
             {lockedRegions.slice(0, 4).map((entry) => (
               <div className="locked-row" key={entry.id}>
@@ -180,6 +213,45 @@ export function MapPanel({ state }: Props) {
       )}
     </section>
   );
+}
+
+function ServiceLegend({ services }: { services: MapService[] }) {
+  if (services.length === 0) {
+    return null;
+  }
+
+  return (
+    <div className="service-legend" aria-label="Map services">
+      {services.map((entry) => (
+        <div className="service-legend-row" key={entry.id}>
+          <span className={`service-kind ${entry.kind}`}>{getServiceCode(entry.kind)}</span>
+          <div>
+            <strong>{entry.label}</strong>
+            <p>{entry.summary}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function getServiceCode(kind: string) {
+  const codes: Record<string, string> = {
+    landmark: "LM",
+    trainer: "TR",
+    guild: "GB",
+    craft: "CR",
+    faction: "FX",
+    ledger: "LD",
+    rest: "RS",
+    social: "SO",
+    material: "MT",
+    shrine: "SH",
+    dungeon: "DG",
+    preview: "PV"
+  };
+
+  return codes[kind] ?? "POI";
 }
 
 function MapReadoutList({ label, values }: { label: string; values: string[] }) {

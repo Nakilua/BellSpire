@@ -2,11 +2,21 @@ import { FormEvent, useMemo, useState } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as Select from "@radix-ui/react-select";
 import { motion } from "motion/react";
-import { Check, ChevronDown, Shield, UserRound, X } from "lucide-react";
+import { Check, ChevronDown, HeartPulse, MapPin, Shield, Swords, UserRound, X } from "lucide-react";
 import type { CharacterCreationInput, CharacterOrigin, CharacterState, CharacterVow } from "../game/types";
 
 const origins: CharacterOrigin[] = ["Saint Veyra Ward", "Hearthmere Farmstead", "Roadwarden Foundling"];
 const vows: CharacterVow[] = ["Hold the Line", "Guard the Small Flame", "Break No Oath"];
+const originNotes: Record<CharacterOrigin, string> = {
+  "Saint Veyra Ward": "Cathedral streets, civic bells, and a watchful first oath.",
+  "Hearthmere Farmstead": "Field roads, pilgrim wax, shrine patience, and stubborn kindness.",
+  "Roadwarden Foundling": "Raised by mile-markers, warning bells, and people who stand guard anyway."
+};
+const vowNotes: Record<CharacterVow, string> = {
+  "Hold the Line": "Classic Bulwark promise: keep the danger facing you.",
+  "Guard the Small Flame": "Protect the fragile thing first, even when the room turns cruel.",
+  "Break No Oath": "A harder road: every promise becomes weight on the shield arm."
+};
 
 interface Props {
   hasProfile: boolean;
@@ -57,13 +67,23 @@ export function LoginView({ hasProfile, savedCharacter, onContinue, onCreate }: 
     <main className="login-root">
       <motion.section className="login-card" initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.42, ease: "easeOut" }}>
         <div className="login-copy">
+          <div className="login-realm-chip">
+            <span>Local Realm</span>
+            <strong>First Bell</strong>
+          </div>
           <div className="login-mark">
             <Shield size={28} />
           </div>
           <h1>Bellspire</h1>
           <p>
-            Make your first traveler. This is a local save, so it lives on this machine until you export it or reset it.
+            Make your first traveler and step onto the Saint Veyra road. Your save stays local until you export it.
           </p>
+          <div className="login-scene-tags" aria-label="First playable route">
+            <span>Saint Veyra</span>
+            <span>Hearthmere Fields</span>
+            <span>Little Dawn</span>
+            <span>Cryptlet</span>
+          </div>
         </div>
 
         <form className="creator-panel" onSubmit={submit}>
@@ -95,19 +115,32 @@ export function LoginView({ hasProfile, savedCharacter, onContinue, onCreate }: 
 
           <div className="field-grid">
             <div>
-              <span className="field-label">Origin</span>
+              <span className="field-label">
+                <MapPin size={13} />
+                Origin
+              </span>
               <SimpleSelect value={origin} options={origins} onChange={(value) => setOrigin(value as CharacterOrigin)} />
+              <p className="field-hint">{originNotes[origin]}</p>
             </div>
             <div>
-              <span className="field-label">First vow</span>
+              <span className="field-label">
+                <HeartPulse size={13} />
+                First vow
+              </span>
               <SimpleSelect value={vow} options={vows} onChange={(value) => setVow(value as CharacterVow)} />
+              <p className="field-hint">{vowNotes[vow]}</p>
             </div>
           </div>
 
           <div className="class-lock">
-            <span>Starter class</span>
-            <strong>Bulwark</strong>
-            <small>Shield, lanes, guard stance, and oath-based protection.</small>
+            <div className="class-lock-icon">
+              <Swords size={20} />
+            </div>
+            <div>
+              <span>Starter class</span>
+              <strong>Bulwark</strong>
+              <small>Shield, lanes, Guard Stance, Shield Oath, and oath-based protection.</small>
+            </div>
           </div>
 
           <button className="action-button primary full-width" type="submit" disabled={!canCreate}>

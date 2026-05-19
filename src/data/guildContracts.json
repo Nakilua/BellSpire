@@ -1,0 +1,26 @@
+[
+  {
+    "id": "first-road-watch",
+    "name": "First Road Watch",
+    "status": "available",
+    "progress": 0,
+    "requirement": "Form or simulate a small party, reach the Road Shrine, and report road danger.",
+    "reward": "Roadwarden trust, guild credit, and social memory with party contacts."
+  },
+  {
+    "id": "little-dawn-candle-run",
+    "name": "Little Dawn Candle Run",
+    "status": "available",
+    "progress": 0,
+    "requirement": "Bring shrine wax and clear the Pilgrim Trial Cryptlet training route.",
+    "reward": "Bellspire Concord reputation, source pity, and Shrinekeeper Olla trust."
+  },
+  {
+    "id": "cryptlet-training-party",
+    "name": "Cryptlet Training Party",
+    "status": "available",
+    "progress": 0,
+    "requirement": "Complete Pilgrim Trial Cryptlet with at least one party contact committed.",
+    "reward": "Guild board credit and future group-finder priority."
+  }
+]

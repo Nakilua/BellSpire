@@ -1,0 +1,74 @@
+[
+  {
+    "id": "pilgrim-renn",
+    "name": "Pilgrim Renn",
+    "role": "Dawn Priest trainee",
+    "kind": "npc",
+    "trust": 18,
+    "availability": "online",
+    "relationshipTag": "recent ally",
+    "lastSeen": "Hearthmere Fields",
+    "notes": ["Nervous, kind, good with shrine rites.", "Will answer party chat if the topic is the Little Dawn road."],
+    "voice": "gentle, anxious, useful"
+  },
+  {
+    "id": "shrinekeeper-olla",
+    "name": "Shrinekeeper Olla",
+    "role": "Road shrine keeper",
+    "kind": "npc",
+    "trust": 24,
+    "availability": "busy",
+    "relationshipTag": "shrine contact",
+    "lastSeen": "Road Shrine of Little Dawn",
+    "notes": ["Protective of pilgrims.", "Answers when the road or cryptlet is mentioned."],
+    "voice": "dry, devotional, direct"
+  },
+  {
+    "id": "edrin-bellhand",
+    "name": "Edrin Bellhand",
+    "role": "Dawn Priest healer",
+    "kind": "simulated-player",
+    "trust": 12,
+    "availability": "online",
+    "relationshipTag": "possible healer",
+    "lastSeen": "#party-chat",
+    "notes": ["Likes clean pulls and clear routes.", "Good fit for training dungeons."],
+    "voice": "calm, practical healer"
+  },
+  {
+    "id": "tallowwick",
+    "name": "Tallowwick",
+    "role": "Arcanist DPS",
+    "kind": "simulated-player",
+    "trust": 8,
+    "availability": "online",
+    "relationshipTag": "chatty DPS",
+    "lastSeen": "#party-chat",
+    "notes": ["Makes jokes when nervous.", "Good at object duty if reminded."],
+    "voice": "witty, fast, slightly dramatic"
+  },
+  {
+    "id": "mothknife",
+    "name": "Mothknife",
+    "role": "Nightblade scout",
+    "kind": "simulated-player",
+    "trust": 6,
+    "availability": "away",
+    "relationshipTag": "quiet scout",
+    "lastSeen": "#guild-board",
+    "notes": ["Rarely speaks, but notices danger.", "Likes routes with hidden objects."],
+    "voice": "brief, sharp, observant"
+  },
+  {
+    "id": "ysabet-cord",
+    "name": "Ysabet Cord",
+    "role": "Guild contract clerk",
+    "kind": "guild",
+    "trust": 15,
+    "availability": "online",
+    "relationshipTag": "guild clerk",
+    "lastSeen": "#guild-board",
+    "notes": ["Tracks contracts, attendance, and road credit.", "Does not approve ghost loot or vague paperwork."],
+    "voice": "formal, brisk, secretly amused"
+  }
+]

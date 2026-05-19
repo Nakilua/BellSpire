@@ -1,0 +1,44 @@
+[
+  {
+    "id": "saint-veyra",
+    "name": "Saint Veyra Capital",
+    "keywords": ["saint veyra", "capital", "guild", "training", "concord", "cathedral"],
+    "summary": "Saint Veyra is the first capital hub: stained glass, black roadstone, guild halls, training courts, Concord paperwork, faction envoys, and the first road out. It should feel social, ceremonial, bureaucratic, and slightly ominous."
+  },
+  {
+    "id": "hearthmere",
+    "name": "Hearthmere Fields",
+    "keywords": ["hearthmere", "fields", "road", "pilgrim", "wolf", "farm"],
+    "summary": "Hearthmere Fields is the starter road zone with farms, pilgrims, ash-gray wolf trails, field rests, road patrol concerns, and the route toward the Road Shrine of Little Dawn."
+  },
+  {
+    "id": "little-dawn",
+    "name": "Road Shrine of Little Dawn",
+    "keywords": ["little dawn", "road shrine", "olla", "shrine", "bell", "cryptlet"],
+    "summary": "The Road Shrine of Little Dawn is a protected road shrine watched by Shrinekeeper Olla. It gates the Pilgrim Trial Cryptlet and teaches road discipline, shrine permission, bell signs, and patient party pacing."
+  },
+  {
+    "id": "pilgrim-trial-cryptlet",
+    "name": "Pilgrim Trial Cryptlet",
+    "keywords": ["cryptlet", "warden", "road-seal", "threaded names", "broken bell", "bone walk", "final toll"],
+    "summary": "Pilgrim Trial Cryptlet is the first training dungeon. It teaches party behavior, basic packs, object counterplay, movement lanes, hidden memory, Bellgrave Warden telegraphs, wipe recap, and source-driven reward discipline."
+  },
+  {
+    "id": "bulwark",
+    "name": "Bulwark Starter Class",
+    "keywords": ["bulwark", "tank", "guard", "shield oath", "frontline", "lane"],
+    "summary": "Bulwark is the first playable class. It protects the party through lanes, Guard Stance, Shield Oath, threat control, patience, and clear calls before pulls."
+  },
+  {
+    "id": "starter-social-cast",
+    "name": "Starter Social Cast",
+    "keywords": ["renn", "olla", "edrin", "tallowwick", "mothknife", "ysabet", "party", "guild"],
+    "summary": "Starter social cast: Pilgrim Renn is nervous and helpful; Olla is dry and devotional; Edrin is a calm healer; Tallowwick is witty DPS with object duty; Mothknife is a terse scout; Ysabet Cord is the guild contract clerk who dislikes vague rewards."
+  },
+  {
+    "id": "canon-rules",
+    "name": "Canon Guardrails",
+    "keywords": ["loot", "reward", "source", "canon", "gear", "contract"],
+    "summary": "Canon rules: no ghost loot, no invented permanent gear, no monetization, no accounts/backend claims, no full MMO scope leap. Unfinished rewards must be staged or source-checked."
+  }
+]

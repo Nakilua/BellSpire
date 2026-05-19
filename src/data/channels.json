@@ -1,0 +1,58 @@
+[
+  {
+    "id": "global-chat",
+    "label": "#global",
+    "kind": "social",
+    "description": "Server-wide chatter, road notices, locked-preview rumors, and living-world pulse."
+  },
+  {
+    "id": "zone-chat",
+    "label": "#zone",
+    "kind": "social",
+    "description": "Local zone chatter, NPC callouts, road state, and nearby simulated players."
+  },
+  {
+    "id": "saint-veyra-capital",
+    "label": "#saint-veyra-capital",
+    "kind": "zone",
+    "poiId": "saint-veyra-capital",
+    "description": "Capital hub, training halls, guild boards, Concord paperwork, and the first road out."
+  },
+  {
+    "id": "hearthmere-fields",
+    "label": "#hearthmere-fields",
+    "kind": "zone",
+    "poiId": "hearthmere-crossing",
+    "description": "Starter roads, ash-gray wolf trails, farmers, pilgrims, and the Road Shrine of Little Dawn."
+  },
+  {
+    "id": "party-chat",
+    "label": "#party-chat",
+    "kind": "social",
+    "description": "Companion chatter, party frames, and soft tactical reminders."
+  },
+  {
+    "id": "guild-board",
+    "label": "#guild-board",
+    "kind": "board",
+    "description": "Guild contracts, clerk replies, social credit, and source-safe work."
+  },
+  {
+    "id": "guild-recruitment",
+    "label": "#guild-recruitment",
+    "kind": "board",
+    "description": "Local guild recruitment posts and staged social hooks."
+  },
+  {
+    "id": "activity-board",
+    "label": "#activity-board",
+    "kind": "board",
+    "description": "Available routes, locked activities, and the first dungeon card."
+  },
+  {
+    "id": "combat-log",
+    "label": "#combat-log",
+    "kind": "combat",
+    "description": "Encounter rounds, telegraphs, lane state, wipe notes, and reward results."
+  }
+]

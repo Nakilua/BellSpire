@@ -1,0 +1,33 @@
+[
+  {
+    "id": "ollaPermission",
+    "label": "Olla's Permission",
+    "value": false,
+    "description": "Shrinekeeper Olla has allowed descent into the Cryptlet."
+  },
+  {
+    "id": "roadTrialOathRead",
+    "label": "Road Trial Oath Read",
+    "value": false,
+    "description": "The player read the oath in Shrine Descent."
+  },
+  {
+    "id": "brokenBellStabilized",
+    "label": "Broken Bell Stabilized",
+    "value": false,
+    "description": "The wax channel in Broken Bell Niche was stabilized."
+  },
+  {
+    "id": "wardenDefeated",
+    "label": "Bellgrave Warden Defeated",
+    "value": false,
+    "description": "The final boss of Pilgrim Trial Cryptlet is defeated."
+  },
+  {
+    "id": "cryptletComplete",
+    "label": "Cryptlet Complete",
+    "value": false,
+    "description": "The Road-Seal Exit reward has been claimed."
+  }
+]
+

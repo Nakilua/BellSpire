@@ -1,0 +1,18 @@
+[
+  {
+    "id": "cryptlet-training-lfg",
+    "name": "Pilgrim Trial Cryptlet - Training",
+    "status": "open",
+    "rolesNeeded": ["healer", "two DPS or companions"],
+    "members": ["Naki / Bulwark"],
+    "routeNote": "New-player safe route. Read bells, respect lane calls, no rush pulling."
+  },
+  {
+    "id": "hearthmere-road-patrol",
+    "name": "Hearthmere Road Patrol",
+    "status": "open",
+    "rolesNeeded": ["any role", "scout helpful"],
+    "members": ["Roadwarden Ila"],
+    "routeNote": "Short patrol between field crossing and Road Shrine. Good for social trust."
+  }
+]

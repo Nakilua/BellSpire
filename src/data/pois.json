@@ -1,0 +1,55 @@
+[
+  {
+    "id": "saint-veyra-capital",
+    "zoneId": "saint-veyra",
+    "name": "Saint Veyra Capital",
+    "type": "Capital hub",
+    "x": 12,
+    "y": 28,
+    "scene": "The city bell is quiet this morning. Saint Veyra opens around you in black roadstone, waxlight, and paperwork that somehow feels more dangerous than wolves.",
+    "exits": ["hearthmere-crossing"],
+    "npcIds": ["master-halren-voss"],
+    "services": ["training", "guild board", "save export"],
+    "actions": ["travel Hearthmere Fields", "abilities", "inventory"]
+  },
+  {
+    "id": "hearthmere-crossing",
+    "zoneId": "hearthmere-fields",
+    "name": "Hearthmere Fields",
+    "type": "Starter road",
+    "x": 42,
+    "y": 48,
+    "scene": "Dawn fog drags itself over wheat fields and low walls. The Old Pilgrim Road runs east toward a small shrine with fresh claw marks on the signpost.",
+    "exits": ["saint-veyra-capital", "road-shrine-little-dawn"],
+    "npcIds": ["pilgrim-renn", "roadwarden-ila"],
+    "services": ["field rest", "road rumors"],
+    "actions": ["travel Road Shrine of Little Dawn", "talk Pilgrim Renn", "map"]
+  },
+  {
+    "id": "road-shrine-little-dawn",
+    "zoneId": "hearthmere-fields",
+    "name": "Road Shrine of Little Dawn",
+    "type": "Shrine and dungeon entrance",
+    "x": 70,
+    "y": 52,
+    "scene": "A candle rail circles a squat road shrine. Beneath it, a dark stair curves toward a cryptlet door fitted with a palm-sized bronze bell.",
+    "exits": ["hearthmere-crossing", "pilgrim-trial-cryptlet"],
+    "npcIds": ["shrinekeeper-olla", "roadwarden-ila"],
+    "services": ["rest shrine", "dungeon entry"],
+    "actions": ["talk Shrinekeeper Olla", "accept quest", "enter dungeon", "inspect crypt bell"]
+  },
+  {
+    "id": "pilgrim-trial-cryptlet",
+    "zoneId": "hearthmere-fields",
+    "name": "Pilgrim Trial Cryptlet",
+    "type": "Training dungeon",
+    "x": 78,
+    "y": 70,
+    "scene": "The stair closes behind you with a bell tone that rings inward instead of out. Old road names hang from thread tags in the dark.",
+    "exits": ["road-shrine-little-dawn"],
+    "npcIds": [],
+    "services": ["dungeon route"],
+    "actions": ["look", "continue"]
+  }
+]
+

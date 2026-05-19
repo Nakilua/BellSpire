@@ -1,0 +1,62 @@
+[
+  {
+    "id": "ash-bitten-bones",
+    "name": "Ash-bitten Bones",
+    "family": "Pilgrim Dead",
+    "rank": "Normal",
+    "maxHp": 18,
+    "role": "basic attacker",
+    "mechanics": ["Bone Clatter"],
+    "counterplay": "Hold Frontline and clear them before they overwhelm the companion lane."
+  },
+  {
+    "id": "vowless-pilgrim-shade",
+    "name": "Vowless Pilgrim Shade",
+    "family": "Pilgrim Dead",
+    "rank": "Tough",
+    "maxHp": 26,
+    "role": "marking shade",
+    "mechanics": ["Unanswered Name", "Road Chill"],
+    "counterplay": "Shield Oath it early so it marks the Bulwark instead of a fragile target."
+  },
+  {
+    "id": "bell-ringer-shade",
+    "name": "Bell-Ringer Shade",
+    "family": "Pilgrim Dead",
+    "rank": "Tough caster",
+    "maxHp": 30,
+    "role": "ritual caster",
+    "mechanics": ["Ringing the Wrong Way", "Wax Seal Channel"],
+    "counterplay": "Use the wax channel or pressure the shade before the ritual completes."
+  },
+  {
+    "id": "bone-hook-crawler",
+    "name": "Bone-Hook Crawler",
+    "family": "Pilgrim Dead",
+    "rank": "Tough",
+    "maxHp": 34,
+    "role": "lane hazard controller",
+    "mechanics": ["Hook Drag", "Bone Snare"],
+    "counterplay": "Hold Frontline so Midline and Backline targets do not get dragged through hazards."
+  },
+  {
+    "id": "bone-rattle-add",
+    "name": "Bone Rattle Add",
+    "family": "Pilgrim Dead",
+    "rank": "Normal",
+    "maxHp": 16,
+    "role": "boss add",
+    "mechanics": ["Bone Rattle"],
+    "counterplay": "Swap damage before add pressure overlaps with Vowless Mark."
+  },
+  {
+    "id": "bellgrave-warden",
+    "name": "The Bellgrave Warden",
+    "family": "Pilgrim Dead / Bellgrave Guardian",
+    "rank": "Dungeon Boss",
+    "maxHp": 60,
+    "role": "final boss",
+    "mechanics": ["Grave Bell Swing", "Vowless Mark", "Bone Rattle Adds", "Road-Seal Pulse", "Final Toll"],
+    "counterplay": "Face the boss Frontline, save Guard Stance for heavy telegraphs, use the Road-Seal Bell before Final Toll."
+  }
+]

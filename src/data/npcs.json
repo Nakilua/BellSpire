@@ -1,0 +1,35 @@
+[
+  {
+    "id": "master-halren-voss",
+    "name": "Master Halren Voss",
+    "role": "Bulwark instructor",
+    "locationId": "saint-veyra-capital",
+    "dialogue": "A shield is not a wall, recruit. A wall waits. A Bulwark chooses where the danger is allowed to go.",
+    "reaction": "Halren marks your stance as passable, which from him is basically a parade."
+  },
+  {
+    "id": "pilgrim-renn",
+    "name": "Pilgrim Renn",
+    "role": "Road pilgrim",
+    "locationId": "hearthmere-crossing",
+    "dialogue": "The shrine bell rang last night, but nobody touched it. I am trying very hard not to think about what that means.",
+    "reaction": "Renn keeps close behind you on the road, visibly relieved when you hold the Frontline."
+  },
+  {
+    "id": "roadwarden-ila",
+    "name": "Roadwarden Ila",
+    "role": "Practical road contact",
+    "locationId": "hearthmere-crossing",
+    "dialogue": "The road is Concord-safe on paper. Wolves and dead pilgrims have not signed the paper.",
+    "reaction": "Ila files your name under useful, not decorative."
+  },
+  {
+    "id": "shrinekeeper-olla",
+    "name": "Shrinekeeper Olla",
+    "role": "Road Shrine keeper",
+    "locationId": "road-shrine-little-dawn",
+    "dialogue": "The Little Dawn bell only opens inward for someone willing to stand between the traveler and the dark.",
+    "reaction": "Olla lights one more candle on the rail and gives you permission to descend."
+  }
+]
+

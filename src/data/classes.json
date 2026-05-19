@@ -1,0 +1,66 @@
+[
+  {
+    "id": "bulwark",
+    "name": "Bulwark",
+    "role": "Tank / protector",
+    "status": "playable",
+    "runtimeSupport": "Starter class with Shield Oath, Guard Stance, lane control, and staged tank loot.",
+    "sourceUse": "Prototype first class locked by Codex handoff."
+  },
+  {
+    "id": "dawn-priest",
+    "name": "Dawn Priest",
+    "role": "Healer / cleanse support",
+    "status": "preview",
+    "runtimeSupport": "NPC and simulated-player support through Pilgrim Renn and Edrin Bellhand.",
+    "sourceUse": "Launch class; playable ability rows pending."
+  },
+  {
+    "id": "arcanist",
+    "name": "Arcanist",
+    "role": "Caster DPS / object control",
+    "status": "preview",
+    "runtimeSupport": "Simulated-player support through Tallowwick and object-duty party behavior.",
+    "sourceUse": "Launch class; playable ability rows pending."
+  },
+  {
+    "id": "nightblade",
+    "name": "Nightblade",
+    "role": "Scout DPS / route knowledge",
+    "status": "preview",
+    "runtimeSupport": "Simulated-player support through Mothknife and danger callouts.",
+    "sourceUse": "Launch class; playable ability rows pending."
+  },
+  {
+    "id": "ranger",
+    "name": "Ranger",
+    "role": "Ranged DPS / road scouting",
+    "status": "preview",
+    "runtimeSupport": "Represented in source hooks and future Bellscar/Briarwatch scouting routes.",
+    "sourceUse": "Launch class; playable ability rows pending."
+  },
+  {
+    "id": "oathwarden",
+    "name": "Oathwarden",
+    "role": "Hybrid guard / vow mechanics",
+    "status": "preview",
+    "runtimeSupport": "Represented in source hooks and future vow/faction systems.",
+    "sourceUse": "Launch class; playable ability rows pending."
+  },
+  {
+    "id": "hexbinder",
+    "name": "Hexbinder",
+    "role": "Debuff / contract breaker",
+    "status": "preview",
+    "runtimeSupport": "Represented in Nocturne/Sanguine Court and contract-counterplay source hooks.",
+    "sourceUse": "Launch class; playable ability rows pending."
+  },
+  {
+    "id": "wildheart",
+    "name": "Wildheart",
+    "role": "Nature bruiser / field survival",
+    "status": "preview",
+    "runtimeSupport": "Represented in Briarwatch, road ecology, and future field survival hooks.",
+    "sourceUse": "Launch class; playable ability rows pending."
+  }
+]

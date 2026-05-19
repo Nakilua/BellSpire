@@ -1,0 +1,20 @@
+[
+  {
+    "id": "trial-under-little-dawn",
+    "name": "Trial Under Little Dawn",
+    "type": "Dungeon onboarding",
+    "giverNpcId": "shrinekeeper-olla",
+    "source": "Pilgrimage of the First Bell",
+    "steps": [
+      "Speak with Shrinekeeper Olla at the Road Shrine of Little Dawn.",
+      "Ring the inward bell and enter Pilgrim Trial Cryptlet.",
+      "Read the Road Trial Oath in the Shrine Descent.",
+      "Stabilize the Broken Bell Niche.",
+      "Cross the Pilgrim Bone Walk.",
+      "Defeat the Bellgrave Warden.",
+      "Ring the Road-Seal Bell and claim the reward cache."
+    ],
+    "rewards": ["XP", "Bellspire Concord reputation", "Roadwarden reputation", "Pilgrimage source pity", "material cache"]
+  }
+]
+

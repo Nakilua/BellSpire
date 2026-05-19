@@ -1,0 +1,53 @@
+[
+  {
+    "id": "saint-veyra",
+    "name": "Saint Veyra Capital",
+    "channelId": "saint-veyra-capital",
+    "type": "Capital hub",
+    "levelRange": "1-60",
+    "locked": false,
+    "summary": "A cathedral city under stained glass and Concord law. Training halls, guild boards, shrines, and the first road out.",
+    "nodeIds": ["saint-veyra-capital"]
+  },
+  {
+    "id": "hearthmere-fields",
+    "name": "Hearthmere Fields",
+    "channelId": "hearthmere-fields",
+    "type": "Starter zone",
+    "levelRange": "1-8",
+    "locked": false,
+    "summary": "Wheat fields, low stone walls, ash-gray wolf trails, dawn fog, and pilgrim roads that are supposed to be safe.",
+    "nodeIds": ["hearthmere-crossing", "road-shrine-little-dawn", "pilgrim-trial-cryptlet"]
+  },
+  {
+    "id": "briarwatch-glen",
+    "name": "Briarwatch Glen",
+    "channelId": "activity-board",
+    "type": "Early zone",
+    "levelRange": "5-15",
+    "locked": true,
+    "summary": "Protected rot, House Brackenholt, Greenbell Hamlet, and Thornhouse. Locked until the first slice is stable.",
+    "nodeIds": []
+  },
+  {
+    "id": "bellscar-coast",
+    "name": "Bellscar Coast",
+    "channelId": "activity-board",
+    "type": "Early-mid public warfare",
+    "levelRange": "10-20",
+    "locked": true,
+    "summary": "Bell Tower Siege, Saltbroken pressure, militia defense, and guild contracts. Preview only.",
+    "nodeIds": []
+  },
+  {
+    "id": "nocturne-vale",
+    "name": "Nocturne Vale",
+    "channelId": "activity-board",
+    "type": "Late vampire court",
+    "levelRange": "38-50",
+    "locked": true,
+    "summary": "Guest Right, court debts, charm resistance, and Sanguine Court. Preview only.",
+    "nodeIds": []
+  }
+]
+

@@ -1,0 +1,111 @@
+{
+  "ambient": [
+    {
+      "channelId": "global-chat",
+      "speaker": "Server Notice",
+      "body": "Bellspire Concord reminds travelers: if a reward is not sourced, it is not real. Report ghost loot to the nearest clerk.",
+      "meta": "global / canon law"
+    },
+    {
+      "channelId": "global-chat",
+      "speaker": "Roadwarden Pell",
+      "body": "Roadwatch call: Hearthmere remains open, but shrine traffic should move in pairs until Little Dawn confirms the lower bell is quiet.",
+      "meta": "global / roadwatch"
+    },
+    {
+      "channelId": "global-chat",
+      "speaker": "Mira Vale",
+      "body": "Bellscar Coast recruitment is still locked for this build. Militia board says: bring shields later, bring patience now.",
+      "meta": "global / locked preview"
+    },
+    {
+      "channelId": "zone-chat",
+      "zoneId": "saint-veyra",
+      "speaker": "Concord Scribe",
+      "body": "Saint Veyra docket: starter contracts, Bulwark training, and Roadwarden reports are being filed under First Road priority.",
+      "meta": "zone / Saint Veyra"
+    },
+    {
+      "channelId": "zone-chat",
+      "zoneId": "hearthmere-fields",
+      "speaker": "Fieldhand Mara",
+      "body": "Saw three pilgrims stop at the east wall and turn around. Not panic, exactly. More like the road whispered something rude.",
+      "meta": "zone / Hearthmere"
+    },
+    {
+      "channelId": "zone-chat",
+      "zoneId": "hearthmere-fields",
+      "speaker": "Roadwarden Ila",
+      "body": "Little Dawn approach is passable. Watch the low stone walls; ash-gray wolves like the fog more than honest people do.",
+      "meta": "zone / road report"
+    },
+    {
+      "channelId": "party-chat",
+      "speaker": "Pilgrim Renn",
+      "body": "I marked the shrine signs again. If we go under Little Dawn, I can call the prayer marks while you hold front.",
+      "meta": "party / Renn"
+    },
+    {
+      "channelId": "party-chat",
+      "speaker": "Edrin Bellhand",
+      "body": "Healer note: clean pulls, clear lane calls, no heroic sprinting into bell architecture. I enjoy living.",
+      "meta": "party / healer"
+    },
+    {
+      "channelId": "party-chat",
+      "speaker": "Tallowwick",
+      "body": "Object duty accepted. If a glowing shrine mechanism bites me, I reserve the right to complain in three channels.",
+      "meta": "party / DPS"
+    },
+    {
+      "channelId": "guild-board",
+      "speaker": "Ysabet Cord",
+      "body": "Recruitment reminder: First Road Watch accepts staged local parties. Name the route, name the witnesses, do not invent payment.",
+      "meta": "guild board / clerk"
+    },
+    {
+      "channelId": "guild-recruitment",
+      "speaker": "Dawnward Table",
+      "body": "Dawnward Table recruiting patient tanks and healers for training routes. No rage-pulling, no fake loot screenshots.",
+      "meta": "guild recruitment"
+    },
+    {
+      "channelId": "guild-recruitment",
+      "speaker": "Candleknots",
+      "body": "Small guild forming for shrine work, material runs, and quiet dungeon clears. We explain mechanics before bells explain them harder.",
+      "meta": "guild recruitment"
+    }
+  ],
+  "dmBeats": [
+    {
+      "reason": "travel",
+      "speaker": "Bellspire Director",
+      "body": "The road keeps moving even when you do not. Somewhere behind you, a contract clerk stamps a page; somewhere ahead, a bell refuses to answer outward.",
+      "meta": "local DM / travel"
+    },
+    {
+      "reason": "channel",
+      "speaker": "Bellspire Director",
+      "body": "The channel shifts like a room door opening. Voices continue before and after you arrive, which is the first rule of a living world.",
+      "meta": "local DM / channel"
+    },
+    {
+      "reason": "dungeon",
+      "speaker": "Bellspire Director",
+      "body": "Dungeon pressure settles into the party frame. Frontline, Midline, Backline: the map is no longer just geography, it is behavior.",
+      "meta": "local DM / dungeon"
+    },
+    {
+      "reason": "loot",
+      "speaker": "Bellspire Director",
+      "body": "The cache opens under source law. Materials, reputation, pity, and staged gear all leave paper trails. The world remembers the difference.",
+      "meta": "local DM / loot"
+    },
+    {
+      "reason": "listen",
+      "speaker": "Bellspire Director",
+      "body": "You stop long enough to hear the server breathe: recruitment posts, road warnings, party jokes, and NPC routines moving around the edges of the scene.",
+      "meta": "local DM / listen"
+    }
+  ]
+}

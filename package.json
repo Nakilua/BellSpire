@@ -1,0 +1,31 @@
+{
+  "name": "bellspire",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "rsbuild dev --host 127.0.0.1",
+    "ai": "node server/bellspire-ai-server.mjs",
+    "canon:build": "node scripts/build-canon-registry.mjs",
+    "canon:audit": "node scripts/build-canon-registry.mjs --audit",
+    "build": "tsc && rsbuild build",
+    "preview": "rsbuild preview --host 127.0.0.1"
+  },
+  "dependencies": {
+    "@radix-ui/react-dialog": "^1.1.15",
+    "@radix-ui/react-select": "^2.2.6",
+    "lucide-react": "^0.468.0",
+    "motion": "^12.39.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@rsbuild/core": "^1.5.15",
+    "@rsbuild/plugin-react": "^1.4.0",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "@xmldom/xmldom": "^0.9.10",
+    "typescript": "^5.7.2",
+    "unzipper": "^0.12.3"
+  }
+}

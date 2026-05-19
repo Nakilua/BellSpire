@@ -1,0 +1,74 @@
+[
+  {
+    "id": "pilgrim-trial-cryptlet",
+    "name": "Pilgrim Trial Cryptlet",
+    "source": "Pilgrimage of the First Bell",
+    "zoneId": "hearthmere-fields",
+    "entrancePoiId": "road-shrine-little-dawn",
+    "levelRange": "4-8",
+    "mode": "Training",
+    "rooms": [
+      {
+        "id": "shrine-descent",
+        "name": "Shrine Descent",
+        "type": "Entrance",
+        "lesson": "Party and companion tutorial",
+        "scene": "Roadstone steps descend beneath the candle rail. A Road Trial Oath is carved above the first landing.",
+        "object": "Road Trial Oath"
+      },
+      {
+        "id": "hall-threaded-names",
+        "name": "Hall of Threaded Names",
+        "type": "Trash / lore",
+        "lesson": "Basic pack and target priority",
+        "scene": "Thread tags hang from the ceiling. Some names are old. Some are still wet with wax.",
+        "encounterId": "threaded-names-pack",
+        "object": "Threaded Name Tags"
+      },
+      {
+        "id": "broken-bell-niche",
+        "name": "Broken Bell Niche",
+        "type": "Mechanic room",
+        "lesson": "Interrupt and object counterplay",
+        "scene": "A cracked wall niche holds half a bell. Amber wax gutters through a broken seal channel.",
+        "encounterId": "broken-bell-niche",
+        "object": "Wax Seal Channel"
+      },
+      {
+        "id": "pilgrim-bone-walk",
+        "name": "Pilgrim Bone Walk",
+        "type": "Hazard room",
+        "lesson": "Movement and lane hazard",
+        "scene": "The passage narrows into three visible lanes. Bones shift beneath the floor like a bad idea learning to crawl.",
+        "encounterId": "pilgrim-bone-walk",
+        "object": "Lost Satchel"
+      },
+      {
+        "id": "candleless-alcove",
+        "name": "Candleless Alcove",
+        "type": "Optional",
+        "lesson": "Hidden memory and rare context",
+        "scene": "One alcove has no candle, no soot, and no dust. Even the dark seems careful around it.",
+        "object": "Empty Name Alcove"
+      },
+      {
+        "id": "warden-chamber",
+        "name": "Warden Chamber",
+        "type": "Final boss",
+        "lesson": "Telegraph reading and defensive timing",
+        "scene": "A cracked bronze bell hangs from roots over a circular roadstone floor. The Bellgrave Warden waits beneath it.",
+        "encounterId": "bellgrave-warden",
+        "object": "Road-Seal Bell"
+      },
+      {
+        "id": "road-seal-exit",
+        "name": "Road-Seal Exit",
+        "type": "Exit",
+        "lesson": "Reward, recap, and source pity",
+        "scene": "The exit bell finally rings outward. The road above remembers you stood your ground.",
+        "object": "Road-Seal Bell"
+      }
+    ]
+  }
+]
+

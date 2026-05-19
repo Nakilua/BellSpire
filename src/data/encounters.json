@@ -1,0 +1,112 @@
+[
+  {
+    "id": "threaded-names-pack",
+    "name": "Hall of Threaded Names",
+    "source": "Pilgrimage of the First Bell",
+    "enemyGroups": [
+      { "enemyId": "vowless-pilgrim-shade", "count": 1 },
+      { "enemyId": "ash-bitten-bones", "count": 2 }
+    ],
+    "intents": [
+      {
+        "id": "unanswered-name",
+        "name": "Unanswered Name",
+        "telegraph": "A thread tag snaps toward the companion lane.",
+        "failureTag": "DPS Target Failure"
+      },
+      {
+        "id": "bone-clatter",
+        "name": "Bone Clatter",
+        "telegraph": "The bones scrape forward in a loose pack.",
+        "failureTag": "Healer Overload"
+      }
+    ]
+  },
+  {
+    "id": "broken-bell-niche",
+    "name": "Broken Bell Niche",
+    "source": "Pilgrimage of the First Bell",
+    "enemyGroups": [
+      { "enemyId": "bell-ringer-shade", "count": 1 },
+      { "enemyId": "ash-bitten-bones", "count": 2 }
+    ],
+    "intents": [
+      {
+        "id": "ritual-windup",
+        "name": "Ringing the Wrong Way",
+        "telegraph": "The Bell-Ringer Shade starts a two-round inward bell cast.",
+        "failureTag": "Object Failure"
+      },
+      {
+        "id": "wax-channel-pressure",
+        "name": "Wax Seal Channel",
+        "telegraph": "Amber wax lights across a cracked channel beside the niche.",
+        "failureTag": "Object Failure"
+      }
+    ]
+  },
+  {
+    "id": "pilgrim-bone-walk",
+    "name": "Pilgrim Bone Walk",
+    "source": "Pilgrimage of the First Bell",
+    "enemyGroups": [
+      { "enemyId": "bone-hook-crawler", "count": 1 },
+      { "enemyId": "ash-bitten-bones", "count": 2 }
+    ],
+    "intents": [
+      {
+        "id": "hook-drag",
+        "name": "Hook Drag",
+        "telegraph": "The crawler lowers its hook toward the Midline.",
+        "failureTag": "Lane Control Failure"
+      },
+      {
+        "id": "bone-snare",
+        "name": "Bone Snare",
+        "telegraph": "The bone-laced floor clicks under the Backline path.",
+        "failureTag": "Movement Failure"
+      }
+    ]
+  },
+  {
+    "id": "bellgrave-warden",
+    "name": "The Bellgrave Warden",
+    "source": "Pilgrimage of the First Bell",
+    "enemyGroups": [
+      { "enemyId": "bellgrave-warden", "count": 1 }
+    ],
+    "intents": [
+      {
+        "id": "grave-bell-swing",
+        "name": "Grave Bell Swing",
+        "telegraph": "The Warden raises its bell-hammer arm. Dull bronze light blooms inside its chest.",
+        "failureTag": "Tank Positioning Failure"
+      },
+      {
+        "id": "vowless-mark",
+        "name": "Vowless Mark",
+        "telegraph": "A thread tag snaps from the Warden toward the companion lane.",
+        "failureTag": "Bad Cleanse Timing"
+      },
+      {
+        "id": "bone-rattle-adds",
+        "name": "Bone Rattle Adds",
+        "telegraph": "Names carved into the floor begin rattling loose.",
+        "failureTag": "DPS Target Failure"
+      },
+      {
+        "id": "road-seal-pulse",
+        "name": "Road-Seal Pulse",
+        "telegraph": "Wax channels light across one lane. The Road-Seal Bell can weaken the next toll.",
+        "failureTag": "Object Failure"
+      },
+      {
+        "id": "final-toll",
+        "name": "Final Toll",
+        "telegraph": "The overhead bell swings once without sound. The Warden's chest bell turns bright.",
+        "failureTag": "Resource Misuse"
+      }
+    ]
+  }
+]
+

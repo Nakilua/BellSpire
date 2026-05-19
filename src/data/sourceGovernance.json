@@ -1,0 +1,157 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Retroactive source-governance map for every curated runtime data file in the Bellspire MVP.",
+  "rules": [
+    "Tier 1 compendium/workbooks define canon names, places, story facts, and MVP boundaries.",
+    "Tier 2 loot worktables define permanent item rows, rarity, drop safety, and staged reward status.",
+    "Tier 3 focused bibles define zone, dungeon, boss, event, social, economy, progression, and locked-preview content.",
+    "Tier 4 Discord/map and Codex handoff prompts define app behavior and MVP scope.",
+    "Tier 5 research references inform systems and MMO feel only; they cannot create canon facts or permanent loot."
+  ],
+  "files": {
+    "abilities.json": {
+      "default": {
+        "sourceTier": 1,
+        "sourceStatus": "curated-canon-mvp",
+        "sourceRefs": ["Project_Bellspire_Complete_Canon_Compendium_v1_1.pdf", "Project_Bellspire_Complete_Data_Workbook_v1_1.xlsx", "Project_Bellspire_Codex_Handoff_Prompt_v1_1.md"],
+        "note": "Bulwark is the first playable class; starter ability behavior is curated for the first playable slice."
+      }
+    },
+    "canonContextPacks.json": {
+      "default": {
+        "sourceTier": 4,
+        "sourceStatus": "runtime-canon-summary",
+        "sourceRefs": ["Project_Bellspire_Complete_Canon_Compendium_v1_1.pdf", "Project_Bellspire_Discord_Map_Playstyle_Prompt_v1_1.md", "Project_Bellspire_Codex_Handoff_Prompt_v1_1.md"],
+        "note": "Small AI context packets summarize canon instead of loading source archives at runtime."
+      }
+    },
+    "channels.json": {
+      "default": {
+        "sourceTier": 4,
+        "sourceStatus": "playstyle-governed",
+        "sourceRefs": ["Project_Bellspire_Discord_Map_Playstyle_Prompt_v1_1.md", "Project_Bellspire_Codex_Handoff_Prompt_v1_1.md"],
+        "note": "Discord-style channel layout is governed by the playstyle and handoff prompts."
+      }
+    },
+    "classes.json": {
+      "default": {
+        "sourceTier": 1,
+        "sourceStatus": "curated-canon-preview",
+        "sourceRefs": ["Project_Bellspire_Complete_Canon_Compendium_v1_1.pdf", "Project_Bellspire_Complete_Data_Workbook_v1_1.xlsx"],
+        "note": "Launch classes are canon-listed, with Bulwark playable and the rest preview-locked."
+      }
+    },
+    "dungeons.json": {
+      "default": {
+        "sourceTier": 1,
+        "sourceStatus": "curated-canon-mvp",
+        "sourceRefs": ["Project_Bellspire_Complete_Canon_Compendium_v1_1.pdf", "Project_Bellspire_Complete_Data_Workbook_v1_1.xlsx", "Project_Bellspire_Codex_Handoff_Prompt_v1_1.md"],
+        "note": "Pilgrim Trial Cryptlet room order is curated for the MVP training dungeon."
+      }
+    },
+    "encounters.json": {
+      "default": {
+        "sourceTier": 1,
+        "sourceStatus": "curated-canon-mvp",
+        "sourceRefs": ["Project_Bellspire_Complete_Canon_Compendium_v1_1.pdf", "Project_Bellspire_Complete_Data_Workbook_v1_1.xlsx"],
+        "note": "Encounter telegraphs and failure tags are curated for the Cryptlet teaching loop."
+      }
+    },
+    "enemies.json": {
+      "default": {
+        "sourceTier": 1,
+        "sourceStatus": "curated-canon-mvp",
+        "sourceRefs": ["Project_Bellspire_Complete_Canon_Compendium_v1_1.pdf", "Project_Bellspire_Complete_Data_Workbook_v1_1.xlsx"],
+        "note": "Cryptlet enemy ecology is limited to the first playable dungeon."
+      }
+    },
+    "groupListings.json": {
+      "default": {
+        "sourceTier": 4,
+        "sourceStatus": "local-social-simulation",
+        "sourceRefs": ["Project_Bellspire_Discord_Map_Playstyle_Prompt_v1_1.md", "Project_Bellspire_Codex_Handoff_Prompt_v1_1.md", "Project_Bellspire_Current_Source_Pack_v0_3_2026-05-18.zip"],
+        "note": "Local group finder entries simulate MMO social flow without claiming live multiplayer."
+      }
+    },
+    "guildContracts.json": {
+      "default": {
+        "sourceTier": 3,
+        "sourceStatus": "curated-social-contracts",
+        "sourceRefs": ["Project_Bellspire_Complete_Canon_Compendium_v1_1.pdf", "Project_Bellspire_Discord_Map_Playstyle_Prompt_v1_1.md", "Project_Bellspire_Current_Source_Pack_v0_3_2026-05-18.zip"],
+        "note": "Contracts are MVP-safe social objectives with non-permanent rewards."
+      }
+    },
+    "items.json": {
+      "default": {
+        "sourceTier": 2,
+        "sourceStatus": "loot-worktable-governed",
+        "sourceRefs": ["Project_Bellspire_Complete_Data_Workbook_v1_1.xlsx", "project_bellspire_tank_loot_workbook_v0_1.xlsx", "Project_Bellspire_Current_Source_Pack_v0_3_2026-05-18.zip"],
+        "note": "Runtime items must also carry inline rarity and sourceStatus because loot is stricter than normal content."
+      }
+    },
+    "livingWorld.json": {
+      "default": {
+        "sourceTier": 5,
+        "sourceStatus": "research-shaped-local-simulation",
+        "sourceRefs": ["Project_Bellspire_Discord_Map_Playstyle_Prompt_v1_1.md", "Project_Bellspire_Current_Source_Pack_v0_3_2026-05-18.zip", "deep-research-report.md"],
+        "note": "Ambient lines are local simulation texture shaped by social/MMO research and constrained by canon names."
+      }
+    },
+    "npcs.json": {
+      "default": {
+        "sourceTier": 1,
+        "sourceStatus": "curated-canon-mvp",
+        "sourceRefs": ["Project_Bellspire_Complete_Canon_Compendium_v1_1.pdf", "Project_Bellspire_Complete_Data_Workbook_v1_1.xlsx"],
+        "note": "Starter NPCs are curated from the first playable slice and local social cast."
+      }
+    },
+    "pois.json": {
+      "default": {
+        "sourceTier": 1,
+        "sourceStatus": "curated-canon-mvp",
+        "sourceRefs": ["Project_Bellspire_Complete_Canon_Compendium_v1_1.pdf", "Project_Bellspire_Complete_Data_Workbook_v1_1.xlsx", "Project_Bellspire_Discord_Map_Playstyle_Prompt_v1_1.md"],
+        "note": "Playable POIs define the first route from Saint Veyra to the Cryptlet."
+      }
+    },
+    "quests.json": {
+      "default": {
+        "sourceTier": 1,
+        "sourceStatus": "curated-canon-mvp",
+        "sourceRefs": ["Project_Bellspire_Complete_Canon_Compendium_v1_1.pdf", "Project_Bellspire_Complete_Data_Workbook_v1_1.xlsx"],
+        "note": "The starter quest follows the Pilgrimage of the First Bell onboarding path."
+      }
+    },
+    "regionTopography.json": {
+      "default": {
+        "sourceTier": 1,
+        "sourceStatus": "curated-canon-map",
+        "sourceRefs": ["Project_Bellspire_Complete_Canon_Compendium_v1_1.pdf", "Project_Bellspire_Complete_Data_Workbook_v1_1.xlsx", "Project_Bellspire_Discord_Map_Playstyle_Prompt_v1_1.md"],
+        "note": "Region layout is schematic topography derived from source names, zone identity, and map/playstyle rules."
+      }
+    },
+    "socialContacts.json": {
+      "default": {
+        "sourceTier": 4,
+        "sourceStatus": "local-social-simulation",
+        "sourceRefs": ["Project_Bellspire_Discord_Map_Playstyle_Prompt_v1_1.md", "Project_Bellspire_Codex_Handoff_Prompt_v1_1.md", "Project_Bellspire_Current_Source_Pack_v0_3_2026-05-18.zip"],
+        "note": "NPC and simulated-player contacts are local social agents constrained by canon roles and starter route context."
+      }
+    },
+    "worldFlags.json": {
+      "default": {
+        "sourceTier": 1,
+        "sourceStatus": "runtime-state-governed",
+        "sourceRefs": ["Project_Bellspire_Complete_Canon_Compendium_v1_1.pdf", "Project_Bellspire_Complete_Data_Workbook_v1_1.xlsx"],
+        "note": "Flags track canon-safe progression through Olla permission, Cryptlet mechanics, Warden defeat, and reward claim."
+      }
+    },
+    "zones.json": {
+      "default": {
+        "sourceTier": 1,
+        "sourceStatus": "curated-canon-map",
+        "sourceRefs": ["Project_Bellspire_Complete_Canon_Compendium_v1_1.pdf", "Project_Bellspire_Complete_Data_Workbook_v1_1.xlsx"],
+        "note": "Playable and preview zones are limited to canon/source-indexed names."
+      }
+    }
+  }
+}

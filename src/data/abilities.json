@@ -1,0 +1,43 @@
+[
+  {
+    "id": "shield-oath",
+    "name": "Shield Oath",
+    "className": "Bulwark",
+    "level": 1,
+    "actionType": "Main",
+    "resource": "+10 Oath",
+    "tags": ["Threat Seal", "Frontline", "Setup"],
+    "description": "Strike and mark an enemy with Threat Seal, pulling danger toward the Bulwark."
+  },
+  {
+    "id": "guard-stance",
+    "name": "Guard Stance",
+    "className": "Bulwark",
+    "level": 2,
+    "actionType": "Quick",
+    "resource": "+5 Oath",
+    "tags": ["Guard Line", "Mitigation", "Frontline"],
+    "description": "Hold the Frontline and reduce the next incoming physical or telegraphed hit."
+  },
+  {
+    "id": "intervene",
+    "name": "Intervene",
+    "className": "Bulwark",
+    "level": 6,
+    "actionType": "Reaction",
+    "resource": "Cost 15 Oath",
+    "tags": ["Reaction", "Protection"],
+    "description": "Take part of a hit meant for an ally. Present in the MVP as a locked reminder until the player levels."
+  },
+  {
+    "id": "basic-strike",
+    "name": "Road-Iron Strike",
+    "className": "Bulwark",
+    "level": 1,
+    "actionType": "Main",
+    "resource": "+2 Oath",
+    "tags": ["Damage"],
+    "description": "A practical shield-and-weapon hit. Not glamorous. Still better than glaring at bones."
+  }
+]
+

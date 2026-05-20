@@ -2734,6 +2734,10 @@ button {
   z-index: 2;
 }
 
+.custom-map-plate .service-pin {
+  z-index: 4;
+}
+
 .custom-map-plate .topography-region strong,
 .custom-map-plate .topography-region small,
 .custom-map-plate .map-node small,
@@ -3523,61 +3527,69 @@ button {
 
 /* Atlas pin art pass: map markers should read like ink, wax, and brass tacks on parchment, not modern app badges. */
 .custom-map-plate .service-pin {
-  gap: 6px;
-  color: rgba(43, 27, 18, 0.96);
-  filter: drop-shadow(0 3px 5px rgba(24, 15, 10, 0.42));
+  gap: 4px;
+  margin: -7px;
+  padding: 7px;
+  color: rgba(48, 30, 18, 0.82);
+  filter:
+    drop-shadow(0 2px 2px rgba(24, 15, 10, 0.28))
+    drop-shadow(0 0 5px rgba(231, 190, 118, 0.16));
   font-family: Georgia, "Times New Roman", serif;
-  letter-spacing: 0.02em;
+  letter-spacing: 0;
   text-transform: none;
 }
 
 .custom-map-plate .service-pin-icon {
   position: relative;
-  min-width: 18px;
-  width: 18px;
-  height: 18px;
-  border: 1px solid rgba(47, 28, 18, 0.78);
-  border-radius: 50% 50% 48% 46%;
+  min-width: 15px;
+  width: 15px;
+  height: 15px;
+  border: 1px solid rgba(47, 28, 18, 0.62);
+  border-radius: 48% 55% 45% 54%;
   background:
-    radial-gradient(circle at 38% 32%, rgba(255, 227, 165, 0.5), transparent 31%),
-    linear-gradient(145deg, rgba(155, 83, 54, 0.92), rgba(79, 35, 28, 0.96) 58%, rgba(32, 19, 15, 0.98)),
-    rgba(113, 59, 43, 0.95);
+    radial-gradient(circle at 36% 28%, rgba(255, 225, 162, 0.48), transparent 28%),
+    radial-gradient(circle at 65% 72%, rgba(45, 23, 16, 0.32), transparent 35%),
+    linear-gradient(145deg, rgba(137, 66, 46, 0.86), rgba(81, 37, 27, 0.9) 60%, rgba(34, 20, 15, 0.92)),
+    rgba(106, 53, 38, 0.86);
   box-shadow:
-    0 0 0 2px rgba(219, 174, 100, 0.14),
-    0 1px 0 rgba(255, 232, 180, 0.28) inset,
-    0 -2px 4px rgba(26, 15, 12, 0.42) inset,
-    0 4px 8px rgba(16, 10, 8, 0.42);
-  color: rgba(255, 225, 168, 0.95);
+    0 0 0 1px rgba(219, 174, 100, 0.1),
+    0 1px 0 rgba(255, 232, 180, 0.2) inset,
+    0 -2px 3px rgba(26, 15, 12, 0.32) inset,
+    0 3px 5px rgba(16, 10, 8, 0.32);
+  color: rgba(49, 29, 18, 0.84);
+  transform: rotate(-7deg);
 }
 
 .custom-map-plate .service-pin-icon::before {
   position: absolute;
-  inset: 3px;
-  border: 1px solid rgba(255, 227, 169, 0.25);
-  border-radius: 48% 52% 44% 56%;
+  inset: 3px 4px 4px 3px;
+  border: 1px solid rgba(255, 227, 169, 0.2);
+  border-radius: 48% 52% 43% 57%;
   content: "";
+  background: rgba(35, 19, 14, 0.08);
 }
 
 .custom-map-plate .service-pin-icon::after {
   position: absolute;
   left: 50%;
-  bottom: -9px;
+  bottom: -7px;
   width: 1px;
-  height: 10px;
+  height: 8px;
   content: "";
-  background: linear-gradient(180deg, rgba(59, 35, 20, 0.72), rgba(59, 35, 20, 0));
-  transform: translateX(-50%) rotate(2deg);
+  background: linear-gradient(180deg, rgba(48, 29, 17, 0.56), rgba(48, 29, 17, 0));
+  transform: translateX(-50%) rotate(4deg);
 }
 
 .service-pin-mark {
   position: relative;
   z-index: 1;
-  color: rgba(255, 229, 174, 0.96);
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 0.58rem;
-  font-weight: 900;
-  line-height: 1;
-  text-shadow: 0 1px 1px rgba(26, 13, 9, 0.7);
+  display: block;
+  width: 5px;
+  height: 5px;
+  border: 1px solid rgba(255, 225, 166, 0.36);
+  border-radius: 46% 54% 45% 55%;
+  background: rgba(45, 24, 16, 0.34);
+  box-shadow: inset 0 0 2px rgba(20, 10, 7, 0.42);
 }
 
 .custom-map-plate .service-pin::before {
@@ -3586,35 +3598,38 @@ button {
 
 .custom-map-plate .service-pin small {
   display: none;
-  max-width: 92px;
-  padding: 3px 7px 4px;
-  border: 1px solid rgba(69, 41, 24, 0.68);
-  border-radius: 1px 4px 4px 1px;
-  background:
-    linear-gradient(90deg, rgba(85, 48, 28, 0.28), transparent 13%),
-    linear-gradient(180deg, rgba(233, 204, 146, 0.94), rgba(178, 128, 70, 0.92));
-  box-shadow:
-    0 1px 0 rgba(255, 235, 183, 0.42) inset,
-    0 7px 14px rgba(21, 12, 8, 0.34);
-  color: rgba(38, 22, 14, 0.94);
-  font-size: 0.56rem;
+  max-width: 104px;
+  padding: 1px 4px 2px;
+  border: 0;
+  border-radius: 0;
+  background: rgba(225, 188, 118, 0.1);
+  box-shadow: none;
+  color: rgba(49, 29, 16, 0.9);
+  font-size: 0.55rem;
+  font-style: italic;
   font-weight: 900;
   letter-spacing: 0;
+  line-height: 1;
+  text-shadow:
+    0 1px 0 rgba(243, 211, 150, 0.42),
+    0 0 4px rgba(230, 191, 118, 0.3);
+  transform: rotate(-1.5deg);
 }
 
 .custom-map-plate .service-pin:hover .service-pin-icon,
 .custom-map-plate .service-pin:focus-visible .service-pin-icon,
 .custom-map-plate .service-pin.active .service-pin-icon {
-  border-color: rgba(59, 32, 21, 0.9);
+  border-color: rgba(59, 32, 21, 0.72);
   background:
-    radial-gradient(circle at 34% 28%, rgba(255, 232, 180, 0.62), transparent 33%),
-    linear-gradient(145deg, rgba(176, 93, 55, 0.98), rgba(103, 42, 32, 0.98) 58%, rgba(42, 22, 16, 0.98)),
-    rgba(130, 58, 43, 0.98);
+    radial-gradient(circle at 34% 28%, rgba(255, 232, 180, 0.5), transparent 33%),
+    radial-gradient(circle at 66% 72%, rgba(45, 23, 16, 0.34), transparent 35%),
+    linear-gradient(145deg, rgba(161, 75, 48, 0.92), rgba(91, 39, 29, 0.96) 58%, rgba(42, 22, 16, 0.96)),
+    rgba(118, 53, 40, 0.94);
   box-shadow:
-    0 0 0 3px rgba(229, 184, 99, 0.18),
-    0 1px 0 rgba(255, 232, 180, 0.36) inset,
-    0 -2px 4px rgba(25, 13, 10, 0.45) inset,
-    0 6px 12px rgba(16, 10, 8, 0.5);
+    0 0 0 2px rgba(229, 184, 99, 0.13),
+    0 1px 0 rgba(255, 232, 180, 0.3) inset,
+    0 -2px 4px rgba(25, 13, 10, 0.38) inset,
+    0 5px 9px rgba(16, 10, 8, 0.42);
 }
 
 .custom-map-plate .service-pin.trainer .service-pin-icon,
@@ -3629,7 +3644,7 @@ button {
 .custom-map-plate .service-pin.market .service-pin-icon,
 .custom-map-plate .service-pin.route .service-pin-icon,
 .custom-map-plate .service-pin.danger .service-pin-icon {
-  color: rgba(255, 229, 174, 0.96);
+  color: rgba(255, 229, 174, 0.8);
 }
 
 .custom-map-plate .service-pin.guild .service-pin-icon,
@@ -3640,6 +3655,13 @@ button {
     linear-gradient(145deg, rgba(84, 63, 87, 0.94), rgba(45, 31, 48, 0.98));
 }
 
+.custom-map-plate .service-pin.guild .service-pin-mark,
+.custom-map-plate .service-pin.faction .service-pin-mark,
+.custom-map-plate .service-pin.ledger .service-pin-mark {
+  border-radius: 2px;
+  transform: rotate(45deg);
+}
+
 .custom-map-plate .service-pin.craft .service-pin-icon,
 .custom-map-plate .service-pin.material .service-pin-icon,
 .custom-map-plate .service-pin.rest .service-pin-icon {
@@ -3648,12 +3670,28 @@ button {
     linear-gradient(145deg, rgba(91, 89, 47, 0.95), rgba(48, 43, 26, 0.98));
 }
 
+.custom-map-plate .service-pin.craft .service-pin-mark,
+.custom-map-plate .service-pin.material .service-pin-mark,
+.custom-map-plate .service-pin.rest .service-pin-mark {
+  width: 6px;
+  height: 3px;
+  border-radius: 999px;
+}
+
 .custom-map-plate .service-pin.shrine .service-pin-icon,
 .custom-map-plate .service-pin.dungeon .service-pin-icon,
 .custom-map-plate .service-pin.danger .service-pin-icon {
   background:
     radial-gradient(circle at 38% 32%, rgba(255, 227, 165, 0.45), transparent 31%),
     linear-gradient(145deg, rgba(122, 52, 56, 0.96), rgba(53, 27, 29, 0.98));
+}
+
+.custom-map-plate .service-pin.shrine .service-pin-mark,
+.custom-map-plate .service-pin.dungeon .service-pin-mark,
+.custom-map-plate .service-pin.danger .service-pin-mark {
+  width: 4px;
+  height: 7px;
+  border-radius: 999px 999px 3px 3px;
 }
 
 .custom-map-plate .service-pin.preview .service-pin-icon {
@@ -3674,20 +3712,21 @@ button {
 
 .custom-map-plate .map-node.active small,
 .custom-map-plate .topography-region.active strong {
-  border: 1px solid rgba(69, 41, 24, 0.68);
-  border-radius: 1px 4px 4px 1px;
+  border: 0;
+  border-radius: 0;
   background:
-    linear-gradient(90deg, rgba(85, 48, 28, 0.28), transparent 13%),
-    linear-gradient(180deg, rgba(233, 204, 146, 0.94), rgba(178, 128, 70, 0.92));
-  box-shadow:
-    0 1px 0 rgba(255, 235, 183, 0.42) inset,
-    0 7px 14px rgba(21, 12, 8, 0.34);
-  color: rgba(38, 22, 14, 0.94);
+    linear-gradient(180deg, transparent 0 68%, rgba(221, 171, 88, 0.24) 69% 84%, transparent 85%),
+    rgba(224, 184, 111, 0.08);
+  box-shadow: none;
+  color: rgba(47, 27, 15, 0.9);
   font-family: Georgia, "Times New Roman", serif;
   font-size: 0.56rem;
+  font-style: italic;
   font-weight: 900;
   letter-spacing: 0;
-  text-shadow: none;
+  text-shadow:
+    0 1px 0 rgba(242, 209, 148, 0.42),
+    0 0 4px rgba(230, 191, 118, 0.3);
 }
 
 .atlas-annotation-layer {
@@ -3700,16 +3739,16 @@ button {
 .atlas-annotation {
   position: absolute;
   display: grid;
-  max-width: 138px;
-  gap: 3px;
-  color: rgba(36, 22, 14, 0.95);
+  max-width: 144px;
+  gap: 1px;
+  color: rgba(45, 27, 15, 0.82);
   font-family: Georgia, "Times New Roman", serif;
   line-height: 1.05;
   text-align: center;
   text-shadow:
-    0 1px 0 rgba(245, 215, 157, 0.52),
-    0 0 8px rgba(229, 194, 125, 0.42);
-  transform: translate(-50%, -50%) rotate(-1deg);
+    0 1px 0 rgba(239, 204, 139, 0.34),
+    0 0 4px rgba(231, 190, 118, 0.22);
+  transform: translate(-50%, -50%) rotate(-1.5deg);
 }
 
 .atlas-annotation::before {
@@ -3717,21 +3756,21 @@ button {
   height: 1px;
   margin: 0 auto -1px;
   content: "";
-  background: linear-gradient(90deg, transparent, rgba(57, 35, 21, 0.56), transparent);
+  background: linear-gradient(90deg, transparent, rgba(57, 35, 21, 0.32), transparent);
 }
 
 .atlas-annotation span {
   display: inline-block;
-  padding: 2px 5px 3px;
-  border: 1px solid rgba(75, 44, 25, 0.18);
-  border-radius: 2px;
+  padding: 0 3px 1px;
+  border: 0;
+  border-radius: 0;
   background:
-    linear-gradient(180deg, rgba(233, 204, 146, 0.24), rgba(154, 98, 54, 0.08)),
-    rgba(219, 183, 116, 0.08);
-  box-shadow: 0 3px 9px rgba(35, 20, 12, 0.14);
-  font-size: 0.57rem;
+    linear-gradient(180deg, transparent 0 68%, rgba(218, 171, 92, 0.16) 69% 82%, transparent 83%);
+  box-shadow: none;
+  font-size: 0.6rem;
+  font-style: italic;
   font-weight: 900;
-  letter-spacing: 0.02em;
+  letter-spacing: 0;
 }
 
 .atlas-annotation small {
@@ -3756,25 +3795,23 @@ button {
 
 .atlas-annotation.route span,
 .atlas-annotation.major span {
-  background:
-    linear-gradient(180deg, rgba(255, 224, 158, 0.34), rgba(148, 86, 46, 0.1)),
-    rgba(221, 169, 87, 0.14);
-  color: rgba(39, 23, 12, 0.98);
+  background: linear-gradient(180deg, transparent 0 68%, rgba(218, 171, 92, 0.18) 69% 82%, transparent 83%);
+  color: rgba(43, 24, 11, 0.86);
 }
 
 .atlas-annotation.service span {
-  color: rgba(47, 31, 17, 0.9);
+  color: rgba(50, 31, 16, 0.78);
 }
 
 .atlas-annotation.danger span,
 .atlas-annotation.dungeon span {
-  border-color: rgba(87, 38, 37, 0.28);
-  color: rgba(82, 29, 27, 0.95);
+  border-color: transparent;
+  color: rgba(91, 31, 27, 0.82);
 }
 
 .atlas-annotation.optional span {
-  border-color: rgba(74, 51, 93, 0.28);
-  color: rgba(57, 39, 76, 0.95);
+  border-color: transparent;
+  color: rgba(57, 39, 76, 0.82);
 }
 
 .atlas-annotation.priority-2 {
@@ -3786,7 +3823,7 @@ button {
 }
 
 .custom-map-plate.expanded .atlas-annotation span {
-  font-size: 0.68rem;
+  font-size: 0.66rem;
 }
 
 .dungeon-room-pin > span {
@@ -3804,6 +3841,21 @@ button {
   color: rgba(255, 229, 174, 0.96);
   font-family: Georgia, "Times New Roman", serif;
   font-size: 0.62rem;
+}
+
+.custom-map-plate .dungeon-room-pin small {
+  padding: 1px 4px 2px;
+  border: 0;
+  border-radius: 0;
+  background:
+    linear-gradient(180deg, transparent 0 68%, rgba(221, 171, 88, 0.22) 69% 84%, transparent 85%),
+    rgba(224, 184, 111, 0.06);
+  box-shadow: none;
+  color: rgba(47, 27, 15, 0.9);
+  font-style: italic;
+  text-shadow:
+    0 1px 0 rgba(242, 209, 148, 0.42),
+    0 0 4px rgba(230, 191, 118, 0.3);
 }
 
 .dungeon-room-pin.active > span,

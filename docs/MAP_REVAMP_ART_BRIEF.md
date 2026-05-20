@@ -23,6 +23,20 @@ The current bitmap maps are moving in the right direction, but the overlay pins 
 - Expanded Atlas View may show denser labels and short notes.
 - The detail layer can be revised safely without regenerating the bitmap art, but future bitmap repaint passes should visually support the same source-governed labels.
 
+## Fresh Atlas Image Pass
+
+- Main atlas images should be fresh generated bitmap plates, not patched versions of weak base maps.
+- Primary overview maps now have dedicated project assets for world, Saint Veyra, Hearthmere/Little Dawn, and Pilgrim Trial Cryptlet.
+- Close-up plates are allowed for high-density inspection: Saint Veyra service districts, Little Dawn shrine road, and Warden Chamber.
+- Close-up images are visual aids. Exact names, services, and canon claims still come from runtime data and source notes.
+
+## Dungeon Atlas Law
+
+- Dungeon plates must read as real playable spaces first, not only mood illustrations.
+- Every dungeon overview should show an entrance, connected room flow, optional branches, encounter spaces, exits, and visual clues for mechanics.
+- Boss rooms may get dedicated close-up plates when the encounter has lane pressure, bells, adds, timed pulses, or other mechanics the player needs to understand.
+- Room names and canon claims still live in runtime data; the art supports those facts but does not become source authority by itself.
+
 ## Bitmap Map Revamp Targets
 
 ### Saint Veyra City

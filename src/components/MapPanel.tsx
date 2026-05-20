@@ -127,13 +127,13 @@ const serviceKindLabels: Record<string, string> = {
   preview: "Locked Preview"
 };
 const dungeonRoomPositions: Record<string, { x: number; y: number }> = {
-  "shrine-descent": { x: 14, y: 29 },
-  "hall-threaded-names": { x: 36, y: 33 },
-  "broken-bell-niche": { x: 55, y: 35 },
-  "pilgrim-bone-walk": { x: 63, y: 57 },
-  "candleless-alcove": { x: 42, y: 68 },
-  "warden-chamber": { x: 79, y: 62 },
-  "road-seal-exit": { x: 89, y: 82 }
+  "shrine-descent": { x: 13, y: 34 },
+  "hall-threaded-names": { x: 35, y: 40 },
+  "broken-bell-niche": { x: 50, y: 37 },
+  "pilgrim-bone-walk": { x: 57, y: 53 },
+  "candleless-alcove": { x: 49, y: 69 },
+  "warden-chamber": { x: 79, y: 42 },
+  "road-seal-exit": { x: 82, y: 73 }
 };
 
 export function MapPanel({ state }: Props) {
@@ -274,17 +274,20 @@ export function MapPanel({ state }: Props) {
       <AtlasDialog title={getAtlasTitle(atlasScope, zone.name, dungeon?.name)} open={atlasScope !== null} onOpenChange={(open) => !open && setAtlasScope(null)}>
         {atlasScope === "world" ? <WorldMapPlate state={state} layers={layers} routePairs={routePairs} expanded /> : null}
         {atlasScope === "zone" ? (
-          <ZoneMapPlate
-            zoneId={zone.id}
-            zonePois={zonePois}
-            currentPoiId={state.locationPoiId}
-            zoneServices={zoneServices}
-            activeService={selectedServiceId ? activeService : undefined}
-            showServices={layers.services}
-            showDetails={layers.details}
-            onSelectService={setSelectedServiceId}
-            expanded
-          />
+          <div className="atlas-dialog-grid atlas-dialog-grid-closeup">
+            <ZoneMapPlate
+              zoneId={zone.id}
+              zonePois={zonePois}
+              currentPoiId={state.locationPoiId}
+              zoneServices={zoneServices}
+              activeService={selectedServiceId ? activeService : undefined}
+              showServices={layers.services}
+              showDetails={layers.details}
+              onSelectService={setSelectedServiceId}
+              expanded
+            />
+            <AtlasCloseupPanel zoneId={zone.id} services={zoneServices} />
+          </div>
         ) : null}
         {atlasScope === "dungeon" && dungeon ? (
           <div className="atlas-dialog-grid">
@@ -296,7 +299,10 @@ export function MapPanel({ state }: Props) {
               showDetails
               expanded
             />
-            {selectedRoom ? <DungeonRoomDetail dungeon={dungeon} room={selectedRoom} activeRoomId={activeRoomId} /> : null}
+            <div className="atlas-closeup-stack">
+              {selectedRoom ? <DungeonRoomDetail dungeon={dungeon} room={selectedRoom} activeRoomId={activeRoomId} /> : null}
+              <AtlasDungeonCloseup dungeon={dungeon} />
+            </div>
           </div>
         ) : null}
       </AtlasDialog>
@@ -447,7 +453,7 @@ function DungeonMapPlate({
   return (
     <div className={`dungeon-ink-map custom-map-plate ${expanded ? "expanded" : ""}`} aria-label={`${dungeon.name} detailed dungeon route`}>
       <svg className="dungeon-route-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-        <path d="M14 29 C22 31, 28 32, 36 33 S47 34, 55 35 C60 42, 63 49, 63 57 C57 64, 50 66, 42 68 M63 57 C70 60, 74 61, 79 62 C83 70, 86 77, 89 82" />
+        <path d="M13 34 C22 38, 28 40, 35 40 C42 39, 46 37, 50 37 C55 42, 57 48, 57 53 C54 60, 52 65, 49 69 M57 53 C64 49, 72 45, 79 42 C80 53, 81 64, 82 73" />
       </svg>
       {dungeon.rooms.map((entry, index) => {
         const position = dungeonRoomPositions[entry.id] ?? { x: 50, y: 50 };
@@ -468,7 +474,7 @@ function DungeonMapPlate({
           </button>
         );
       })}
-      <AtlasAnnotationLayer scope="dungeon" dungeonId={dungeon.id} expanded={expanded} showDetails={showDetails} />
+      {expanded ? null : <AtlasAnnotationLayer scope="dungeon" dungeonId={dungeon.id} expanded={expanded} showDetails={showDetails} />}
     </div>
   );
 }
@@ -520,6 +526,75 @@ function AtlasAnnotationLayer({
       ))}
     </div>
   );
+}
+
+function AtlasCloseupPanel({ zoneId, services }: { zoneId: string; services: MapService[] }) {
+  const config = getZoneCloseup(zoneId);
+
+  if (!config) {
+    return null;
+  }
+
+  return (
+    <aside className="atlas-closeup-panel" aria-label={`${config.title} close-up`}>
+      <div>
+        <span>Close-Up Plate</span>
+        <strong>{config.title}</strong>
+        <p>{config.description}</p>
+      </div>
+      <div className={`atlas-closeup-plate ${config.className}`} aria-hidden="true" />
+      <div className="atlas-closeup-services">
+        {services.slice(0, 8).map((entry) => (
+          <span className={`service-kind-chip ${entry.kind}`} key={entry.id}>
+            {entry.label}
+          </span>
+        ))}
+      </div>
+      <small>{config.sourceNote}</small>
+    </aside>
+  );
+}
+
+function AtlasDungeonCloseup({ dungeon }: { dungeon: DungeonDefinition }) {
+  if (dungeon.id !== "pilgrim-trial-cryptlet") {
+    return null;
+  }
+
+  return (
+    <aside className="atlas-closeup-panel" aria-label="Warden Chamber close-up">
+      <div>
+        <span>Boss-Room Plate</span>
+        <strong>Warden Chamber Close-Up</strong>
+        <p>Fresh tactical art for lane pressure, Road-Seal Bell reads, adds, pulse timing, and Final Toll staging.</p>
+      </div>
+      <div className="atlas-closeup-plate closeup-warden-chamber" aria-hidden="true" />
+      <div className="atlas-closeup-services">
+        <span className="service-kind-chip dungeon">Road-Seal Bell</span>
+        <span className="service-kind-chip danger">Lane Pressure</span>
+        <span className="service-kind-chip shrine">Final Toll</span>
+      </div>
+      <small>Pilgrim Trial Cryptlet runtime room and Bellgrave Warden encounter data. Art is a visual aid, not independent canon authority.</small>
+    </aside>
+  );
+}
+
+function getZoneCloseup(zoneId: string) {
+  const closeups: Record<string, { title: string; description: string; className: string; sourceNote: string }> = {
+    "saint-veyra": {
+      title: "Saint Veyra Service Districts",
+      description: "A denser city close-up for the cathedral road, civic services, training, crafting, markets, shrine care, and guild work.",
+      className: "closeup-saint-veyra",
+      sourceNote: "Saint Veyra district/service entries from the compendium, workbook, map services, and source-governed annotations."
+    },
+    "hearthmere-fields": {
+      title: "Little Dawn Shrine Road",
+      description: "A shrine-hill close-up for Olla, shrine rest, road candle work, field supplies, wax beds, and the Cryptlet stair.",
+      className: "closeup-little-dawn",
+      sourceNote: "Hearthmere Fields, Road Shrine of Little Dawn, Olla, and Pilgrim Trial Cryptlet entries from source-governed runtime data."
+    }
+  };
+
+  return closeups[zoneId];
 }
 
 function DungeonRouteList({

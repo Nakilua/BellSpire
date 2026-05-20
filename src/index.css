@@ -2723,6 +2723,35 @@ button {
   background-image: url("./assets/maps/pilgrim-cryptlet-map.png");
 }
 
+body::after {
+  position: fixed;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  content:
+    url("./assets/maps/bellspire-world-atlas.png")
+    url("./assets/maps/saint-veyra-city-map.png")
+    url("./assets/maps/hearthmere-little-dawn-map.png")
+    url("./assets/maps/pilgrim-cryptlet-map.png")
+    url("./assets/maps/saint-veyra-district-closeup.png")
+    url("./assets/maps/little-dawn-shrine-closeup.png")
+    url("./assets/maps/warden-chamber-closeup.png");
+  opacity: 0;
+  pointer-events: none;
+}
+
+.atlas-closeup-plate.closeup-saint-veyra {
+  background-image: url("./assets/maps/saint-veyra-district-closeup.png");
+}
+
+.atlas-closeup-plate.closeup-little-dawn {
+  background-image: url("./assets/maps/little-dawn-shrine-closeup.png");
+}
+
+.atlas-closeup-plate.closeup-warden-chamber {
+  background-image: url("./assets/maps/warden-chamber-closeup.png");
+}
+
 .custom-map-plate .handdrawn-atlas,
 .custom-map-plate .topography-routes {
   opacity: 0;
@@ -3384,6 +3413,14 @@ button {
   transform: translate(-50%, -50%) scale(1.08);
 }
 
+.custom-map-plate.expanded .service-pin small {
+  display: block;
+}
+
+.custom-map-plate.expanded .dungeon-room-pin small {
+  display: block;
+}
+
 .service-pin.market .service-pin-icon,
 .service-kind.market {
   border-color: rgba(229, 184, 99, 0.7);
@@ -3429,6 +3466,7 @@ button {
 }
 
 .dungeon-ink-map.custom-map-plate {
+  aspect-ratio: 16 / 9;
   min-height: 230px;
 }
 
@@ -3858,6 +3896,13 @@ button {
     0 0 4px rgba(230, 191, 118, 0.3);
 }
 
+.dungeon-ink-map.custom-map-plate .dungeon-room-pin small {
+  color: rgba(255, 226, 168, 0.96);
+  text-shadow:
+    0 1px 2px rgba(16, 8, 5, 0.95),
+    0 0 7px rgba(231, 170, 86, 0.38);
+}
+
 .dungeon-room-pin.active > span,
 .dungeon-room-pin.selected > span {
   border-color: rgba(53, 31, 19, 0.9);
@@ -3970,6 +4015,84 @@ button {
   gap: 12px;
 }
 
+.atlas-closeup-stack {
+  display: grid;
+  gap: 12px;
+}
+
+.atlas-closeup-panel {
+  display: grid;
+  gap: 10px;
+  align-self: start;
+  border: 1px solid rgba(183, 135, 76, 0.34);
+  border-radius: 4px;
+  background:
+    repeating-linear-gradient(92deg, transparent 0 18px, rgba(229, 201, 143, 0.018) 19px 20px),
+    linear-gradient(180deg, rgba(43, 28, 24, 0.72), rgba(12, 8, 10, 0.78));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 232, 180, 0.06),
+    0 14px 28px rgba(0, 0, 0, 0.24);
+  padding: 10px;
+}
+
+.atlas-closeup-panel span {
+  display: block;
+  color: var(--bell-fog);
+  font-size: 0.62rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.atlas-closeup-panel strong {
+  display: block;
+  margin-top: 3px;
+  color: var(--bell-wax);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 0.96rem;
+}
+
+.atlas-closeup-panel p,
+.atlas-closeup-panel small {
+  margin: 5px 0 0;
+  color: var(--bell-ash);
+  font-size: 0.72rem;
+  line-height: 1.4;
+}
+
+.atlas-closeup-plate {
+  overflow: hidden;
+  aspect-ratio: 16 / 10;
+  min-height: 180px;
+  border: 1px solid rgba(209, 159, 89, 0.42);
+  border-radius: 4px;
+  background-color: rgba(52, 38, 32, 0.82);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 232, 180, 0.08),
+    inset 0 0 38px rgba(6, 4, 5, 0.24);
+}
+
+.atlas-closeup-services {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.service-kind-chip {
+  border: 1px solid rgba(183, 135, 76, 0.34);
+  border-radius: 999px;
+  background: rgba(229, 201, 143, 0.08);
+  color: var(--bell-wax);
+  font-size: 0.58rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  padding: 4px 7px;
+  text-transform: uppercase;
+}
+
 .atlas-dialog-content .custom-map-plate {
   width: min(100%, 1320px);
   margin: 0 auto;
@@ -3979,6 +4102,10 @@ button {
   .atlas-dialog-grid {
     grid-template-columns: minmax(0, 1fr) 320px;
     align-items: start;
+  }
+
+  .atlas-dialog-grid-closeup {
+    grid-template-columns: minmax(0, 1fr) 380px;
   }
 }
 
@@ -3995,6 +4122,10 @@ button {
 
   .custom-map-plate.expanded {
     min-height: 320px;
+  }
+
+  .dungeon-ink-map.custom-map-plate.expanded {
+    min-height: 210px;
   }
 
   .atlas-dialog-content {

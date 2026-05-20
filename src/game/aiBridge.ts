@@ -124,6 +124,7 @@ function createGameSnapshot(state: GameState, message: string) {
       tension: narrative.tension,
       tensionLabel: narrative.tensionLabel,
       seenBeatCount: narrative.seenBeatCount,
+      sceneCount: narrative.sceneCount,
       lastBeatId: narrative.lastBeatId
     },
     recentParty: state.social.recentParty,

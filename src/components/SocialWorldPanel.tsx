@@ -47,7 +47,7 @@ export function SocialWorldPanel({ state, onCommand }: Props) {
         </div>
         <p>{narrative.arcTitle}</p>
         <p>
-          Chapter: {narrative.stageTitle} / Beats {narrative.seenBeatCount}
+          Chapter: {narrative.stageTitle} / Beats {narrative.seenBeatCount} / Scenes {narrative.sceneCount}
         </p>
         <div className="director-pressure" aria-label={`Narrative tension ${narrative.tension}`}>
           <span style={{ width: `${Math.max(8, narrative.tension * 10)}%` }} />

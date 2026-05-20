@@ -174,8 +174,11 @@ export interface NarrativeState {
   arcId: string;
   stageId: string;
   tension: number;
+  sceneCount: number;
   seenBeatIds: string[];
+  vignetteCursor: Record<string, number>;
   lastBeatId?: string;
+  lastVignetteId?: string;
   lastTrigger?: string;
 }
 

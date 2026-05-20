@@ -29,9 +29,23 @@ interface NarrativeBeat {
   sourceNote: string;
 }
 
+interface NarrativeVignette {
+  id: string;
+  triggers: NarrativeTrigger[];
+  stageIds?: string[];
+  locationPoiIds?: string[];
+  dungeonRoomIds?: string[];
+  title: string;
+  bodies: string[];
+  meta: string;
+  tension: number;
+  sourceNote: string;
+}
+
 const mainArc = narrativeArcs.mainArc;
 const stages = mainArc.stages as NarrativeStage[];
 const beats = narrativeArcs.beats as NarrativeBeat[];
+const vignettes = narrativeArcs.vignettes as NarrativeVignette[];
 
 export function pulseNarrative(state: GameState, trigger: NarrativeTrigger, options: { force?: boolean } = {}): GameState {
   const stage = resolveNarrativeStage(state);
@@ -39,7 +53,7 @@ export function pulseNarrative(state: GameState, trigger: NarrativeTrigger, opti
   const beat = selectBeat(primed, trigger, stage, Boolean(options.force));
 
   if (!beat) {
-    return options.force ? addCurrentSceneDmBeat(primed, stage) : primed;
+    return addRepeatableVignette(primed, trigger, stage, Boolean(options.force)) ?? (options.force ? addCurrentSceneDmBeat(primed, stage) : primed);
   }
 
   return addNarrativeBeat(primed, beat, stage);
@@ -63,7 +77,9 @@ export function showNarrativeJournal(state: GameState): GameState {
     "",
     `Current scene: ${room ? `${room.name} - ${room.scene}` : `${poi.name} - ${poi.scene}`}`,
     `DM tension: ${state.narrative.tension}/10 (${tensionLabel})`,
+    `Living scene pulses: ${state.narrative.sceneCount}`,
     `Last DM trigger: ${state.narrative.lastTrigger ?? "none"}`,
+    `Last texture: ${state.narrative.lastVignetteId ?? "none"}`,
     "",
     "Recent narrative beats:",
     recentBeats.join("\n") || "No major narrative beats logged yet.",
@@ -72,7 +88,8 @@ export function showNarrativeJournal(state: GameState): GameState {
     "Try `dm`, `story`, or `director give me a cinematic read of this moment`."
   ].join("\n");
 
-  return addFeed(updateNarrativeState(state, stage, "story"), "recap", "Main Story Journal", body, "Narrative Director");
+  const journaled = addFeed(updateNarrativeState(state, stage, "story"), "recap", "Main Story Journal", body, "Narrative Director");
+  return addRepeatableVignette(journaled, "story", stage, true) ?? journaled;
 }
 
 export function getNarrativeStatus(state: GameState) {
@@ -88,7 +105,9 @@ export function getNarrativeStatus(state: GameState) {
     tension: state.narrative.tension,
     tensionLabel: describeTension(state.narrative.tension),
     lastBeatId: state.narrative.lastBeatId,
-    seenBeatCount: state.narrative.seenBeatIds.length
+    lastVignetteId: state.narrative.lastVignetteId,
+    seenBeatCount: state.narrative.seenBeatIds.length,
+    sceneCount: state.narrative.sceneCount
   };
 }
 
@@ -111,6 +130,42 @@ function addNarrativeBeat(state: GameState, beat: NarrativeBeat, stage: Narrativ
   };
 
   return addFeed(nextState, "scene", beat.title, `${beat.body}\n\nSource note: ${beat.sourceNote}`, beat.meta);
+}
+
+function addRepeatableVignette(state: GameState, trigger: NarrativeTrigger, stage: NarrativeStage, force: boolean): GameState | null {
+  if (!force && !["listen", "rest", "travel", "talk", "dungeon", "loot"].includes(trigger)) {
+    return null;
+  }
+
+  const candidates = vignettes.filter((vignette) => matchesVignetteState(state, vignette, trigger, stage));
+  if (!candidates.length) {
+    return null;
+  }
+
+  const room = getCurrentRoom(state);
+  const poi = getCurrentPoi(state);
+  const cursorKey = `vignette:${trigger}:${stage.id}:${poi.id}:${room?.id ?? "field"}`;
+  const cursor = state.narrative.vignetteCursor[cursorKey] ?? 0;
+  const vignette = candidates[cursor % candidates.length];
+  const body = vignette.bodies[Math.floor(cursor / Math.max(1, candidates.length)) % vignette.bodies.length];
+  const renderedBody = renderVignette(body, state, stage);
+
+  const nextState: GameState = {
+    ...state,
+    narrative: {
+      ...state.narrative,
+      stageId: stage.id,
+      tension: clamp(state.narrative.tension + vignette.tension, 0, 10),
+      sceneCount: state.narrative.sceneCount + 1,
+      lastVignetteId: vignette.id,
+      vignetteCursor: {
+        ...state.narrative.vignetteCursor,
+        [cursorKey]: cursor + 1
+      }
+    }
+  };
+
+  return addFeed(nextState, "scene", vignette.title, `${renderedBody}\n\nSource note: ${vignette.sourceNote}`, vignette.meta);
 }
 
 function addCurrentSceneDmBeat(state: GameState, stage: NarrativeStage): GameState {
@@ -168,6 +223,31 @@ function matchesBeatState(state: GameState, beat: NarrativeBeat) {
   return true;
 }
 
+function matchesVignetteState(state: GameState, vignette: NarrativeVignette, trigger: NarrativeTrigger, stage: NarrativeStage) {
+  const room = getCurrentRoom(state);
+  if (!vignette.triggers.includes(trigger)) {
+    return false;
+  }
+
+  if (vignette.stageIds?.length && !vignette.stageIds.includes(stage.id)) {
+    return false;
+  }
+
+  if (vignette.locationPoiIds?.length && !vignette.locationPoiIds.includes(state.locationPoiId)) {
+    return false;
+  }
+
+  if (vignette.dungeonRoomIds?.length && !room?.id) {
+    return false;
+  }
+
+  if (vignette.dungeonRoomIds?.length && room?.id && !vignette.dungeonRoomIds.includes(room.id)) {
+    return false;
+  }
+
+  return true;
+}
+
 function resolveNarrativeStage(state: GameState): NarrativeStage {
   const room = getCurrentRoom(state);
   const quest = state.quests["trial-under-little-dawn"];
@@ -209,6 +289,23 @@ function updateNarrativeState(state: GameState, stage: NarrativeStage, trigger: 
       lastTrigger: trigger
     }
   };
+}
+
+function renderVignette(body: string, state: GameState, stage: NarrativeStage) {
+  const room = getCurrentRoom(state);
+  const poi = getCurrentPoi(state);
+  const replacements: Record<string, string> = {
+    character: state.character.name,
+    origin: state.character.origin,
+    vow: state.character.vow,
+    location: poi.name,
+    room: room?.name ?? poi.name,
+    chapter: stage.title,
+    tensionLabel: describeTension(state.narrative.tension),
+    party: state.social.recentParty.join(", ") || "the party"
+  };
+
+  return body.replace(/\{([a-zA-Z]+)\}/g, (_, key: string) => replacements[key] ?? `{${key}}`);
 }
 
 function describeTension(tension: number) {

@@ -149,9 +149,12 @@ export function createInitialState(characterInput?: CharacterCreationInput): Gam
       arcId: "pilgrimage-first-bell",
       stageId: "first-road-summons",
       tension: 0,
+      sceneCount: 0,
       seenBeatIds: [],
+      vignetteCursor: {},
       lastTrigger: undefined,
-      lastBeatId: undefined
+      lastBeatId: undefined,
+      lastVignetteId: undefined
     },
     sessionRecap: {
       visited: ["Saint Veyra Capital"],
@@ -228,7 +231,8 @@ export function sanitizeImportedState(value: unknown): GameState | null {
     narrative: {
       ...base.narrative,
       ...maybe.narrative,
-      seenBeatIds: maybe.narrative?.seenBeatIds ?? base.narrative.seenBeatIds
+      seenBeatIds: maybe.narrative?.seenBeatIds ?? base.narrative.seenBeatIds,
+      vignetteCursor: maybe.narrative?.vignetteCursor ?? base.narrative.vignetteCursor
     },
     sessionRecap: {
       ...base.sessionRecap,

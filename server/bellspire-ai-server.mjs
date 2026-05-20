@@ -214,7 +214,7 @@ function chooseMode(payload) {
   const intent = String(payload?.intent?.id || "").toLowerCase();
   const message = String(payload?.message || "").toLowerCase();
   const pressure = Number(payload?.gameSnapshot?.storyPressure || 0);
-  const cinematicTerms = ["cathedral", "canon", "lore", "vow", "boss", "warden", "final toll", "emotional", "cinematic", "major scene"];
+  const cinematicTerms = ["cathedral", "canon", "lore", "vow", "boss", "warden", "final toll", "emotional", "cinematic", "major scene", "main story", "narrative", "chapter"];
 
   if (pressure >= 6 || ["lore-question", "scene-reading", "dungeon-tactics"].includes(intent) || cinematicTerms.some((term) => message.includes(term))) {
     return "cinematic";
@@ -236,6 +236,7 @@ function buildDirectorPrompt(payload, mode, model) {
       "Reply as believable NPCs or simulated players, not as a generic assistant.",
       "Use short, human-feeling lines. Make each speaker distinct.",
       "Normal social chat should feel like Discord party/guild chat. Cinematic mode may be more atmospheric.",
+      "When channelId is director, behave like a tabletop DM for Bellspire: narrate the current scene, name what the world notices, give one concrete next hook, and keep canon/source limits intact.",
       "For party-chat, choose recent party members or suitable adventurers. Do not include guild clerks unless the channel is guild-board.",
       "For guild-board, prefer the contract clerk and official guild voices. Do not roleplay the player.",
       "Local simulation owns schedules, social state, rewards, and consequences. You provide dialogue only inside the supplied state.",
@@ -252,6 +253,7 @@ function buildDirectorPrompt(payload, mode, model) {
         localIntent: payload?.intent,
         location: snapshot.location,
         room: snapshot.room,
+        narrative: snapshot.narrative,
         character: snapshot.character,
         recentParty: snapshot.recentParty,
         contacts,

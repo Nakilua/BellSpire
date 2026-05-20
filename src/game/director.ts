@@ -1,5 +1,6 @@
 import { addFeed, createId } from "./state";
 import { getBudgetStatus, updateDirectorSpend, updateLocalDirectorCount } from "./budget";
+import { getNarrativeStatus } from "./narrativeDirector";
 import { getCurrentPoi, getCurrentRoom } from "./selectors";
 import type { GameState, SocialContactState } from "./types";
 
@@ -124,14 +125,18 @@ export function runDirectorPrompt(state: GameState, prompt: string): GameState {
   const intent = inferIntent(prompt);
   const poi = getCurrentPoi(state);
   const room = getCurrentRoom(state);
+  const narrative = getNarrativeStatus(state);
   const contacts = getRecentContacts(state).slice(0, 3);
   const localScene = room ? `${room.name}: ${room.scene}` : `${poi.name}: ${poi.scene}`;
   const response = [
     `The local Director reads this as ${intent.topic}.`,
+    `Main arc: ${narrative.arcTitle} / ${narrative.stageTitle}.`,
     `Current scene: ${localScene}`,
+    `DM tension: ${narrative.tension}/10 (${narrative.tensionLabel}).`,
     contacts.length
       ? `Likely voices: ${contacts.map((contact) => `${contact.name} (${contact.relationshipTag})`).join(", ")}.`
       : "No staged party voices are committed yet.",
+    `Next story pressure: ${narrative.nextHint}`,
     directorNudge(intent, state)
   ].join("\n");
 

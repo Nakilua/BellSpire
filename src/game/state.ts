@@ -145,9 +145,21 @@ export function createInitialState(characterInput?: CharacterCreationInput): Gam
       tick: 0,
       ambientCursor: {}
     },
+    narrative: {
+      arcId: "pilgrimage-first-bell",
+      stageId: "first-road-summons",
+      tension: 0,
+      sceneCount: 0,
+      seenBeatIds: [],
+      vignetteCursor: {},
+      lastTrigger: undefined,
+      lastBeatId: undefined,
+      lastVignetteId: undefined
+    },
     sessionRecap: {
       visited: ["Saint Veyra Capital"],
       quests: [],
+      narrative: [],
       loot: [],
       wipes: [],
       reputation: [],
@@ -216,9 +228,16 @@ export function sanitizeImportedState(value: unknown): GameState | null {
       ...maybe.livingWorld,
       ambientCursor: maybe.livingWorld?.ambientCursor ?? base.livingWorld.ambientCursor
     },
+    narrative: {
+      ...base.narrative,
+      ...maybe.narrative,
+      seenBeatIds: maybe.narrative?.seenBeatIds ?? base.narrative.seenBeatIds,
+      vignetteCursor: maybe.narrative?.vignetteCursor ?? base.narrative.vignetteCursor
+    },
     sessionRecap: {
       ...base.sessionRecap,
       ...maybe.sessionRecap,
+      narrative: maybe.sessionRecap?.narrative ?? base.sessionRecap.narrative,
       social: maybe.sessionRecap?.social ?? base.sessionRecap.social
     }
   } as GameState;

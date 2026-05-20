@@ -1,0 +1,267 @@
+[
+  {
+    "id": "saint-veyra-cathedral",
+    "zoneId": "saint-veyra",
+    "label": "Cathedral",
+    "kind": "landmark",
+    "x": 50,
+    "y": 42,
+    "summary": "Cathedral of the First Bell and central city landmark.",
+    "sourceNote": "Saint Veyra canon hub, Cathedral roads, and Cathedral of the First Bell references"
+  },
+  {
+    "id": "saint-veyra-first-bell-plaza",
+    "zoneId": "saint-veyra",
+    "label": "First Bell Plaza",
+    "kind": "landmark",
+    "x": 53,
+    "y": 59,
+    "summary": "Central social plaza under suspended city bells; public announcements, seasonal events, and world-boss rally point.",
+    "sourceNote": "Complete Canon Compendium v1.1 Saint Veyra Capital districts, pages 315 and 497"
+  },
+  {
+    "id": "saint-veyra-concord-hall",
+    "zoneId": "saint-veyra",
+    "label": "Concord Hall",
+    "kind": "ledger",
+    "x": 49,
+    "y": 72,
+    "summary": "Player registration, guild charters, faction board, contracts, LFG, recruitment, and mentor board.",
+    "sourceNote": "Complete Canon Compendium v1.1 Saint Veyra Capital districts, pages 315 and 497"
+  },
+  {
+    "id": "saint-veyra-training",
+    "zoneId": "saint-veyra",
+    "label": "Training",
+    "kind": "trainer",
+    "x": 68,
+    "y": 38,
+    "summary": "Class training halls and starter combat practice.",
+    "sourceNote": "Complete Data Workbook Zone_DB and curated Saint Veyra runtime services"
+  },
+  {
+    "id": "saint-veyra-guild-board",
+    "zoneId": "saint-veyra",
+    "label": "Guild Board",
+    "kind": "guild",
+    "x": 34,
+    "y": 34,
+    "summary": "Guild boards, starter contracts, and local social work.",
+    "sourceNote": "Saint Veyra guild board services and guild contract docs"
+  },
+  {
+    "id": "saint-veyra-crafting",
+    "zoneId": "saint-veyra",
+    "label": "Oath-Iron Yard",
+    "kind": "craft",
+    "x": 35,
+    "y": 61,
+    "summary": "Plate armor, shields, siege repairs, blacksmithing, repair sinks, and Bulwark/Oathwarden gear quests.",
+    "sourceNote": "Complete Canon Compendium v1.1 Saint Veyra Capital districts and Complete Data Workbook Zone_DB"
+  },
+  {
+    "id": "saint-veyra-censer-row",
+    "zoneId": "saint-veyra",
+    "label": "Censer Row",
+    "kind": "shrine",
+    "x": 57,
+    "y": 49,
+    "summary": "Dawn Priest chapel clinics, incense vendors, relic clinics, healing tutorials, and cleanse practice.",
+    "sourceNote": "Complete Canon Compendium v1.1 Saint Veyra Capital districts, pages 315 and 497"
+  },
+  {
+    "id": "saint-veyra-blackglass-arcade",
+    "zoneId": "saint-veyra",
+    "label": "Blackglass Arcade",
+    "kind": "faction",
+    "x": 64,
+    "y": 34,
+    "summary": "Arcanist libraries, mirror-rune labs, spell research, rune puzzles, and risky vendors.",
+    "sourceNote": "Complete Canon Compendium v1.1 Saint Veyra Capital districts, pages 315 and 497"
+  },
+  {
+    "id": "saint-veyra-bellgrave-steps",
+    "zoneId": "saint-veyra",
+    "label": "Bellgrave Steps",
+    "kind": "shrine",
+    "x": 65,
+    "y": 70,
+    "summary": "Mortuary guild offices, grave ledgers, spirit wards, corpse-right quests, and undead bounty hooks.",
+    "sourceNote": "Complete Canon Compendium v1.1 Saint Veyra Capital districts, pages 315 and 497"
+  },
+  {
+    "id": "saint-veyra-market-seven-lanterns",
+    "zoneId": "saint-veyra",
+    "label": "Seven Lanterns",
+    "kind": "market",
+    "x": 43,
+    "y": 69,
+    "summary": "Auction house, material exchange, player trade, listing fees, and commodity sinks.",
+    "sourceNote": "Complete Canon Compendium v1.1 Saint Veyra Capital districts, pages 315 and 497"
+  },
+  {
+    "id": "saint-veyra-low-bells",
+    "zoneId": "saint-veyra",
+    "label": "Low Bells",
+    "kind": "social",
+    "x": 24,
+    "y": 68,
+    "summary": "Rogue alleys, informants, illegal contracts, Nightblade hooks, PvP board, and Red Court whispers.",
+    "sourceNote": "Complete Canon Compendium v1.1 Saint Veyra Capital districts, pages 315 and 497"
+  },
+  {
+    "id": "saint-veyra-faction-envoys",
+    "zoneId": "saint-veyra",
+    "label": "Envoys",
+    "kind": "faction",
+    "x": 74,
+    "y": 58,
+    "summary": "Faction envoy presence and Concord-facing social hooks.",
+    "sourceNote": "Complete Data Workbook Zone_DB marks Saint Veyra as faction envoy foundation"
+  },
+  {
+    "id": "saint-veyra-pilgrim-gate",
+    "zoneId": "saint-veyra",
+    "label": "Pilgrim Gate",
+    "kind": "route",
+    "x": 87,
+    "y": 61,
+    "summary": "Road out to Hearthmere Fields, starter exit, pilgrimage tutorial, and travel unlock path.",
+    "sourceNote": "Complete Canon Compendium v1.1 Saint Veyra Capital districts, pages 315 and 497"
+  },
+  {
+    "id": "saint-veyra-concord-offices",
+    "zoneId": "saint-veyra",
+    "label": "Concord",
+    "kind": "ledger",
+    "x": 51,
+    "y": 64,
+    "summary": "Concord paperwork, identity, and local realm admin flavor.",
+    "sourceNote": "Runtime topography landmarks list Concord offices"
+  },
+  {
+    "id": "hearthmere-field-rest",
+    "zoneId": "hearthmere-fields",
+    "poiId": "hearthmere-crossing",
+    "label": "Field Rest",
+    "kind": "rest",
+    "x": 27,
+    "y": 38,
+    "summary": "A safe-ish field rest stop on the Old Pilgrim Road.",
+    "sourceNote": "Hearthmere Fields POI services"
+  },
+  {
+    "id": "hearthmere-road-rumors",
+    "zoneId": "hearthmere-fields",
+    "poiId": "hearthmere-crossing",
+    "label": "Rumors",
+    "kind": "social",
+    "x": 40,
+    "y": 50,
+    "summary": "Road rumors from pilgrims, farmers, and Roadwarden chatter.",
+    "sourceNote": "Hearthmere Fields POI services and living-world road reports"
+  },
+  {
+    "id": "hearthmere-field-supplies",
+    "zoneId": "hearthmere-fields",
+    "label": "Field Supplies",
+    "kind": "craft",
+    "x": 31,
+    "y": 56,
+    "summary": "Starter material identity: field herbs, road iron, Ashfang hide, pilgrim wax, simple meals, and bandage materials.",
+    "sourceNote": "Complete Canon Compendium v1.1 Hearthmere Fields crafting identity, pages 317 and 499"
+  },
+  {
+    "id": "hearthmere-road-candle",
+    "zoneId": "hearthmere-fields",
+    "label": "Road Candle",
+    "kind": "shrine",
+    "x": 47,
+    "y": 53,
+    "summary": "Pilgrimage route beat for carrying the Road Candle from Saint Veyra toward Hearthmere shrine.",
+    "sourceNote": "Complete Canon Compendium v1.1 Pilgrimage of the First Bell quest beats, pages 318 and 500"
+  },
+  {
+    "id": "hearthmere-fence-repairs",
+    "zoneId": "hearthmere-fields",
+    "label": "Fence Repairs",
+    "kind": "craft",
+    "x": 24,
+    "y": 65,
+    "summary": "Farm-line repair work tied to Ashfang claw marks, field supplies, and road defense contribution.",
+    "sourceNote": "Complete Canon Compendium v1.1 Hearthmere quest beats and Ashfang Roadbreak contribution rules"
+  },
+  {
+    "id": "hearthmere-ashfang-signs",
+    "zoneId": "hearthmere-fields",
+    "label": "Ashfang Signs",
+    "kind": "danger",
+    "x": 21,
+    "y": 32,
+    "summary": "Wolf tracks, farm-line pressure, Ashfang scouts, and first road-defense warning signs.",
+    "sourceNote": "Complete Canon Compendium v1.1 Hearthmere Fields enemy families and public event spine"
+  },
+  {
+    "id": "hearthmere-wax-beds",
+    "zoneId": "hearthmere-fields",
+    "label": "Wax Beds",
+    "kind": "material",
+    "x": 58,
+    "y": 42,
+    "summary": "Pilgrim wax beds used for shrine and road-seal upkeep.",
+    "sourceNote": "Hearthmere/Little Dawn map prompt and Pilgrim Wax item source"
+  },
+  {
+    "id": "little-dawn-shrine-rest",
+    "zoneId": "hearthmere-fields",
+    "poiId": "road-shrine-little-dawn",
+    "label": "Shrine Rest",
+    "kind": "shrine",
+    "x": 78,
+    "y": 40,
+    "summary": "Road Shrine of Little Dawn rest and Olla interaction point.",
+    "sourceNote": "Road Shrine of Little Dawn POI services"
+  },
+  {
+    "id": "little-dawn-olla",
+    "zoneId": "hearthmere-fields",
+    "poiId": "road-shrine-little-dawn",
+    "label": "Olla",
+    "kind": "social",
+    "x": 82,
+    "y": 48,
+    "summary": "Shrinekeeper Olla interaction point for permission, shrine memory, and Cryptlet entry.",
+    "sourceNote": "Road Shrine of Little Dawn POI services and Shrinekeeper Olla runtime NPC data"
+  },
+  {
+    "id": "little-dawn-dungeon-entry",
+    "zoneId": "hearthmere-fields",
+    "poiId": "road-shrine-little-dawn",
+    "label": "Dungeon",
+    "kind": "dungeon",
+    "x": 73,
+    "y": 67,
+    "summary": "Pilgrim Trial Cryptlet entry stair beneath the shrine.",
+    "sourceNote": "Road Shrine of Little Dawn and Pilgrim Trial Cryptlet POI services"
+  },
+  {
+    "id": "bellscar-coastwatch-preview",
+    "zoneId": "bellscar-coast",
+    "label": "Coastwatch Landing",
+    "kind": "preview",
+    "x": 36,
+    "y": 20,
+    "summary": "Preview service hub: inn, repair, mailbox, notice board, guild contract plank, and Roadwarden post.",
+    "sourceNote": "Complete workbook Bellscar rows and map topography audit"
+  },
+  {
+    "id": "nocturne-red-wax-preview",
+    "zoneId": "nocturne-vale",
+    "label": "Red Wax Embassy",
+    "kind": "preview",
+    "x": 76,
+    "y": 30,
+    "summary": "Preview service hub for contract vendors and etiquette training.",
+    "sourceNote": "Complete Data Workbook V1_1 Nocturne Vale expansion rows"
+  }
+]

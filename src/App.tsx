@@ -1,21 +1,13 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { Clipboard, Download, RotateCcw, Upload, UserRound } from "lucide-react";
-import { ActivityBoard } from "./components/ActivityBoard";
+import * as Tooltip from "@radix-ui/react-tooltip";
+import { Clipboard, Download, HeartPulse, RotateCcw, Shield, Upload, UserRound } from "lucide-react";
 import { ChannelRail } from "./components/ChannelRail";
-import { CanonLibraryPanel } from "./components/CanonLibraryPanel";
-import { CharacterPanel } from "./components/CharacterPanel";
 import { CommandBar } from "./components/CommandBar";
 import { EncounterBubble } from "./components/EncounterBubble";
-import { InventoryPanel } from "./components/InventoryPanel";
+import { HudPanelTabs } from "./components/HudPanelTabs";
 import { LoginView } from "./components/LoginView";
-import { MapPanel } from "./components/MapPanel";
 import { NarrativeFeed } from "./components/NarrativeFeed";
-import { PartyPanel } from "./components/PartyPanel";
-import { QuestTracker } from "./components/QuestTracker";
-import { SaveTools } from "./components/SaveTools";
-import { SocialWorldPanel } from "./components/SocialWorldPanel";
-import { WorldStatePanel } from "./components/WorldStatePanel";
 import { fetchAiStatus, requestLiveDirector } from "./game/aiBridge";
 import { shouldUseLocalDirector } from "./game/budget";
 import { runCommand } from "./game/commands";
@@ -133,6 +125,7 @@ export default function App() {
   const actions = useMemo(() => getAvailableActions(state), [state]);
   const currentPoi = getCurrentPoi(state);
   const currentSaveJson = useMemo(() => JSON.stringify(state, null, 2), [state]);
+  const sceneKey = getSceneKey(state);
 
   function dispatchCommand(command: string) {
     const liveRequest = getLiveDirectorRequest(state, command);
@@ -303,7 +296,7 @@ export default function App() {
   const showLogin = route === "login" || !state.profileCreated;
 
   return (
-    <div className="app-root">
+    <div className={`app-root scene-${sceneKey}`}>
       <div className="app-background" />
       <AnimatePresence mode="wait">
         {showLogin ? (
@@ -316,44 +309,42 @@ export default function App() {
           />
         ) : (
           <motion.div className="app-shell" key="game" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.24 }}>
-        <header className="app-header">
-          <div className="brand-block">
-            <h1 className="app-title">Bellspire</h1>
-            <p className="app-subtitle">
-              {currentPoi.name} / {state.character.className} level {state.character.level}
-            </p>
-          </div>
-          <div className="header-actions">
-            <span className="save-status">{saveStatus}</span>
-            <button className="icon-button" type="button" onClick={() => navigate("login")} title="Open character screen">
-              <UserRound size={16} />
-              <span>Character</span>
-            </button>
-            <button className="icon-button" type="button" onClick={downloadSave} title="Download save JSON">
-              <Download size={16} />
-              <span>Download</span>
-            </button>
-            <button className="icon-button" type="button" onClick={copySave} title="Copy save JSON">
-              <Clipboard size={16} />
-              <span>Copy</span>
-            </button>
-            <button className="icon-button" type="button" onClick={() => importInputRef.current?.click()} title="Import save JSON">
-              <Upload size={16} />
-              <span>Import</span>
-            </button>
-            <button className="icon-button danger" type="button" onClick={resetSave} title="Reset local save">
-              <RotateCcw size={16} />
-              <span>Reset</span>
-            </button>
-            <input
-              ref={importInputRef}
-              className="visually-hidden"
-              type="file"
-              accept="application/json,.json"
-              onChange={(event) => importSave(event.target.files?.[0])}
-            />
-          </div>
-        </header>
+        <Tooltip.Provider delayDuration={220}>
+          <header className="app-header">
+            <div className="brand-block">
+              <span className="realm-badge">Local Realm / Save v{state.saveVersion}</span>
+              <h1 className="app-title">BellSpire</h1>
+              <p className="app-subtitle">
+                {currentPoi.name} / {state.character.className} level {state.character.level}
+              </p>
+            </div>
+
+            <div className="hud-stat-cluster" aria-label="Character status">
+              <HudMeter icon={<HeartPulse size={15} />} label="HP" value={state.character.hp} max={state.character.maxHp} tone="hp" />
+              <HudMeter icon={<Shield size={15} />} label="Oath" value={state.character.oath} max={100} tone="oath" />
+              <div className="ai-status-chip">
+                <span>AI</span>
+                <strong>{state.social.director.mode}</strong>
+              </div>
+            </div>
+
+            <div className="header-actions">
+              <span className="save-status">{saveStatus}</span>
+              <HeaderActionButton label="Character" icon={<UserRound size={16} />} onClick={() => navigate("login")} />
+              <HeaderActionButton label="Download" icon={<Download size={16} />} onClick={downloadSave} />
+              <HeaderActionButton label="Copy" icon={<Clipboard size={16} />} onClick={copySave} />
+              <HeaderActionButton label="Import" icon={<Upload size={16} />} onClick={() => importInputRef.current?.click()} />
+              <HeaderActionButton label="Reset" icon={<RotateCcw size={16} />} onClick={resetSave} danger />
+              <input
+                ref={importInputRef}
+                className="visually-hidden"
+                type="file"
+                accept="application/json,.json"
+                onChange={(event) => importSave(event.target.files?.[0])}
+              />
+            </div>
+          </header>
+        </Tooltip.Provider>
 
         <div className="app-layout">
           <ChannelRail state={state} onCommand={dispatchCommand} />
@@ -365,14 +356,11 @@ export default function App() {
           </main>
 
           <aside className="right-panel">
-            <SocialWorldPanel state={state} onCommand={dispatchCommand} />
-            <MapPanel state={state} />
-            <CanonLibraryPanel />
-            <CharacterPanel state={state} />
-            <PartyPanel state={state} />
-            <SaveTools
+            <HudPanelTabs
+              state={state}
               exportText={exportText}
               importText={importText}
+              onCommand={dispatchCommand}
               onCopy={copySave}
               onDownload={downloadSave}
               onImportPasted={importPastedSave}
@@ -380,10 +368,6 @@ export default function App() {
               onPickFile={() => importInputRef.current?.click()}
               onValidate={validateCurrentSave}
             />
-            <QuestTracker state={state} />
-            <InventoryPanel state={state} />
-            <WorldStatePanel state={state} />
-            <ActivityBoard state={state} onCommand={dispatchCommand} />
           </aside>
         </div>
           </motion.div>
@@ -391,6 +375,56 @@ export default function App() {
       </AnimatePresence>
     </div>
   );
+}
+
+function HudMeter({ icon, label, value, max, tone }: { icon: ReactNode; label: string; value: number; max: number; tone: "hp" | "oath" }) {
+  const percent = Math.max(0, Math.min(100, Math.round((value / max) * 100)));
+  return (
+    <div className={`hud-meter ${tone}`}>
+      <div className="hud-meter-top">
+        {icon}
+        <span>{label}</span>
+        <strong>
+          {value}/{max}
+        </strong>
+      </div>
+      <div className="hud-meter-track">
+        <span style={{ width: `${percent}%` }} />
+      </div>
+    </div>
+  );
+}
+
+function HeaderActionButton({ label, icon, onClick, danger = false }: { label: string; icon: ReactNode; onClick: () => void; danger?: boolean }) {
+  return (
+    <Tooltip.Root>
+      <Tooltip.Trigger asChild>
+        <button className={`icon-button ${danger ? "danger" : ""}`} type="button" onClick={onClick} aria-label={label}>
+          {icon}
+          <span>{label}</span>
+        </button>
+      </Tooltip.Trigger>
+      <Tooltip.Portal>
+        <Tooltip.Content className="tooltip-content" sideOffset={8}>
+          {label}
+          <Tooltip.Arrow className="tooltip-arrow" />
+        </Tooltip.Content>
+      </Tooltip.Portal>
+    </Tooltip.Root>
+  );
+}
+
+function getSceneKey(state: GameState) {
+  if (state.dungeon || state.locationPoiId === "pilgrim-trial-cryptlet") {
+    return "cryptlet";
+  }
+  if (state.locationPoiId === "road-shrine-little-dawn") {
+    return "shrine";
+  }
+  if (state.locationPoiId.includes("hearthmere")) {
+    return "fields";
+  }
+  return "saint";
 }
 
 function getLiveDirectorRequest(state: GameState, command: string): LiveDirectorRequest | null {
@@ -451,6 +485,12 @@ function isKnownNonChatCommand(command: string) {
     "recap",
     "listen",
     "wait",
+    "story",
+    "main story",
+    "narrative",
+    "dm",
+    "dm scene",
+    "narrate",
     "who",
     "nearby",
     "lfg",

@@ -1,5 +1,6 @@
 import { CheckCircle2, ClipboardList, Gauge, MessageCircle, Radio, Sparkles, UserPlus, UsersRound } from "lucide-react";
 import type { ReactNode } from "react";
+import { getNarrativeStatus } from "../game/narrativeDirector";
 import type { GameState, SocialContactState } from "../game/types";
 
 interface Props {
@@ -11,6 +12,7 @@ export function SocialWorldPanel({ state, onCommand }: Props) {
   const onlineCount = state.social.contacts.filter((contact) => contact.availability === "online").length;
   const visibleContacts = [...state.social.contacts].sort(sortContacts).slice(0, 5);
   const director = state.social.director;
+  const narrative = getNarrativeStatus(state);
   const budgetPercent = Math.min(100, Math.round((director.estimatedSpendUsd / director.monthlyBudgetUsd) * 100));
   const stopPercent = Math.min(100, Math.round((director.stopAtUsd / director.monthlyBudgetUsd) * 100));
 
@@ -36,6 +38,29 @@ export function SocialWorldPanel({ state, onCommand }: Props) {
             <strong>{value}</strong>
           </div>
         ))}
+      </div>
+
+      <div className="director-card narrative-director-card">
+        <div className="split-row tight">
+          <h3>Narrative DM</h3>
+          <span className="status-pill active">{narrative.tensionLabel}</span>
+        </div>
+        <p>{narrative.arcTitle}</p>
+        <p>
+          Chapter: {narrative.stageTitle} / Beats {narrative.seenBeatCount} / Scenes {narrative.sceneCount}
+        </p>
+        <div className="director-pressure" aria-label={`Narrative tension ${narrative.tension}`}>
+          <span style={{ width: `${Math.max(8, narrative.tension * 10)}%` }} />
+        </div>
+        <p>{narrative.nextHint}</p>
+        <div className="social-command-row">
+          <button className="action-button quiet full-width" type="button" onClick={() => onCommand("story")}>
+            Story Journal
+          </button>
+          <button className="action-button quiet full-width" type="button" onClick={() => onCommand("dm")}>
+            DM Scene
+          </button>
+        </div>
       </div>
 
       <div className="director-card">

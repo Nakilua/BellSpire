@@ -97,6 +97,30 @@
         "note": "Ambient lines are local simulation texture shaped by social/MMO research and constrained by canon names."
       }
     },
+    "mapServices.json": {
+      "default": {
+        "sourceTier": 1,
+        "sourceStatus": "curated-canon-map-services",
+        "sourceRefs": ["Project_Bellspire_Complete_Canon_Compendium_v1_1.pdf", "Project_Bellspire_Complete_Data_Workbook_v1_1.xlsx", "Project_Bellspire_Discord_Map_Playstyle_Prompt_v1_1.md"],
+        "note": "Map service pins expose source-governed hub, trainer, guild, crafting, shrine, and route service categories without inventing unsourced shop names."
+      }
+    },
+    "mapAnnotations.json": {
+      "default": {
+        "sourceTier": 1,
+        "sourceStatus": "curated-canon-map-annotations",
+        "sourceRefs": ["Project_Bellspire_Complete_Canon_Compendium_v1_1.pdf", "Project_Bellspire_Complete_Data_Workbook_v1_1.xlsx", "Project_Bellspire_Discord_Map_Playstyle_Prompt_v1_1.md"],
+        "note": "Map annotation labels expose source-governed districts, routes, dungeon rooms, and generic service clusters as an atlas detail layer without treating bitmap art as canon authority."
+      }
+    },
+    "narrativeArcs.json": {
+      "default": {
+        "sourceTier": 1,
+        "sourceStatus": "curated-canon-narrative",
+        "sourceRefs": ["Project_Bellspire_Complete_Canon_Compendium_v1_1.pdf", "Project_Bellspire_Complete_Data_Workbook_v1_1.xlsx", "Project_Bellspire_Codex_Handoff_Prompt_v1_1.md", "Project_Bellspire_Discord_Map_Playstyle_Prompt_v1_1.md"],
+        "note": "The MVP narrative director uses canon locations, quest beats, dungeon rooms, and source-law constraints while keeping moment-to-moment narration as local DM texture."
+      }
+    },
     "npcs.json": {
       "default": {
         "sourceTier": 1,

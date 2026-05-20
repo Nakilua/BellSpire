@@ -81,6 +81,7 @@ export interface DungeonState {
 export interface SessionRecap {
   visited: string[];
   quests: string[];
+  narrative: string[];
   loot: string[];
   wipes: string[];
   reputation: string[];
@@ -169,6 +170,18 @@ export interface LivingWorldState {
   lastPulseReason?: string;
 }
 
+export interface NarrativeState {
+  arcId: string;
+  stageId: string;
+  tension: number;
+  sceneCount: number;
+  seenBeatIds: string[];
+  vignetteCursor: Record<string, number>;
+  lastBeatId?: string;
+  lastVignetteId?: string;
+  lastTrigger?: string;
+}
+
 export interface GameState {
   saveVersion: 1;
   profileCreated: boolean;
@@ -184,6 +197,7 @@ export interface GameState {
   feed: FeedEntry[];
   social: SocialState;
   livingWorld: LivingWorldState;
+  narrative: NarrativeState;
   dungeon?: DungeonState;
   encounter?: EncounterState;
   sessionRecap: SessionRecap;

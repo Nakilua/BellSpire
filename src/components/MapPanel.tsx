@@ -1,5 +1,28 @@
-import { useMemo, useState } from "react";
-import { Layers, Map as MapIcon, Route } from "lucide-react";
+import { useMemo, useState, type ReactNode } from "react";
+import * as Dialog from "@radix-ui/react-dialog";
+import {
+  Church,
+  DoorOpen,
+  Dumbbell,
+  Flag,
+  Hammer,
+  Landmark,
+  Layers,
+  LockKeyhole,
+  Map as MapIcon,
+  MapPin,
+  Maximize2,
+  MessageCircle,
+  PackageOpen,
+  Route,
+  ScrollText,
+  Sparkles,
+  Tent,
+  X,
+  type LucideIcon
+} from "lucide-react";
+import mapAnnotations from "../data/mapAnnotations.json";
+import mapServices from "../data/mapServices.json";
 import pois from "../data/pois.json";
 import regionTopography from "../data/regionTopography.json";
 import { getActiveDungeon, getCurrentRoom, getCurrentZone } from "../game/selectors";
@@ -9,7 +32,9 @@ interface Props {
   state: GameState;
 }
 
-type MapLayer = "routes" | "services" | "danger" | "guild";
+type MapLayer = "routes" | "services" | "danger" | "guild" | "details";
+type AtlasScope = "world" | "zone" | "dungeon";
+type AtlasAnnotationKind = "major" | "route" | "service" | "danger" | "dungeon" | "optional";
 
 interface RegionTopography {
   id: string;
@@ -29,25 +54,107 @@ interface RegionTopography {
   sourceNote: string;
 }
 
+interface MapService {
+  id: string;
+  zoneId: string;
+  poiId?: string;
+  label: string;
+  kind: string;
+  x: number;
+  y: number;
+  summary: string;
+  sourceNote: string;
+}
+
+interface MapAnnotation {
+  id: string;
+  scope: "zone" | "dungeon";
+  zoneId?: string;
+  dungeonId?: string;
+  label: string;
+  kind: AtlasAnnotationKind;
+  x: number;
+  y: number;
+  priority: number;
+  note: string;
+  sourceNote: string;
+}
+
+interface DungeonRoom {
+  id: string;
+  name: string;
+  type: string;
+  lesson: string;
+  scene: string;
+  object?: string;
+  encounterId?: string;
+}
+
+interface DungeonDefinition {
+  id: string;
+  name: string;
+  source: string;
+  levelRange: string;
+  mode: string;
+  rooms: DungeonRoom[];
+}
+
 const regions = regionTopography as RegionTopography[];
+const services = mapServices as MapService[];
+const annotations = mapAnnotations as MapAnnotation[];
 const layerLabels: Record<MapLayer, string> = {
   routes: "Routes",
   services: "Services",
   danger: "Danger",
-  guild: "Guild"
+  guild: "Guild",
+  details: "Details"
+};
+const serviceKindLabels: Record<string, string> = {
+  landmark: "Landmarks",
+  ledger: "Civic",
+  trainer: "Training",
+  guild: "Guild",
+  craft: "Crafting",
+  market: "Market",
+  faction: "Faction",
+  shrine: "Shrine",
+  rest: "Rest",
+  social: "Social",
+  material: "Materials",
+  dungeon: "Dungeon",
+  danger: "Danger",
+  route: "Routes",
+  preview: "Locked Preview"
+};
+const dungeonRoomPositions: Record<string, { x: number; y: number }> = {
+  "shrine-descent": { x: 13, y: 34 },
+  "hall-threaded-names": { x: 35, y: 40 },
+  "broken-bell-niche": { x: 50, y: 37 },
+  "pilgrim-bone-walk": { x: 57, y: 53 },
+  "candleless-alcove": { x: 49, y: 69 },
+  "warden-chamber": { x: 79, y: 42 },
+  "road-seal-exit": { x: 82, y: 73 }
 };
 
 export function MapPanel({ state }: Props) {
+  const [selectedServiceId, setSelectedServiceId] = useState<string | null>(null);
+  const [selectedDungeonRoomId, setSelectedDungeonRoomId] = useState<string | null>(null);
+  const [atlasScope, setAtlasScope] = useState<AtlasScope | null>(null);
   const [layers, setLayers] = useState<Record<MapLayer, boolean>>({
     routes: true,
     services: true,
     danger: true,
-    guild: false
+    guild: false,
+    details: true
   });
-  const dungeon = getActiveDungeon(state);
-  const room = getCurrentRoom(state);
+  const dungeon = getActiveDungeon(state) as DungeonDefinition | undefined;
+  const room = getCurrentRoom(state) as DungeonRoom | undefined;
   const zone = getCurrentZone(state);
   const zonePois = pois.filter((poi) => poi.zoneId === zone.id);
+  const zoneServices = services.filter((entry) => entry.zoneId === zone.id);
+  const activeService = zoneServices.find((entry) => entry.id === selectedServiceId) ?? zoneServices[0];
+  const activeRoomId = room?.id ?? dungeon?.rooms[state.dungeon?.roomIndex ?? 0]?.id;
+  const selectedRoom = dungeon?.rooms.find((entry) => entry.id === (selectedDungeonRoomId ?? activeRoomId)) ?? room;
   const lockedRegions = regions.filter((entry) => entry.locked);
   const currentRegion = regions.find((entry) => entry.zoneId === zone.id) ?? regions[0];
   const routePairs = useMemo(() => {
@@ -77,8 +184,12 @@ export function MapPanel({ state }: Props) {
     }));
   }
 
+  function openAtlas(scope: AtlasScope) {
+    setAtlasScope(scope);
+  }
+
   return (
-    <section className="panel">
+    <section className="panel atlas-panel">
       <div className="panel-title">
         <MapIcon size={15} />
         <span>Map</span>
@@ -86,28 +197,35 @@ export function MapPanel({ state }: Props) {
 
       {dungeon && state.dungeon ? (
         <div>
-          <p className="panel-copy">{dungeon.name}</p>
-          <div className="dungeon-ink-map" aria-label={`${dungeon.name} hand-drawn dungeon route`}>
-            <DungeonAtlasInk activeIndex={state.dungeon.roomIndex} />
+          <div className="map-heading-row">
+            <p className="panel-copy">{dungeon.name}</p>
+            <button className="map-open-button" type="button" onClick={() => openAtlas("dungeon")}>
+              <Maximize2 size={13} />
+              <span>Atlas View</span>
+            </button>
           </div>
-          <div className="stack-sm">
-            {dungeon.rooms.map((entry, index) => (
-              <div className={`route-row ${index === state.dungeon?.roomIndex ? "active" : ""}`} key={entry.id}>
-                <span>{index + 1}</span>
-                <div>
-                  <p>{entry.name}</p>
-                  <small>{entry.type}</small>
-                </div>
-              </div>
-            ))}
-          </div>
+          <DungeonMapPlate
+            dungeon={dungeon}
+            activeRoomId={activeRoomId}
+            selectedRoomId={selectedRoom?.id}
+            onSelectRoom={setSelectedDungeonRoomId}
+            showDetails
+          />
+          {selectedRoom ? <DungeonRoomDetail dungeon={dungeon} room={selectedRoom} activeRoomId={activeRoomId} /> : null}
+          <DungeonRouteList dungeon={dungeon} activeRoomId={activeRoomId} selectedRoomId={selectedRoom?.id} onSelectRoom={setSelectedDungeonRoomId} />
           {room ? <p className="panel-note">Current room: {room.lesson}</p> : null}
         </div>
       ) : (
         <div>
-          <p className="panel-copy">
-            {zone.name} / {zone.levelRange}
-          </p>
+          <div className="map-heading-row">
+            <p className="panel-copy">
+              {zone.name} / {zone.levelRange}
+            </p>
+            <button className="map-open-button" type="button" onClick={() => openAtlas("zone")}>
+              <Maximize2 size={13} />
+              <span>Atlas View</span>
+            </button>
+          </div>
           <div className="map-layer-row" aria-label="Map layers">
             {(Object.keys(layerLabels) as MapLayer[]).map((layer) => (
               <button className={`map-layer-button ${layers[layer] ? "active" : ""}`} type="button" onClick={() => toggleLayer(layer)} key={layer}>
@@ -117,31 +235,7 @@ export function MapPanel({ state }: Props) {
             ))}
           </div>
 
-          <div className="world-map" aria-label="Bellspire world topology">
-            <WorldAtlasInk showDanger={layers.danger} showGuild={layers.guild} />
-            {layers.routes ? (
-              <svg className="topography-routes" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-                {routePairs.map((pair) => (
-                  <line x1={pair.from.x} y1={pair.from.y} x2={pair.to.x} y2={pair.to.y} key={`${pair.from.id}-${pair.to.id}`} />
-                ))}
-              </svg>
-            ) : null}
-
-            {regions.map((region) => {
-              const active = region.zoneId === zone.id;
-              return (
-                <div
-                  className={`topography-region ${region.terrainType} ${active ? "active" : ""} ${region.locked ? "locked" : ""}`}
-                  key={region.id}
-                  style={{ left: `${region.x}%`, top: `${region.y}%` }}
-                >
-                  <span className="region-pin" />
-                  <strong>{region.name}</strong>
-                  <small>{region.levelRange}</small>
-                </div>
-              );
-            })}
-          </div>
+          <WorldMapPlate state={state} layers={layers} routePairs={routePairs} onOpenWorld={() => openAtlas("world")} />
 
           <div className="map-readout">
             <div className="map-readout-title">
@@ -155,19 +249,17 @@ export function MapPanel({ state }: Props) {
             {layers.guild ? <MapReadoutList label="Guild hooks" values={currentRegion.guildHooks} /> : null}
           </div>
 
-          <div className="node-map topographic-node-map">
-            <ZoneAtlasInk zoneId={zone.id} />
-            {zonePois.map((poi) => (
-              <div
-                className={`map-node ${poi.id === state.locationPoiId ? "active" : ""}`}
-                key={poi.id}
-                style={{ left: `${poi.x}%`, top: `${poi.y}%` }}
-              >
-                <span />
-                <small>{poi.name}</small>
-              </div>
-            ))}
-          </div>
+          <ZoneMapPlate
+            zoneId={zone.id}
+            zonePois={zonePois}
+            currentPoiId={state.locationPoiId}
+            zoneServices={zoneServices}
+            activeService={selectedServiceId ? activeService : undefined}
+            showServices={layers.services}
+            showDetails={layers.details}
+            onSelectService={setSelectedServiceId}
+          />
+          {layers.services ? <ServiceLegend services={zoneServices} selectedService={activeService} onSelect={setSelectedServiceId} /> : null}
           <div className="locked-list">
             {lockedRegions.slice(0, 4).map((entry) => (
               <div className="locked-row" key={entry.id}>
@@ -178,8 +270,475 @@ export function MapPanel({ state }: Props) {
           </div>
         </div>
       )}
+
+      <AtlasDialog title={getAtlasTitle(atlasScope, zone.name, dungeon?.name)} open={atlasScope !== null} onOpenChange={(open) => !open && setAtlasScope(null)}>
+        {atlasScope === "world" ? <WorldMapPlate state={state} layers={layers} routePairs={routePairs} expanded /> : null}
+        {atlasScope === "zone" ? (
+          <div className="atlas-dialog-grid atlas-dialog-grid-closeup">
+            <ZoneMapPlate
+              zoneId={zone.id}
+              zonePois={zonePois}
+              currentPoiId={state.locationPoiId}
+              zoneServices={zoneServices}
+              activeService={selectedServiceId ? activeService : undefined}
+              showServices={layers.services}
+              showDetails={layers.details}
+              onSelectService={setSelectedServiceId}
+              expanded
+            />
+            <AtlasCloseupPanel zoneId={zone.id} services={zoneServices} />
+          </div>
+        ) : null}
+        {atlasScope === "dungeon" && dungeon ? (
+          <div className="atlas-dialog-grid">
+            <DungeonMapPlate
+              dungeon={dungeon}
+              activeRoomId={activeRoomId}
+              selectedRoomId={selectedRoom?.id}
+              onSelectRoom={setSelectedDungeonRoomId}
+              showDetails
+              expanded
+            />
+            <div className="atlas-closeup-stack">
+              {selectedRoom ? <DungeonRoomDetail dungeon={dungeon} room={selectedRoom} activeRoomId={activeRoomId} /> : null}
+              <AtlasDungeonCloseup dungeon={dungeon} />
+            </div>
+          </div>
+        ) : null}
+      </AtlasDialog>
     </section>
   );
+}
+
+function WorldMapPlate({
+  state,
+  layers,
+  routePairs,
+  onOpenWorld,
+  expanded = false
+}: {
+  state: GameState;
+  layers: Record<MapLayer, boolean>;
+  routePairs: { from: RegionTopography; to: RegionTopography }[];
+  onOpenWorld?: () => void;
+  expanded?: boolean;
+}) {
+  const zone = getCurrentZone(state);
+
+  return (
+    <div className={`world-map custom-map-plate ${expanded ? "expanded" : ""}`} aria-label="Bellspire world topology">
+      {layers.routes ? (
+        <svg className="topography-routes" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+          {routePairs.map((pair) => (
+            <line x1={pair.from.x} y1={pair.from.y} x2={pair.to.x} y2={pair.to.y} key={`${pair.from.id}-${pair.to.id}`} />
+          ))}
+        </svg>
+      ) : null}
+
+      {regions.map((region) => {
+        const active = region.zoneId === zone.id;
+        return (
+          <div
+            className={`topography-region ${region.terrainType} ${active ? "active" : ""} ${region.locked ? "locked" : ""}`}
+            key={region.id}
+            style={{ left: `${region.x}%`, top: `${region.y}%` }}
+            title={`${region.name}: ${region.terrain}`}
+          >
+            <span className="region-pin" />
+            <strong>{region.name}</strong>
+            <small>{region.levelRange}</small>
+          </div>
+        );
+      })}
+      {layers.services
+        ? services
+            .filter((entry) => entry.kind === "preview")
+            .map((entry) => (
+              <button
+                className="service-pin preview"
+                key={entry.id}
+                style={{ left: `${entry.x}%`, top: `${entry.y}%` }}
+                title={`${entry.label}: ${entry.summary}`}
+                type="button"
+              >
+                <span className="service-pin-icon" aria-hidden="true">
+                  <span className="service-pin-mark" />
+                </span>
+                <small>{entry.label}</small>
+              </button>
+            ))
+        : null}
+      {onOpenWorld ? (
+        <button className="map-corner-button" type="button" onClick={onOpenWorld}>
+          <Maximize2 size={12} />
+          <span>World</span>
+        </button>
+      ) : null}
+    </div>
+  );
+}
+
+function ZoneMapPlate({
+  zoneId,
+  zonePois,
+  currentPoiId,
+  zoneServices,
+  activeService,
+  showServices,
+  showDetails,
+  onSelectService,
+  expanded = false
+}: {
+  zoneId: string;
+  zonePois: typeof pois;
+  currentPoiId: string;
+  zoneServices: MapService[];
+  activeService?: MapService;
+  showServices: boolean;
+  showDetails: boolean;
+  onSelectService: (id: string) => void;
+  expanded?: boolean;
+}) {
+  return (
+    <div className={`node-map topographic-node-map custom-map-plate zone-${zoneId} ${expanded ? "expanded" : ""}`} aria-label={`${zoneId} detailed atlas map`}>
+      {zonePois.map((poi) => (
+        <div
+          className={`map-node ${poi.id === currentPoiId ? "active" : ""}`}
+          key={poi.id}
+          style={{ left: `${poi.x}%`, top: `${poi.y}%` }}
+          title={`${poi.name}: ${poi.type}`}
+        >
+          <span />
+          <small>{poi.name}</small>
+        </div>
+      ))}
+      {showServices
+        ? zoneServices.map((entry) => (
+            <button
+              className={`service-pin ${entry.kind} ${activeService?.id === entry.id ? "active" : ""}`}
+              key={entry.id}
+              style={{ left: `${entry.x}%`, top: `${entry.y}%` }}
+              title={`${entry.label}: ${entry.summary}`}
+              type="button"
+              aria-label={`${entry.label}: ${entry.summary}`}
+              onClick={() => onSelectService(entry.id)}
+            >
+              <span className="service-pin-icon" aria-hidden="true">
+                <span className="service-pin-mark" />
+              </span>
+              <small>{entry.label}</small>
+            </button>
+          ))
+        : null}
+      <AtlasAnnotationLayer scope="zone" zoneId={zoneId} expanded={expanded} showDetails={showDetails} />
+    </div>
+  );
+}
+
+function DungeonMapPlate({
+  dungeon,
+  activeRoomId,
+  selectedRoomId,
+  onSelectRoom,
+  showDetails,
+  expanded = false
+}: {
+  dungeon: DungeonDefinition;
+  activeRoomId?: string;
+  selectedRoomId?: string;
+  onSelectRoom: (id: string) => void;
+  showDetails: boolean;
+  expanded?: boolean;
+}) {
+  return (
+    <div className={`dungeon-ink-map custom-map-plate ${expanded ? "expanded" : ""}`} aria-label={`${dungeon.name} detailed dungeon route`}>
+      <svg className="dungeon-route-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M13 34 C22 38, 28 40, 35 40 C42 39, 46 37, 50 37 C55 42, 57 48, 57 53 C54 60, 52 65, 49 69 M57 53 C64 49, 72 45, 79 42 C80 53, 81 64, 82 73" />
+      </svg>
+      {dungeon.rooms.map((entry, index) => {
+        const position = dungeonRoomPositions[entry.id] ?? { x: 50, y: 50 };
+        const isActive = entry.id === activeRoomId;
+        const isSelected = entry.id === selectedRoomId;
+
+        return (
+          <button
+            className={`dungeon-room-pin ${isActive ? "active" : ""} ${isSelected ? "selected" : ""} ${entry.type.toLowerCase().includes("optional") ? "optional" : ""}`}
+            key={entry.id}
+            style={{ left: `${position.x}%`, top: `${position.y}%` }}
+            title={`${entry.name}: ${entry.lesson}`}
+            type="button"
+            onClick={() => onSelectRoom(entry.id)}
+          >
+            <span>{index + 1}</span>
+            <small>{entry.name}</small>
+          </button>
+        );
+      })}
+      {expanded ? null : <AtlasAnnotationLayer scope="dungeon" dungeonId={dungeon.id} expanded={expanded} showDetails={showDetails} />}
+    </div>
+  );
+}
+
+function AtlasAnnotationLayer({
+  scope,
+  zoneId,
+  dungeonId,
+  expanded,
+  showDetails
+}: {
+  scope: MapAnnotation["scope"];
+  zoneId?: string;
+  dungeonId?: string;
+  expanded: boolean;
+  showDetails: boolean;
+}) {
+  if (!showDetails) {
+    return null;
+  }
+
+  const visibleAnnotations = annotations.filter((entry) => {
+    if (!expanded && entry.priority > 1) {
+      return false;
+    }
+    if (scope === "zone") {
+      return entry.scope === "zone" && entry.zoneId === zoneId;
+    }
+    return entry.scope === "dungeon" && entry.dungeonId === dungeonId;
+  });
+
+  if (visibleAnnotations.length === 0) {
+    return null;
+  }
+
+  return (
+    <div className="atlas-annotation-layer" aria-hidden="true">
+      {visibleAnnotations.map((entry) => (
+        <div
+          className={`atlas-annotation ${entry.kind} priority-${entry.priority}`}
+          key={entry.id}
+          style={{ left: `${entry.x}%`, top: `${entry.y}%` }}
+          title={`${entry.label}: ${entry.note}`}
+          data-source-note={entry.sourceNote}
+        >
+          <span>{entry.label}</span>
+          {expanded ? <small>{entry.note}</small> : null}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function AtlasCloseupPanel({ zoneId, services }: { zoneId: string; services: MapService[] }) {
+  const config = getZoneCloseup(zoneId);
+
+  if (!config) {
+    return null;
+  }
+
+  return (
+    <aside className="atlas-closeup-panel" aria-label={`${config.title} close-up`}>
+      <div>
+        <span>Close-Up Plate</span>
+        <strong>{config.title}</strong>
+        <p>{config.description}</p>
+      </div>
+      <div className={`atlas-closeup-plate ${config.className}`} aria-hidden="true" />
+      <div className="atlas-closeup-services">
+        {services.slice(0, 8).map((entry) => (
+          <span className={`service-kind-chip ${entry.kind}`} key={entry.id}>
+            {entry.label}
+          </span>
+        ))}
+      </div>
+      <small>{config.sourceNote}</small>
+    </aside>
+  );
+}
+
+function AtlasDungeonCloseup({ dungeon }: { dungeon: DungeonDefinition }) {
+  if (dungeon.id !== "pilgrim-trial-cryptlet") {
+    return null;
+  }
+
+  return (
+    <aside className="atlas-closeup-panel" aria-label="Warden Chamber close-up">
+      <div>
+        <span>Boss-Room Plate</span>
+        <strong>Warden Chamber Close-Up</strong>
+        <p>Fresh tactical art for lane pressure, Road-Seal Bell reads, adds, pulse timing, and Final Toll staging.</p>
+      </div>
+      <div className="atlas-closeup-plate closeup-warden-chamber" aria-hidden="true" />
+      <div className="atlas-closeup-services">
+        <span className="service-kind-chip dungeon">Road-Seal Bell</span>
+        <span className="service-kind-chip danger">Lane Pressure</span>
+        <span className="service-kind-chip shrine">Final Toll</span>
+      </div>
+      <small>Pilgrim Trial Cryptlet runtime room and Bellgrave Warden encounter data. Art is a visual aid, not independent canon authority.</small>
+    </aside>
+  );
+}
+
+function getZoneCloseup(zoneId: string) {
+  const closeups: Record<string, { title: string; description: string; className: string; sourceNote: string }> = {
+    "saint-veyra": {
+      title: "Saint Veyra Service Districts",
+      description: "A denser city close-up for the cathedral road, civic services, training, crafting, markets, shrine care, and guild work.",
+      className: "closeup-saint-veyra",
+      sourceNote: "Saint Veyra district/service entries from the compendium, workbook, map services, and source-governed annotations."
+    },
+    "hearthmere-fields": {
+      title: "Little Dawn Shrine Road",
+      description: "A shrine-hill close-up for Olla, shrine rest, road candle work, field supplies, wax beds, and the Cryptlet stair.",
+      className: "closeup-little-dawn",
+      sourceNote: "Hearthmere Fields, Road Shrine of Little Dawn, Olla, and Pilgrim Trial Cryptlet entries from source-governed runtime data."
+    }
+  };
+
+  return closeups[zoneId];
+}
+
+function DungeonRouteList({
+  dungeon,
+  activeRoomId,
+  selectedRoomId,
+  onSelectRoom
+}: {
+  dungeon: DungeonDefinition;
+  activeRoomId?: string;
+  selectedRoomId?: string;
+  onSelectRoom: (id: string) => void;
+}) {
+  return (
+    <div className="stack-sm dungeon-route-list">
+      {dungeon.rooms.map((entry, index) => (
+        <button
+          className={`route-row ${entry.id === activeRoomId ? "active" : ""} ${entry.id === selectedRoomId ? "selected" : ""}`}
+          key={entry.id}
+          type="button"
+          onClick={() => onSelectRoom(entry.id)}
+        >
+          <span>{index + 1}</span>
+          <div>
+            <p>{entry.name}</p>
+            <small>{entry.type} / {entry.lesson}</small>
+          </div>
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function DungeonRoomDetail({ dungeon, room, activeRoomId }: { dungeon: DungeonDefinition; room: DungeonRoom; activeRoomId?: string }) {
+  const index = dungeon.rooms.findIndex((entry) => entry.id === room.id);
+
+  return (
+    <div className={`dungeon-room-detail ${room.id === activeRoomId ? "active" : ""}`}>
+      <div>
+        <span>Room {index + 1}</span>
+        <strong>{room.name}</strong>
+      </div>
+      <p>{room.scene}</p>
+      <MapReadoutList label="Lesson" values={[room.lesson]} />
+      {room.object ? <MapReadoutList label="Object" values={[room.object]} /> : null}
+      {room.encounterId ? <MapReadoutList label="Encounter" values={[room.encounterId]} /> : null}
+    </div>
+  );
+}
+
+function ServiceLegend({
+  services,
+  selectedService,
+  onSelect
+}: {
+  services: MapService[];
+  selectedService?: MapService;
+  onSelect: (id: string) => void;
+}) {
+  const grouped = services.reduce<Record<string, MapService[]>>((groups, entry) => {
+    const label = serviceKindLabels[entry.kind] ?? "Services";
+    groups[label] = groups[label] ? [...groups[label], entry] : [entry];
+    return groups;
+  }, {});
+
+  if (services.length === 0) {
+    return null;
+  }
+
+  return (
+    <div className="service-legend" aria-label="Map services">
+      <div className="service-legend-title">
+        <ScrollText size={13} />
+        <span>Source-Governed Services</span>
+      </div>
+      {Object.entries(grouped).map(([group, entries]) => (
+        <div className="service-legend-group" key={group}>
+          <span>{group}</span>
+          {entries.map((entry) => (
+            <button className={`service-legend-row ${selectedService?.id === entry.id ? "active" : ""}`} key={entry.id} type="button" onClick={() => onSelect(entry.id)}>
+              <span className={`service-kind ${entry.kind}`}>
+                <ServiceIcon kind={entry.kind} />
+              </span>
+              <div>
+                <strong>{entry.label}</strong>
+                <p>{entry.summary}</p>
+              </div>
+            </button>
+          ))}
+        </div>
+      ))}
+      {selectedService ? (
+        <div className="service-detail">
+          <strong>{selectedService.label}</strong>
+          <p>{selectedService.summary}</p>
+          <small>{selectedService.sourceNote}</small>
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+function AtlasDialog({ title, open, onOpenChange, children }: { title: string; open: boolean; onOpenChange: (open: boolean) => void; children: ReactNode }) {
+  return (
+    <Dialog.Root open={open} onOpenChange={onOpenChange}>
+      <Dialog.Portal>
+        <Dialog.Overlay className="dialog-overlay atlas-dialog-overlay" />
+        <Dialog.Content className="atlas-dialog-content">
+          <div className="atlas-dialog-header">
+            <Dialog.Title>{title}</Dialog.Title>
+            <Dialog.Close asChild>
+              <button className="icon-button" type="button" aria-label="Close atlas view">
+                <X size={15} />
+              </button>
+            </Dialog.Close>
+          </div>
+          <div className="atlas-dialog-body">{children}</div>
+        </Dialog.Content>
+      </Dialog.Portal>
+    </Dialog.Root>
+  );
+}
+
+function ServiceIcon({ kind }: { kind: string }) {
+  const icons: Record<string, LucideIcon> = {
+    landmark: Church,
+    trainer: Dumbbell,
+    guild: ScrollText,
+    craft: Hammer,
+    market: PackageOpen,
+    faction: Flag,
+    ledger: Landmark,
+    rest: Tent,
+    social: MessageCircle,
+    material: PackageOpen,
+    shrine: Sparkles,
+    dungeon: DoorOpen,
+    route: Route,
+    danger: Flag,
+    preview: LockKeyhole
+  };
+  const Icon = icons[kind] ?? MapPin;
+
+  return <Icon aria-hidden="true" size={13} strokeWidth={2.4} />;
 }
 
 function MapReadoutList({ label, values }: { label: string; values: string[] }) {
@@ -191,72 +750,12 @@ function MapReadoutList({ label, values }: { label: string; values: string[] }) 
   );
 }
 
-function WorldAtlasInk({ showDanger, showGuild }: { showDanger: boolean; showGuild: boolean }) {
-  return (
-    <svg className="handdrawn-atlas world-ink" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-      <path className="ink-land land-west" d="M12 35 C16 26, 24 23, 32 28 C39 32, 42 42, 39 51 C36 62, 27 69, 18 65 C10 60, 7 46, 12 35 Z" />
-      <path className="ink-land land-east" d="M47 18 C61 9, 80 10, 91 24 C98 34, 94 48, 84 55 C76 61, 70 73, 60 81 C51 88, 40 82, 43 70 C46 56, 55 49, 53 38 C51 29, 40 25, 47 18 Z" />
-      <path className="ink-land bellgrave-below-shape" d="M48 73 C55 66, 67 68, 73 78 C68 88, 54 91, 45 84 C42 80, 43 76, 48 73 Z" />
-      <path className="ink-coast" d="M34 17 C37 20, 35 25, 39 29 C43 33, 48 31, 51 36 C55 43, 51 50, 55 55" />
-      <path className="ink-road main-road" d="M20 36 C28 40, 36 45, 44 63 C52 55, 61 56, 72 50 C75 41, 77 34, 86 18" />
-      <path className="ink-road lower-road" d="M44 63 C51 72, 58 80, 68 86" />
-      <path className="ink-road coast-road" d="M20 36 C24 28, 31 22, 36 20 C42 19, 47 17, 52 16" />
-      <path className="ink-hills" d="M40 61 l3 -5 l3 5 M47 58 l3 -6 l4 7 M55 57 l3 -5 l3 5" />
-      <path className="ink-hills" d="M70 28 l3 -5 l4 6 M77 26 l4 -6 l4 7" />
-      <path className="ink-forest" d="M39 67 c-2 -5, 3 -8, 5 -3 c2 -4, 7 -2, 5 3 c-3 3 -7 4 -10 0 Z" />
-      <path className="ink-forest" d="M57 60 c-2 -4, 3 -7, 5 -3 c2 -4, 7 -2, 5 3 c-3 3 -7 4 -10 0 Z" />
-      {showDanger ? <path className="ink-danger" d="M34 20 C39 15, 49 13, 56 17 C52 24, 44 27, 36 24 Z" /> : null}
-      {showDanger ? <path className="ink-danger" d="M72 17 C80 10, 90 17, 91 27 C83 24, 76 25, 72 17 Z" /> : null}
-      {showGuild ? <path className="ink-guild" d="M18 36 l4 -8 l4 8 M22 28 v14" /> : null}
-      {showGuild ? <path className="ink-guild" d="M36 20 l3 -7 l3 7 M39 13 v12" /> : null}
-    </svg>
-  );
-}
-
-function ZoneAtlasInk({ zoneId }: { zoneId: string }) {
-  if (zoneId === "saint-veyra") {
-    return (
-      <svg className="handdrawn-atlas zone-ink" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-        <path className="ink-land" d="M16 56 C28 28, 62 18, 84 42 C79 68, 58 82, 28 76 C19 72, 12 66, 16 56 Z" />
-        <path className="ink-road main-road" d="M18 62 C34 58, 48 50, 68 42 C75 39, 80 41, 84 46" />
-        <path className="ink-road lower-road" d="M50 50 C47 39, 50 30, 57 22" />
-        <path className="ink-cathedral" d="M49 39 l8 -18 l8 18 Z M53 39 v22 M61 39 v22" />
-      </svg>
-    );
+function getAtlasTitle(scope: AtlasScope | null, zoneName: string, dungeonName?: string) {
+  if (scope === "world") {
+    return "BellSpire World Atlas";
   }
-
-  return (
-    <svg className="handdrawn-atlas zone-ink" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-      <path className="ink-land" d="M8 58 C20 42, 35 31, 52 34 C68 37, 82 47, 92 64 C76 82, 48 86, 25 77 C15 73, 9 66, 8 58 Z" />
-      <path className="ink-field" d="M17 60 C30 55, 45 53, 59 58 M18 66 C33 62, 48 62, 68 68 M23 49 C34 47, 43 48, 53 51" />
-      <path className="ink-road main-road" d="M12 60 C27 58, 40 54, 52 49 C65 44, 78 42, 90 45" />
-      <path className="ink-road lower-road" d="M52 49 C56 60, 61 69, 72 76" />
-      <path className="ink-shrine" d="M69 40 l4 -9 l4 9 Z M71 40 v12 M75 40 v12" />
-      <path className="ink-forest" d="M18 43 c-2 -4, 2 -8, 5 -3 c2 -4, 6 -2, 5 3 c-3 4 -7 4 -10 0 Z" />
-      <path className="ink-hills" d="M74 75 l3 -5 l3 5 M81 74 l3 -5 l3 5" />
-    </svg>
-  );
-}
-
-function DungeonAtlasInk({ activeIndex }: { activeIndex: number }) {
-  const rooms = [
-    [12, 18],
-    [27, 29],
-    [42, 38],
-    [55, 52],
-    [42, 64],
-    [70, 70],
-    [86, 83]
-  ];
-
-  return (
-    <svg className="handdrawn-atlas dungeon-ink" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-      <path className="ink-cavern" d="M8 18 C22 8, 38 25, 50 34 C64 45, 54 63, 72 70 C84 75, 91 79, 92 89 C75 96, 62 84, 52 75 C41 66, 29 63, 24 50 C19 37, 2 31, 8 18 Z" />
-      <path className="ink-road main-road" d="M12 18 C25 28, 36 31, 42 38 C50 46, 50 56, 42 64 C52 64, 61 68, 70 70 C75 75, 80 79, 86 83" />
-      <path className="ink-hills" d="M52 51 l3 -5 l3 5 M58 54 l3 -5 l3 5" />
-      {rooms.map(([x, y], index) => (
-        <circle className={`ink-room ${index === activeIndex ? "active" : ""}`} cx={x} cy={y} r={index === 5 ? 4.8 : 3.2} key={`${x}-${y}`} />
-      ))}
-    </svg>
-  );
+  if (scope === "dungeon") {
+    return dungeonName ?? "Dungeon Atlas";
+  }
+  return `${zoneName} Atlas`;
 }

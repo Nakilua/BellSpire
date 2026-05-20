@@ -49,7 +49,8 @@ export function getAvailableActions(state: GameState): ActionButton[] {
       { label: "Shield Oath", command: `shield oath ${firstEnemy?.name ?? ""}`.trim(), tone: "primary" },
       { label: "Guard Frontline", command: "guard frontline" },
       { label: "Attack", command: `attack ${firstEnemy?.name ?? ""}`.trim() },
-      { label: "Move Midline", command: "move midline", tone: "quiet" }
+      { label: "Move Midline", command: "move midline", tone: "quiet" },
+      { label: "Story", command: "story", tone: "quiet" }
     ];
 
     if (state.encounter.currentIntentId === "road-seal-pulse") {
@@ -64,6 +65,7 @@ export function getAvailableActions(state: GameState): ActionButton[] {
     const actions: ActionButton[] = [
       { label: "Look", command: "look" },
       { label: "Map", command: "map", tone: "quiet" },
+      { label: "DM Scene", command: "dm", tone: "quiet" },
       { label: "Recap", command: "recap", tone: "quiet" }
     ];
 
@@ -85,6 +87,7 @@ export function getAvailableActions(state: GameState): ActionButton[] {
       return [
         { label: "Travel Hearthmere", command: "travel Hearthmere Fields", tone: "primary" },
         { label: "Listen", command: "listen" },
+        { label: "Story", command: "story" },
         { label: "Abilities", command: "abilities" },
         { label: "Inventory", command: "inventory", tone: "quiet" }
       ];
@@ -93,6 +96,7 @@ export function getAvailableActions(state: GameState): ActionButton[] {
         { label: "Travel Road Shrine", command: "travel Road Shrine of Little Dawn", tone: "primary" },
         { label: "Talk Pilgrim Renn", command: "talk Pilgrim Renn" },
         { label: "Listen", command: "listen" },
+        { label: "DM Scene", command: "dm", tone: "quiet" },
         { label: "Map", command: "map", tone: "quiet" }
       ];
     case "road-shrine-little-dawn":
@@ -101,6 +105,7 @@ export function getAvailableActions(state: GameState): ActionButton[] {
         { label: "Accept Quest", command: "accept quest" },
         { label: "Enter Dungeon", command: "enter dungeon", tone: "primary" },
         { label: "Listen", command: "listen" },
+        { label: "Story", command: "story", tone: "quiet" },
         { label: "Inspect Bell", command: "inspect crypt bell", tone: "quiet" }
       ];
     default:

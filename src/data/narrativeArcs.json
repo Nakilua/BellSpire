@@ -1,0 +1,304 @@
+{
+  "schemaVersion": 1,
+  "mainArc": {
+    "id": "pilgrimage-first-bell",
+    "title": "Pilgrimage of the First Bell",
+    "premise": "The first road out of Saint Veyra opens through discipline, witness, and the inward-ringing bells beneath Little Dawn.",
+    "sourceNote": "Complete Canon Compendium v1.1 Pilgrimage of the First Bell, Saint Veyra, Hearthmere Fields, and Pilgrim Trial Cryptlet sections.",
+    "stages": [
+      {
+        "id": "first-road-summons",
+        "title": "The First Road Summons",
+        "summary": "Saint Veyra gives the character a safe starting hub, a public road duty, and a first reason to step outside the walls.",
+        "nextHint": "Travel Hearthmere Fields or ask the DM what the city notices."
+      },
+      {
+        "id": "hearthmere-crossing",
+        "title": "Fields That Listen",
+        "summary": "Hearthmere Fields turns the tutorial road into a lived-in place: fields, road warnings, low walls, and pilgrims who know the shrine path.",
+        "nextHint": "Follow the road to Little Dawn and listen for local warnings."
+      },
+      {
+        "id": "little-dawn-threshold",
+        "title": "The Shrine Gives Permission",
+        "summary": "Shrinekeeper Olla and the inward bell make the first dungeon feel like a rite, not an arcade door.",
+        "nextHint": "Talk to Olla, accept the trial, then enter the Cryptlet."
+      },
+      {
+        "id": "cryptlet-descent",
+        "title": "Under the Road",
+        "summary": "The Cryptlet teaches party discipline: lanes, object respect, name-tags, and the difference between speed and survival.",
+        "nextHint": "Continue through each room and inspect objects before rushing."
+      },
+      {
+        "id": "warden-toll",
+        "title": "The Warden's Toll",
+        "summary": "The Bellgrave Warden tests whether the Bulwark can read pressure, protect the party, and answer the bell without panic.",
+        "nextHint": "Use Guard Stance, Shield Oath, lane movement, and the Road-Seal Bell."
+      },
+      {
+        "id": "road-seal-witness",
+        "title": "Road-Seal Witness",
+        "summary": "The first road becomes official only when the party survives, reports clearly, and accepts source-governed rewards.",
+        "nextHint": "Loot the cache, read the recap, and let the world remember the run."
+      }
+    ]
+  },
+  "beats": [
+    {
+      "id": "saint-veyra-first-road",
+      "trigger": "dm",
+      "stageId": "first-road-summons",
+      "locationPoiId": "saint-veyra-capital",
+      "title": "DM: Saint Veyra Holds Its Breath",
+      "body": "Saint Veyra does not feel like a menu screen. It feels like a city pretending it is calm. Clerks move reports beneath stained glass, training shields knock in the Oath-Iron Yard, and the public bells hang above First Bell Plaza with the patience of judges. The road east is open, but only just.",
+      "meta": "Narrative Director / Saint Veyra",
+      "tension": 1,
+      "sourceNote": "Source-governed Saint Veyra hub identity and first-road MVP scope."
+    },
+    {
+      "id": "hearthmere-first-crossing",
+      "trigger": "travel",
+      "stageId": "hearthmere-crossing",
+      "locationPoiId": "hearthmere-crossing",
+      "title": "DM: The Fields Answer With Fog",
+      "body": "Hearthmere does not greet you with danger first. It greets you with work: fence repairs, wet soil, road iron under your boots, and farmers pretending not to watch the shield on your arm. Far ahead, Little Dawn rises as a pale mark against the field haze.",
+      "meta": "Narrative Director / Hearthmere Fields",
+      "tension": 1,
+      "sourceNote": "Source-governed Hearthmere Fields identity, materials, and Little Dawn approach."
+    },
+    {
+      "id": "little-dawn-arrival",
+      "trigger": "travel",
+      "stageId": "little-dawn-threshold",
+      "locationPoiId": "road-shrine-little-dawn",
+      "title": "DM: Little Dawn Waits Below The Bell",
+      "body": "The Road Shrine of Little Dawn is smaller than the stories make it, which somehow makes it worse. Wax has built up in the cracks of the stone steps. Someone has cleaned the threshold recently. Someone else has stood there too long deciding whether to go under.",
+      "meta": "Narrative Director / Road Shrine",
+      "tension": 1,
+      "sourceNote": "Source-governed Little Dawn shrine, Cryptlet entrance, and pilgrimage beat."
+    },
+    {
+      "id": "olla-permission-given",
+      "trigger": "talk",
+      "stageId": "little-dawn-threshold",
+      "locationPoiId": "road-shrine-little-dawn",
+      "requiredFlag": "ollaPermission",
+      "title": "DM: Olla Makes It Official",
+      "body": "Olla's permission does not sound like encouragement. It sounds like a key turning. Around the shrine, the small social world adjusts: Renn falls quiet, a roadwarden looks toward the lower stair, and the party understands that the tutorial has stopped being imaginary.",
+      "meta": "Narrative Director / Shrinekeeper Olla",
+      "tension": 2,
+      "sourceNote": "Source-governed Olla permission and Trial Under Little Dawn start."
+    },
+    {
+      "id": "trial-accepted",
+      "trigger": "quest",
+      "stageId": "little-dawn-threshold",
+      "questId": "trial-under-little-dawn",
+      "questStatus": "active",
+      "title": "DM: The Trial Has Your Name",
+      "body": "The quest does not appear as a sparkling chore. It lands like a witness statement. Your name, your vow, the road, the bell, the party nearby. The Concord can file all of that later. Right now, the stone only cares whether you step forward.",
+      "meta": "Narrative Director / Main Story",
+      "tension": 2,
+      "sourceNote": "Source-governed Trial Under Little Dawn quest steps."
+    },
+    {
+      "id": "cryptlet-door-opens",
+      "trigger": "dungeon",
+      "stageId": "cryptlet-descent",
+      "locationPoiId": "pilgrim-trial-cryptlet",
+      "dungeonRoomId": "shrine-descent",
+      "title": "DM: The Door Opens Inward",
+      "body": "The Cryptlet does not open like a tomb. It opens like a memory accepting a visitor. The first chamber receives the party in cool roadstone, candle-smell, and the heavy quiet of rules older than the people enforcing them.",
+      "meta": "Narrative Director / Shrine Descent",
+      "tension": 2,
+      "sourceNote": "Source-governed Pilgrim Trial Cryptlet Shrine Descent."
+    },
+    {
+      "id": "threaded-names-whisper",
+      "trigger": "dungeon",
+      "stageId": "cryptlet-descent",
+      "dungeonRoomId": "hall-threaded-names",
+      "title": "DM: The Names Are Not Decoration",
+      "body": "The hanging name-tags brush one another without wind. They are not loot, not puzzle clutter, not set dressing. They are proof that other people walked this route with fear in their mouths and did not become anonymous.",
+      "meta": "Narrative Director / Hall of Threaded Names",
+      "tension": 1,
+      "sourceNote": "Source-governed Threaded Name Tags hidden memory beat."
+    },
+    {
+      "id": "broken-bell-choice",
+      "trigger": "dungeon",
+      "stageId": "cryptlet-descent",
+      "dungeonRoomId": "broken-bell-niche",
+      "title": "DM: The Broken Bell Teaches Patience",
+      "body": "The Broken Bell Niche is the first place the dungeon asks whether you are here to win or here to understand. The wax channel is simple enough to ignore and important enough to punish that choice.",
+      "meta": "Narrative Director / Broken Bell Niche",
+      "tension": 1,
+      "sourceNote": "Source-governed Broken Bell Niche object lesson."
+    },
+    {
+      "id": "bone-walk-party-trust",
+      "trigger": "dungeon",
+      "stageId": "cryptlet-descent",
+      "dungeonRoomId": "pilgrim-bone-walk",
+      "title": "DM: The Bone Walk Measures The Party",
+      "body": "The Pilgrim Bone Walk narrows the party without touching the walls. Everyone's role becomes visible: the Bulwark's pace, the healer's patience, the damage dealers' restraint, Renn's breathing as he follows the safe side of your shield.",
+      "meta": "Narrative Director / Pilgrim Bone Walk",
+      "tension": 2,
+      "sourceNote": "Source-governed Bone Walk party-behavior lesson."
+    },
+    {
+      "id": "warden-before-toll",
+      "trigger": "dungeon",
+      "stageId": "warden-toll",
+      "dungeonRoomId": "warden-chamber",
+      "title": "DM: The Warden Has Been Listening",
+      "body": "The Warden Chamber does not feel empty before the fight. It feels attended. The Bellgrave Warden is not waiting to surprise you; it is waiting to see whether the party learned enough to deserve the next road.",
+      "meta": "Narrative Director / Warden Chamber",
+      "tension": 3,
+      "sourceNote": "Source-governed Bellgrave Warden chamber and final tutorial test."
+    },
+    {
+      "id": "road-seal-cache-opens",
+      "trigger": "loot",
+      "stageId": "road-seal-witness",
+      "requiredFlag": "cryptletComplete",
+      "title": "DM: The Road Accepts The Report",
+      "body": "The cache opens without fanfare because Bellspire is not impressed by noise. Materials, reputation, pity, and staged rewards all leave a trail the Concord can audit. More importantly, the road has a witness now.",
+      "meta": "Narrative Director / Road-Seal Exit",
+      "tension": -2,
+      "sourceNote": "Source-governed Cryptlet reward cache and no-ghost-loot rule."
+    }
+  ],
+  "vignettes": [
+    {
+      "id": "saint-veyra-city-routines",
+      "triggers": ["dm", "listen"],
+      "stageIds": ["first-road-summons"],
+      "locationPoiIds": ["saint-veyra-capital"],
+      "title": "DM Texture: Saint Veyra Keeps Moving",
+      "meta": "Narrative Director / repeatable city scene",
+      "tension": 0,
+      "sourceNote": "Source-safe Saint Veyra hub texture from capital systems and district identity.",
+      "bodies": [
+        "A clerk crosses First Bell Plaza with a ledger held under one arm, walking fast enough to imply urgency and slow enough to deny panic. Near the training courts, a shield drill lands in a steady rhythm. {character}'s {vow} vow feels less like flavor text here and more like a job someone may actually ask you to do.",
+        "The city does not pause for you, which is the point. Concord messengers argue over routing stamps, Bulwark trainees rotate through shield lines, and somebody near the guild board laughs too loudly at bad news. Saint Veyra is safe, but not asleep.",
+        "Rainwater gathers in the black roadstone grooves and carries candle reflection through the plaza like molten gold. Your {origin} origin changes who looks twice, but everyone recognizes the shield. The road out is not dramatic from here. It is simply waiting."
+      ]
+    },
+    {
+      "id": "first-road-party-check",
+      "triggers": ["dm", "listen", "travel"],
+      "stageIds": ["first-road-summons", "hearthmere-crossing"],
+      "title": "DM Texture: The Party Checks Its Nerves",
+      "meta": "Narrative Director / repeatable party scene",
+      "tension": 1,
+      "sourceNote": "Local social simulation texture constrained by starter party roles and first-road scope.",
+      "bodies": [
+        "Renn watches your shield instead of the horizon, which tells you two things: he trusts the role more than the person so far, and he is trying very hard not to show it. Somewhere behind the party, the chats keep moving like a city-sized heartbeat.",
+        "Edrin counts everyone with healer eyes: health, posture, distance, confidence. Tallowwick pretends not to be doing the same math, then ruins the illusion by muttering that ancient roads should come with fewer opinions.",
+        "For a few seconds, nobody gives you a quest marker. The party just exists: boots on stone, wax smell in the air, people waiting to see whether your next choice makes the world safer or louder."
+      ]
+    },
+    {
+      "id": "hearthmere-road-pressure",
+      "triggers": ["dm", "listen", "travel"],
+      "stageIds": ["hearthmere-crossing"],
+      "locationPoiIds": ["hearthmere-crossing"],
+      "title": "DM Texture: Hearthmere Has Edges",
+      "meta": "Narrative Director / repeatable road scene",
+      "tension": 1,
+      "sourceNote": "Source-safe Hearthmere texture from field roads, low walls, shrine approach, and road pressure.",
+      "bodies": [
+        "The field paths look simple until you notice how many low walls bend slightly away from the shrine road. Farmers build around things they do not want to discuss. That is not a monster warning yet. It is older and more practical.",
+        "A fieldhand raises two fingers in road greeting, then touches the small charm at her belt when she thinks you have looked away. Hearthmere is not terrified. Hearthmere is experienced.",
+        "The fog lies low over the wheat and refuses to behave like weather. It makes distance feel negotiable. The shrine is still ahead, but the road between here and there has started paying attention."
+      ]
+    },
+    {
+      "id": "little-dawn-threshold-repeat",
+      "triggers": ["dm", "listen", "talk"],
+      "stageIds": ["little-dawn-threshold"],
+      "locationPoiIds": ["road-shrine-little-dawn"],
+      "title": "DM Texture: Little Dawn Does Not Rush",
+      "meta": "Narrative Director / repeatable shrine scene",
+      "tension": 1,
+      "sourceNote": "Source-safe Little Dawn shrine and Olla threshold texture.",
+      "bodies": [
+        "Olla gives the party the mercy of not filling silence. The shrine does that on its own: candle hiss, robe cloth, stone settling under old weight. If this were only a tutorial, the air would not feel so interested.",
+        "Renn reads the same shrine mark twice and pretends the second pass is for accuracy. Tallowwick notices, opens his mouth, then wisely chooses survival through silence. Character growth, barely.",
+        "The inward bell is small enough to fit in a hand and heavy enough to change the room. It does not promise glory. It offers permission, which is worse because permission can become responsibility."
+      ]
+    },
+    {
+      "id": "cryptlet-living-dungeon",
+      "triggers": ["dm", "listen", "dungeon"],
+      "stageIds": ["cryptlet-descent"],
+      "title": "DM Texture: The Cryptlet Teaches Back",
+      "meta": "Narrative Director / repeatable dungeon scene",
+      "tension": 1,
+      "sourceNote": "Source-safe Cryptlet tutorial texture from room lessons, lanes, and object counterplay.",
+      "bodies": [
+        "The Cryptlet is not built to kill beginners. That almost makes it more insulting. Every hall is patient, every object positioned like a teacher folding its hands, every mistake allowed just long enough to become educational.",
+        "Your shield changes the shape of the room. People stand differently behind it. The dungeon notices the formation before it notices your name.",
+        "A faint vibration travels through the floor whenever the party hesitates. Not a threat yet. More like the place clearing its throat before correcting someone's posture."
+      ]
+    },
+    {
+      "id": "cryptlet-room-focus",
+      "triggers": ["dm", "dungeon"],
+      "stageIds": ["cryptlet-descent", "warden-toll"],
+      "title": "DM Texture: Current Room Read",
+      "meta": "Narrative Director / repeatable room read",
+      "tension": 1,
+      "sourceNote": "Uses the current source-governed dungeon room scene and lesson without creating new room canon.",
+      "bodies": [
+        "{room} asks for a specific kind of patience. The lesson is not hidden: watch the object, respect the lane, listen to the party before the room makes the point louder.",
+        "In {room}, the party's confidence becomes visible. The healer's distance, the scout's angle, your frontline pace. The room is less a hallway than a question with stone walls.",
+        "The DM read is simple: if something here looks decorative, inspect it. Bellspire has a suspicious relationship with decorations."
+      ]
+    },
+    {
+      "id": "warden-pressure-repeat",
+      "triggers": ["dm", "listen", "dungeon"],
+      "stageIds": ["warden-toll"],
+      "dungeonRoomIds": ["warden-chamber"],
+      "title": "DM Texture: The Warden Lets You Think",
+      "meta": "Narrative Director / repeatable boss scene",
+      "tension": 2,
+      "sourceNote": "Source-safe Bellgrave Warden pressure texture from final tutorial chamber and telegraph rules.",
+      "bodies": [
+        "The Warden does not posture. That is the frightening part. It gives you time to read the chamber, to remember the Road-Seal Bell, to choose discipline before pressure makes the choice for you.",
+        "Every party member goes quieter here. Not silent. Professional. The difference matters. This is where the first road learns whether your {vow} vow survives contact with the bell.",
+        "The roots above the bronze bell look still until the party moves. Then their shadows shift half a second late, as if the room is deciding which mistake to punish first."
+      ]
+    },
+    {
+      "id": "road-seal-afterglow",
+      "triggers": ["dm", "listen", "loot"],
+      "stageIds": ["road-seal-witness"],
+      "title": "DM Texture: After The First Road",
+      "meta": "Narrative Director / repeatable aftermath scene",
+      "tension": -1,
+      "sourceNote": "Source-safe aftermath texture for completed Cryptlet, source pity, reputation, and report memory.",
+      "bodies": [
+        "Afterward, the world does not explode into victory music. It gets administrative. Reports, cache counts, names of witnesses, damage noted, lessons filed. Bellspire makes survival feel official.",
+        "Renn keeps looking back at the exit like he expects the Cryptlet to call his name again. Edrin lets him. Tallowwick does not joke for almost a full minute, which is how you know the run mattered.",
+        "The Road-Seal Exit leaves a different kind of silence behind you. Not empty. Acknowledged. The road knows you stood there."
+      ]
+    },
+    {
+      "id": "personal-vow-reflection",
+      "triggers": ["dm", "story", "rest"],
+      "title": "DM Texture: The Vow Answers Softly",
+      "meta": "Narrative Director / repeatable character scene",
+      "tension": 0,
+      "sourceNote": "Character-origin and vow reflection only; does not create new canon facts.",
+      "bodies": [
+        "For a moment, the big systems fall away: no loot table, no chat scroll, no map overlay. Just {character}, Bulwark, {origin}, carrying the vow to {vow}. The world can be huge later. Right now it is one person deciding to keep standing.",
+        "The shield is not only equipment in this story. It is a social promise. People behave differently around someone who has chosen to be the first thing danger meets.",
+        "Your vow does not shout. It waits in the pauses: before travel, before pulling, before answering someone afraid. That is where Bellspire can make a character feel real."
+      ]
+    }
+  ]
+}

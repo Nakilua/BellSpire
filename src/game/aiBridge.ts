@@ -1,6 +1,7 @@
 import canonContextPacks from "../data/canonContextPacks.json";
 import canonRegistry from "../data/canonRegistry.json";
 import { inferIntent } from "./director";
+import { getNarrativeStatus } from "./narrativeDirector";
 import { getCurrentPoi, getCurrentRoom } from "./selectors";
 import type { GameState } from "./types";
 
@@ -85,6 +86,7 @@ export async function requestLiveDirector(state: GameState, channelId: string, m
 function createGameSnapshot(state: GameState, message: string) {
   const poi = getCurrentPoi(state);
   const room = getCurrentRoom(state);
+  const narrative = getNarrativeStatus(state);
 
   return {
     location: {
@@ -113,6 +115,17 @@ function createGameSnapshot(state: GameState, message: string) {
       hp: state.character.hp,
       maxHp: state.character.maxHp,
       oath: state.character.oath
+    },
+    narrative: {
+      arcTitle: narrative.arcTitle,
+      stageTitle: narrative.stageTitle,
+      stageSummary: narrative.stageSummary,
+      nextHint: narrative.nextHint,
+      tension: narrative.tension,
+      tensionLabel: narrative.tensionLabel,
+      seenBeatCount: narrative.seenBeatCount,
+      sceneCount: narrative.sceneCount,
+      lastBeatId: narrative.lastBeatId
     },
     recentParty: state.social.recentParty,
     contacts: state.social.contacts.map((contact) => ({

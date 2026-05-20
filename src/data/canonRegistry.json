@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-19T17:10:32.147Z",
+  "generatedAt": "2026-05-20T04:49:56.816Z",
   "sourceRoot": "C:\\Users\\steph\\Downloads",
   "summary": {
     "sourceFiles": 16,
@@ -10,10 +10,10 @@
     "workbookRows": 910,
     "pdfFiles": 8,
     "markdownFiles": 3,
-    "runtimeDataFiles": 18,
-    "runtimeRecords": 123,
-    "runtimeGovernedFiles": 18,
-    "runtimeGovernedRecords": 123,
+    "runtimeDataFiles": 21,
+    "runtimeRecords": 194,
+    "runtimeGovernedFiles": 21,
+    "runtimeGovernedRecords": 194,
     "zones": 11,
     "pois": 99,
     "dungeons": 12,
@@ -635,10 +635,10 @@
     }
   ],
   "runtimeGovernance": {
-    "files": 18,
-    "records": 123,
-    "governedFiles": 18,
-    "governedRecords": 123
+    "files": 21,
+    "records": 194,
+    "governedFiles": 21,
+    "governedRecords": 194
   },
   "pdfIndex": {
     "available": true,

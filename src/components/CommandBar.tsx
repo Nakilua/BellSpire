@@ -22,6 +22,14 @@ export function CommandBar({ actions, onCommand }: Props) {
 
   return (
     <footer className="command-footer">
+      <div className="hotbar-row" aria-label="Action hotbar">
+        {actions.slice(0, 6).map((action, index) => (
+          <button className={`hotbar-button ${action.tone ?? ""}`} type="button" onClick={() => onCommand(action.command)} key={`${action.command}-${index}`}>
+            <small>{index + 1}</small>
+            <span>{action.label}</span>
+          </button>
+        ))}
+      </div>
       <form className="command-form" onSubmit={submit}>
         <input
           className="command-input"

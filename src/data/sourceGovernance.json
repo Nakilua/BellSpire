@@ -105,6 +105,14 @@
         "note": "Map service pins expose source-governed hub, trainer, guild, crafting, shrine, and route service categories without inventing unsourced shop names."
       }
     },
+    "mapAnnotations.json": {
+      "default": {
+        "sourceTier": 1,
+        "sourceStatus": "curated-canon-map-annotations",
+        "sourceRefs": ["Project_Bellspire_Complete_Canon_Compendium_v1_1.pdf", "Project_Bellspire_Complete_Data_Workbook_v1_1.xlsx", "Project_Bellspire_Discord_Map_Playstyle_Prompt_v1_1.md"],
+        "note": "Map annotation labels expose source-governed districts, routes, dungeon rooms, and generic service clusters as an atlas detail layer without treating bitmap art as canon authority."
+      }
+    },
     "narrativeArcs.json": {
       "default": {
         "sourceTier": 1,

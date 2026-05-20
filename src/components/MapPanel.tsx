@@ -21,6 +21,7 @@ import {
   X,
   type LucideIcon
 } from "lucide-react";
+import mapAnnotations from "../data/mapAnnotations.json";
 import mapServices from "../data/mapServices.json";
 import pois from "../data/pois.json";
 import regionTopography from "../data/regionTopography.json";
@@ -31,8 +32,9 @@ interface Props {
   state: GameState;
 }
 
-type MapLayer = "routes" | "services" | "danger" | "guild";
+type MapLayer = "routes" | "services" | "danger" | "guild" | "details";
 type AtlasScope = "world" | "zone" | "dungeon";
+type AtlasAnnotationKind = "major" | "route" | "service" | "danger" | "dungeon" | "optional";
 
 interface RegionTopography {
   id: string;
@@ -64,6 +66,20 @@ interface MapService {
   sourceNote: string;
 }
 
+interface MapAnnotation {
+  id: string;
+  scope: "zone" | "dungeon";
+  zoneId?: string;
+  dungeonId?: string;
+  label: string;
+  kind: AtlasAnnotationKind;
+  x: number;
+  y: number;
+  priority: number;
+  note: string;
+  sourceNote: string;
+}
+
 interface DungeonRoom {
   id: string;
   name: string;
@@ -85,11 +101,13 @@ interface DungeonDefinition {
 
 const regions = regionTopography as RegionTopography[];
 const services = mapServices as MapService[];
+const annotations = mapAnnotations as MapAnnotation[];
 const layerLabels: Record<MapLayer, string> = {
   routes: "Routes",
   services: "Services",
   danger: "Danger",
-  guild: "Guild"
+  guild: "Guild",
+  details: "Details"
 };
 const serviceKindLabels: Record<string, string> = {
   landmark: "Landmarks",
@@ -126,7 +144,8 @@ export function MapPanel({ state }: Props) {
     routes: true,
     services: true,
     danger: true,
-    guild: false
+    guild: false,
+    details: true
   });
   const dungeon = getActiveDungeon(state) as DungeonDefinition | undefined;
   const room = getCurrentRoom(state) as DungeonRoom | undefined;
@@ -190,6 +209,7 @@ export function MapPanel({ state }: Props) {
             activeRoomId={activeRoomId}
             selectedRoomId={selectedRoom?.id}
             onSelectRoom={setSelectedDungeonRoomId}
+            showDetails
           />
           {selectedRoom ? <DungeonRoomDetail dungeon={dungeon} room={selectedRoom} activeRoomId={activeRoomId} /> : null}
           <DungeonRouteList dungeon={dungeon} activeRoomId={activeRoomId} selectedRoomId={selectedRoom?.id} onSelectRoom={setSelectedDungeonRoomId} />
@@ -236,6 +256,7 @@ export function MapPanel({ state }: Props) {
             zoneServices={zoneServices}
             activeService={activeService}
             showServices={layers.services}
+            showDetails={layers.details}
             onSelectService={setSelectedServiceId}
           />
           {layers.services ? <ServiceLegend services={zoneServices} selectedService={activeService} onSelect={setSelectedServiceId} /> : null}
@@ -260,6 +281,7 @@ export function MapPanel({ state }: Props) {
             zoneServices={zoneServices}
             activeService={activeService}
             showServices={layers.services}
+            showDetails={layers.details}
             onSelectService={setSelectedServiceId}
             expanded
           />
@@ -271,6 +293,7 @@ export function MapPanel({ state }: Props) {
               activeRoomId={activeRoomId}
               selectedRoomId={selectedRoom?.id}
               onSelectRoom={setSelectedDungeonRoomId}
+              showDetails
               expanded
             />
             {selectedRoom ? <DungeonRoomDetail dungeon={dungeon} room={selectedRoom} activeRoomId={activeRoomId} /> : null}
@@ -356,6 +379,7 @@ function ZoneMapPlate({
   zoneServices,
   activeService,
   showServices,
+  showDetails,
   onSelectService,
   expanded = false
 }: {
@@ -365,6 +389,7 @@ function ZoneMapPlate({
   zoneServices: MapService[];
   activeService?: MapService;
   showServices: boolean;
+  showDetails: boolean;
   onSelectService: (id: string) => void;
   expanded?: boolean;
 }) {
@@ -399,6 +424,7 @@ function ZoneMapPlate({
             </button>
           ))
         : null}
+      <AtlasAnnotationLayer scope="zone" zoneId={zoneId} expanded={expanded} showDetails={showDetails} />
     </div>
   );
 }
@@ -408,12 +434,14 @@ function DungeonMapPlate({
   activeRoomId,
   selectedRoomId,
   onSelectRoom,
+  showDetails,
   expanded = false
 }: {
   dungeon: DungeonDefinition;
   activeRoomId?: string;
   selectedRoomId?: string;
   onSelectRoom: (id: string) => void;
+  showDetails: boolean;
   expanded?: boolean;
 }) {
   return (
@@ -440,6 +468,56 @@ function DungeonMapPlate({
           </button>
         );
       })}
+      <AtlasAnnotationLayer scope="dungeon" dungeonId={dungeon.id} expanded={expanded} showDetails={showDetails} />
+    </div>
+  );
+}
+
+function AtlasAnnotationLayer({
+  scope,
+  zoneId,
+  dungeonId,
+  expanded,
+  showDetails
+}: {
+  scope: MapAnnotation["scope"];
+  zoneId?: string;
+  dungeonId?: string;
+  expanded: boolean;
+  showDetails: boolean;
+}) {
+  if (!showDetails) {
+    return null;
+  }
+
+  const visibleAnnotations = annotations.filter((entry) => {
+    if (!expanded && entry.priority > 1) {
+      return false;
+    }
+    if (scope === "zone") {
+      return entry.scope === "zone" && entry.zoneId === zoneId;
+    }
+    return entry.scope === "dungeon" && entry.dungeonId === dungeonId;
+  });
+
+  if (visibleAnnotations.length === 0) {
+    return null;
+  }
+
+  return (
+    <div className="atlas-annotation-layer" aria-hidden="true">
+      {visibleAnnotations.map((entry) => (
+        <div
+          className={`atlas-annotation ${entry.kind} priority-${entry.priority}`}
+          key={entry.id}
+          style={{ left: `${entry.x}%`, top: `${entry.y}%` }}
+          title={`${entry.label}: ${entry.note}`}
+          data-source-note={entry.sourceNote}
+        >
+          <span>{entry.label}</span>
+          {expanded ? <small>{entry.note}</small> : null}
+        </div>
+      ))}
     </div>
   );
 }

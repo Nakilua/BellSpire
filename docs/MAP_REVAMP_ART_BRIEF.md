@@ -10,9 +10,18 @@ The current bitmap maps are moving in the right direction, but the overlay pins 
 
 - Pins are UI, not canon by themselves.
 - Marker text must come from `src/data/mapServices.json` and keep a `sourceNote`.
+- Cartographer labels must come from `src/data/mapAnnotations.json` and keep a `sourceNote`.
 - If the compendium proves a function but not an exact shop name, use a generic label like `Training`, `Crafting`, `Field Supplies`, or `Guild Board`.
 - Do not invent permanent shop, inn, vendor, NPC, or loot names to make a map prettier.
 - In-map labels should stay sparse; detail belongs in hover/selection panels and legends.
+
+## Cartographer Detail Layer
+
+- The bitmap map is the visual plate.
+- `src/data/mapAnnotations.json` is the readable detail layer for districts, roads, shrine thresholds, dungeon rooms, and source-safe service clusters.
+- Normal map mode should show only the most important labels.
+- Expanded Atlas View may show denser labels and short notes.
+- The detail layer can be revised safely without regenerating the bitmap art, but future bitmap repaint passes should visually support the same source-governed labels.
 
 ## Bitmap Map Revamp Targets
 
@@ -47,3 +56,4 @@ The current bitmap maps are moving in the right direction, but the overlay pins 
 - Pins should feel painted onto or physically attached to the map.
 - Expanded Atlas View should make small details inspectable.
 - Mobile view can simplify labels, but it must keep tap targets usable.
+- Detail labels should feel hand-lettered into the atlas rather than like modern app labels.

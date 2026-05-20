@@ -3690,6 +3690,105 @@ button {
   text-shadow: none;
 }
 
+.atlas-annotation-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.atlas-annotation {
+  position: absolute;
+  display: grid;
+  max-width: 138px;
+  gap: 3px;
+  color: rgba(36, 22, 14, 0.95);
+  font-family: Georgia, "Times New Roman", serif;
+  line-height: 1.05;
+  text-align: center;
+  text-shadow:
+    0 1px 0 rgba(245, 215, 157, 0.52),
+    0 0 8px rgba(229, 194, 125, 0.42);
+  transform: translate(-50%, -50%) rotate(-1deg);
+}
+
+.atlas-annotation::before {
+  width: 22px;
+  height: 1px;
+  margin: 0 auto -1px;
+  content: "";
+  background: linear-gradient(90deg, transparent, rgba(57, 35, 21, 0.56), transparent);
+}
+
+.atlas-annotation span {
+  display: inline-block;
+  padding: 2px 5px 3px;
+  border: 1px solid rgba(75, 44, 25, 0.18);
+  border-radius: 2px;
+  background:
+    linear-gradient(180deg, rgba(233, 204, 146, 0.24), rgba(154, 98, 54, 0.08)),
+    rgba(219, 183, 116, 0.08);
+  box-shadow: 0 3px 9px rgba(35, 20, 12, 0.14);
+  font-size: 0.57rem;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+}
+
+.atlas-annotation small {
+  display: none;
+  padding: 4px 6px;
+  border: 1px solid rgba(75, 44, 25, 0.28);
+  border-radius: 2px;
+  background:
+    linear-gradient(180deg, rgba(235, 205, 146, 0.88), rgba(175, 124, 69, 0.78)),
+    rgba(208, 160, 83, 0.78);
+  box-shadow:
+    0 1px 0 rgba(255, 236, 184, 0.34) inset,
+    0 8px 18px rgba(20, 12, 8, 0.26);
+  color: rgba(37, 23, 14, 0.9);
+  font-size: 0.55rem;
+  font-weight: 800;
+}
+
+.atlas-annotation.route {
+  transform: translate(-50%, -50%) rotate(-4deg);
+}
+
+.atlas-annotation.route span,
+.atlas-annotation.major span {
+  background:
+    linear-gradient(180deg, rgba(255, 224, 158, 0.34), rgba(148, 86, 46, 0.1)),
+    rgba(221, 169, 87, 0.14);
+  color: rgba(39, 23, 12, 0.98);
+}
+
+.atlas-annotation.service span {
+  color: rgba(47, 31, 17, 0.9);
+}
+
+.atlas-annotation.danger span,
+.atlas-annotation.dungeon span {
+  border-color: rgba(87, 38, 37, 0.28);
+  color: rgba(82, 29, 27, 0.95);
+}
+
+.atlas-annotation.optional span {
+  border-color: rgba(74, 51, 93, 0.28);
+  color: rgba(57, 39, 76, 0.95);
+}
+
+.atlas-annotation.priority-2 {
+  opacity: 0.92;
+}
+
+.custom-map-plate.expanded .atlas-annotation {
+  max-width: 178px;
+}
+
+.custom-map-plate.expanded .atlas-annotation span {
+  font-size: 0.68rem;
+}
+
 .dungeon-room-pin > span {
   width: 20px;
   height: 20px;
@@ -3858,5 +3957,18 @@ button {
   .dungeon-room-pin small,
   .service-pin small {
     max-width: 96px;
+  }
+
+  .atlas-annotation {
+    max-width: 94px;
+  }
+
+  .atlas-annotation span {
+    font-size: 0.5rem;
+    padding-inline: 4px;
+  }
+
+  .atlas-annotation small {
+    display: none;
   }
 }

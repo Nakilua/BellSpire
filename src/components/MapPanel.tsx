@@ -332,8 +332,8 @@ function WorldMapPlate({
                 title={`${entry.label}: ${entry.summary}`}
                 type="button"
               >
-                <span className="service-pin-icon">
-                  <ServiceIcon kind={entry.kind} />
+                <span className="service-pin-icon" aria-hidden="true">
+                  <span className="service-pin-mark">{getServiceMark(entry.kind)}</span>
                 </span>
                 <small>{entry.label}</small>
               </button>
@@ -392,8 +392,8 @@ function ZoneMapPlate({
               aria-label={`${entry.label}: ${entry.summary}`}
               onClick={() => onSelectService(entry.id)}
             >
-              <span className="service-pin-icon">
-                <ServiceIcon kind={entry.kind} />
+              <span className="service-pin-icon" aria-hidden="true">
+                <span className="service-pin-mark">{getServiceMark(entry.kind)}</span>
               </span>
               <small>{entry.label}</small>
             </button>
@@ -586,6 +586,28 @@ function ServiceIcon({ kind }: { kind: string }) {
   const Icon = icons[kind] ?? MapPin;
 
   return <Icon aria-hidden="true" size={13} strokeWidth={2.4} />;
+}
+
+function getServiceMark(kind: string) {
+  const marks: Record<string, string> = {
+    landmark: "B",
+    ledger: "L",
+    trainer: "T",
+    guild: "G",
+    craft: "C",
+    market: "M",
+    faction: "F",
+    shrine: "+",
+    rest: "R",
+    social: "S",
+    material: "m",
+    dungeon: "D",
+    danger: "!",
+    route: ">",
+    preview: "?"
+  };
+
+  return marks[kind] ?? ".";
 }
 
 function MapReadoutList({ label, values }: { label: string; values: string[] }) {

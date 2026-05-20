@@ -7,6 +7,7 @@ BellSpire should feel like a gothic MMO atlas client: readable as a game, rich a
 - `/login` and `/` should share the same visual language: parchment, ink, wax seals, bronze trim, shrine light, and dark cathedral glass.
 - Maps should be usable, not just decorative. The current generated bitmap maps are the base art layer, while readable labels, pins, and legends are source-governed UI.
 - Major canon landmarks and districts may appear as painted map labels. Shops, services, trainers, inns, boards, and vendors should be data-driven markers unless a source gives an exact name.
+- Pins should match the map art: ink marks, wax seals, brass tacks, hand-lettered tags, and parchment flags. Avoid modern floating app-icon badges.
 - Dungeon maps should show room order, active room, lesson, object, checkpoint/route meaning, and boss/optional branches clearly.
 
 ## Source Law For Map Details
@@ -25,6 +26,7 @@ BellSpire should feel like a gothic MMO atlas client: readable as a game, rich a
 - The right-side map tab feels like an in-world atlas/journal surface.
 - The expanded Atlas View is usable on desktop and still readable on mobile.
 - The command bar, quest cards, inventory, feed messages, and tabs keep moving toward the same atlas material style.
+- A future bitmap map repaint pass should add more painted city, shop, inn, district, shrine, route, and dungeon detail without using the image itself as canon authority.
 
 ## Not Yet
 

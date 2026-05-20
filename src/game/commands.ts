@@ -7,6 +7,7 @@ import zones from "../data/zones.json";
 import { performCombatAction, startEncounter } from "./combat";
 import { postWorldChat, pulseLivingWorld, showNearbyWorld } from "./livingWorld";
 import { grantCryptletRewards } from "./loot";
+import { pulseNarrative, showNarrativeJournal } from "./narrativeDirector";
 import { addFeed } from "./state";
 import { getActiveDungeon, getBulwarkAbilities, getCurrentPoi, getCurrentRoom, getCurrentZone, getQuestDefinition } from "./selectors";
 import { handleSocialCommand } from "./social";
@@ -39,11 +40,19 @@ export function runCommand(state: GameState, rawCommand: string): GameState {
   }
 
   if (command === "listen" || command === "wait") {
-    return pulseLivingWorld(next, "listen");
+    return pulseNarrative(pulseLivingWorld(next, "listen"), "listen");
   }
 
   if (command === "who" || command === "nearby") {
     return showNearbyWorld(next);
+  }
+
+  if (command === "story" || command === "main story" || command === "narrative") {
+    return showNarrativeJournal(next);
+  }
+
+  if (command === "dm" || command === "narrate" || command === "dm scene") {
+    return pulseNarrative(next, "dm", { force: true });
   }
 
   if (command.startsWith("global ")) {
@@ -142,7 +151,7 @@ export function runCommand(state: GameState, rawCommand: string): GameState {
     next,
     "warning",
     "Command not recognized",
-    "Try `look`, `map`, `travel Hearthmere Fields`, `talk Shrinekeeper Olla`, `accept quest`, `enter dungeon`, `lfg`, `party hello`, `director what does the party notice?`, `guild contracts`, `invite Renn`, `shield oath`, `guard frontline`, `loot`, or use the action buttons.",
+    "Try `look`, `story`, `dm`, `map`, `travel Hearthmere Fields`, `talk Shrinekeeper Olla`, `accept quest`, `enter dungeon`, `lfg`, `party hello`, `director what does the party notice?`, `guild contracts`, `invite Renn`, `shield oath`, `guard frontline`, `loot`, or use the action buttons.",
     "MVP parser"
   );
 }
@@ -236,7 +245,7 @@ function moveToPoi(state: GameState, poiId: string): GameState {
   const channelId = zone?.channelId ?? state.activeChannelId;
   const visited = state.sessionRecap.visited.includes(poi.name) ? state.sessionRecap.visited : [...state.sessionRecap.visited, poi.name];
 
-  return pulseLivingWorld(addFeed(
+  return pulseNarrative(pulseLivingWorld(addFeed(
     {
       ...state,
       activeChannelId: channelId,
@@ -250,7 +259,7 @@ function moveToPoi(state: GameState, poiId: string): GameState {
     poi.name,
     poi.scene,
     zone?.name
-  ), "travel");
+  ), "travel"), "travel");
 }
 
 function findPoiByAlias(targetText: string) {
@@ -309,7 +318,7 @@ function talk(state: GameState, targetText: string): GameState {
     next = addFeed(next, "system", "Quest available", "Trial Under Little Dawn is ready. Use `accept quest` or press the action button.", "Shrinekeeper Olla");
   }
 
-  return pulseLivingWorld(next, "talk");
+  return pulseNarrative(pulseLivingWorld(next, "talk"), "talk");
 }
 
 function acceptQuest(state: GameState): GameState {
@@ -318,7 +327,7 @@ function acceptQuest(state: GameState): GameState {
   }
 
   const quest = getQuestDefinition("trial-under-little-dawn")!;
-  return addFeed(
+  return pulseNarrative(addFeed(
     {
       ...state,
       quests: {
@@ -339,7 +348,7 @@ function acceptQuest(state: GameState): GameState {
     `Quest accepted: ${quest.name}`,
     quest.steps[1],
     quest.source
-  );
+  ), "quest");
 }
 
 function enterDungeon(state: GameState): GameState {
@@ -352,7 +361,7 @@ function enterDungeon(state: GameState): GameState {
   }
 
   const dungeon = dungeons[0];
-  return pulseLivingWorld(addFeed(
+  return pulseNarrative(pulseLivingWorld(addFeed(
     {
       ...state,
       activeChannelId: "combat-log",
@@ -387,7 +396,7 @@ function enterDungeon(state: GameState): GameState {
     "Pilgrim Trial Cryptlet",
     "The inward bell opens the roadstone door. Room 1: Shrine Descent. The Road Trial Oath is read and logged.",
     "Training mode"
-  ), "dungeon");
+  ), "dungeon"), "dungeon");
 }
 
 function continueDungeon(state: GameState): GameState {
@@ -465,10 +474,10 @@ function continueDungeon(state: GameState): GameState {
   next = addFeed(next, "scene", nextRoom.name, `${nextRoom.scene}\nLesson: ${nextRoom.lesson}`, nextRoom.type);
 
   if (nextRoom.encounterId) {
-    return startEncounter(next, nextRoom.encounterId);
+    return startEncounter(pulseNarrative(next, "dungeon"), nextRoom.encounterId);
   }
 
-  return pulseLivingWorld(next, "dungeon");
+  return pulseNarrative(pulseLivingWorld(next, "dungeon"), "dungeon");
 }
 
 function retryEncounter(state: GameState): GameState {
@@ -584,7 +593,7 @@ function loot(state: GameState): GameState {
     }
   };
 
-  return pulseLivingWorld(next, "loot");
+  return pulseNarrative(pulseLivingWorld(next, "loot"), "loot");
 }
 
 function showInventory(state: GameState): GameState {
@@ -626,6 +635,7 @@ function recap(state: GameState): GameState {
   const recapLines = [
     `Visited: ${state.sessionRecap.visited.join(" -> ") || "None"}`,
     `Quests: ${state.sessionRecap.quests.join("; ") || "None"}`,
+    `Narrative: ${state.sessionRecap.narrative.join("; ") || "None"}`,
     `Loot: ${state.sessionRecap.loot.join("; ") || "None"}`,
     `Wipes: ${state.sessionRecap.wipes.join("; ") || "None"}`,
     `Reputation: ${state.sessionRecap.reputation.join("; ") || "None"}`,

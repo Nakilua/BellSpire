@@ -1,0 +1,173 @@
+{
+  "schemaVersion": 1,
+  "mainArc": {
+    "id": "pilgrimage-first-bell",
+    "title": "Pilgrimage of the First Bell",
+    "premise": "The first road out of Saint Veyra opens through discipline, witness, and the inward-ringing bells beneath Little Dawn.",
+    "sourceNote": "Complete Canon Compendium v1.1 Pilgrimage of the First Bell, Saint Veyra, Hearthmere Fields, and Pilgrim Trial Cryptlet sections.",
+    "stages": [
+      {
+        "id": "first-road-summons",
+        "title": "The First Road Summons",
+        "summary": "Saint Veyra gives the character a safe starting hub, a public road duty, and a first reason to step outside the walls.",
+        "nextHint": "Travel Hearthmere Fields or ask the DM what the city notices."
+      },
+      {
+        "id": "hearthmere-crossing",
+        "title": "Fields That Listen",
+        "summary": "Hearthmere Fields turns the tutorial road into a lived-in place: fields, road warnings, low walls, and pilgrims who know the shrine path.",
+        "nextHint": "Follow the road to Little Dawn and listen for local warnings."
+      },
+      {
+        "id": "little-dawn-threshold",
+        "title": "The Shrine Gives Permission",
+        "summary": "Shrinekeeper Olla and the inward bell make the first dungeon feel like a rite, not an arcade door.",
+        "nextHint": "Talk to Olla, accept the trial, then enter the Cryptlet."
+      },
+      {
+        "id": "cryptlet-descent",
+        "title": "Under the Road",
+        "summary": "The Cryptlet teaches party discipline: lanes, object respect, name-tags, and the difference between speed and survival.",
+        "nextHint": "Continue through each room and inspect objects before rushing."
+      },
+      {
+        "id": "warden-toll",
+        "title": "The Warden's Toll",
+        "summary": "The Bellgrave Warden tests whether the Bulwark can read pressure, protect the party, and answer the bell without panic.",
+        "nextHint": "Use Guard Stance, Shield Oath, lane movement, and the Road-Seal Bell."
+      },
+      {
+        "id": "road-seal-witness",
+        "title": "Road-Seal Witness",
+        "summary": "The first road becomes official only when the party survives, reports clearly, and accepts source-governed rewards.",
+        "nextHint": "Loot the cache, read the recap, and let the world remember the run."
+      }
+    ]
+  },
+  "beats": [
+    {
+      "id": "saint-veyra-first-road",
+      "trigger": "dm",
+      "stageId": "first-road-summons",
+      "locationPoiId": "saint-veyra-capital",
+      "title": "DM: Saint Veyra Holds Its Breath",
+      "body": "Saint Veyra does not feel like a menu screen. It feels like a city pretending it is calm. Clerks move reports beneath stained glass, training shields knock in the Oath-Iron Yard, and the public bells hang above First Bell Plaza with the patience of judges. The road east is open, but only just.",
+      "meta": "Narrative Director / Saint Veyra",
+      "tension": 1,
+      "sourceNote": "Source-governed Saint Veyra hub identity and first-road MVP scope."
+    },
+    {
+      "id": "hearthmere-first-crossing",
+      "trigger": "travel",
+      "stageId": "hearthmere-crossing",
+      "locationPoiId": "hearthmere-crossing",
+      "title": "DM: The Fields Answer With Fog",
+      "body": "Hearthmere does not greet you with danger first. It greets you with work: fence repairs, wet soil, road iron under your boots, and farmers pretending not to watch the shield on your arm. Far ahead, Little Dawn rises as a pale mark against the field haze.",
+      "meta": "Narrative Director / Hearthmere Fields",
+      "tension": 1,
+      "sourceNote": "Source-governed Hearthmere Fields identity, materials, and Little Dawn approach."
+    },
+    {
+      "id": "little-dawn-arrival",
+      "trigger": "travel",
+      "stageId": "little-dawn-threshold",
+      "locationPoiId": "road-shrine-little-dawn",
+      "title": "DM: Little Dawn Waits Below The Bell",
+      "body": "The Road Shrine of Little Dawn is smaller than the stories make it, which somehow makes it worse. Wax has built up in the cracks of the stone steps. Someone has cleaned the threshold recently. Someone else has stood there too long deciding whether to go under.",
+      "meta": "Narrative Director / Road Shrine",
+      "tension": 1,
+      "sourceNote": "Source-governed Little Dawn shrine, Cryptlet entrance, and pilgrimage beat."
+    },
+    {
+      "id": "olla-permission-given",
+      "trigger": "talk",
+      "stageId": "little-dawn-threshold",
+      "locationPoiId": "road-shrine-little-dawn",
+      "requiredFlag": "ollaPermission",
+      "title": "DM: Olla Makes It Official",
+      "body": "Olla's permission does not sound like encouragement. It sounds like a key turning. Around the shrine, the small social world adjusts: Renn falls quiet, a roadwarden looks toward the lower stair, and the party understands that the tutorial has stopped being imaginary.",
+      "meta": "Narrative Director / Shrinekeeper Olla",
+      "tension": 2,
+      "sourceNote": "Source-governed Olla permission and Trial Under Little Dawn start."
+    },
+    {
+      "id": "trial-accepted",
+      "trigger": "quest",
+      "stageId": "little-dawn-threshold",
+      "questId": "trial-under-little-dawn",
+      "questStatus": "active",
+      "title": "DM: The Trial Has Your Name",
+      "body": "The quest does not appear as a sparkling chore. It lands like a witness statement. Your name, your vow, the road, the bell, the party nearby. The Concord can file all of that later. Right now, the stone only cares whether you step forward.",
+      "meta": "Narrative Director / Main Story",
+      "tension": 2,
+      "sourceNote": "Source-governed Trial Under Little Dawn quest steps."
+    },
+    {
+      "id": "cryptlet-door-opens",
+      "trigger": "dungeon",
+      "stageId": "cryptlet-descent",
+      "locationPoiId": "pilgrim-trial-cryptlet",
+      "dungeonRoomId": "shrine-descent",
+      "title": "DM: The Door Opens Inward",
+      "body": "The Cryptlet does not open like a tomb. It opens like a memory accepting a visitor. The first chamber receives the party in cool roadstone, candle-smell, and the heavy quiet of rules older than the people enforcing them.",
+      "meta": "Narrative Director / Shrine Descent",
+      "tension": 2,
+      "sourceNote": "Source-governed Pilgrim Trial Cryptlet Shrine Descent."
+    },
+    {
+      "id": "threaded-names-whisper",
+      "trigger": "dungeon",
+      "stageId": "cryptlet-descent",
+      "dungeonRoomId": "hall-threaded-names",
+      "title": "DM: The Names Are Not Decoration",
+      "body": "The hanging name-tags brush one another without wind. They are not loot, not puzzle clutter, not set dressing. They are proof that other people walked this route with fear in their mouths and did not become anonymous.",
+      "meta": "Narrative Director / Hall of Threaded Names",
+      "tension": 1,
+      "sourceNote": "Source-governed Threaded Name Tags hidden memory beat."
+    },
+    {
+      "id": "broken-bell-choice",
+      "trigger": "dungeon",
+      "stageId": "cryptlet-descent",
+      "dungeonRoomId": "broken-bell-niche",
+      "title": "DM: The Broken Bell Teaches Patience",
+      "body": "The Broken Bell Niche is the first place the dungeon asks whether you are here to win or here to understand. The wax channel is simple enough to ignore and important enough to punish that choice.",
+      "meta": "Narrative Director / Broken Bell Niche",
+      "tension": 1,
+      "sourceNote": "Source-governed Broken Bell Niche object lesson."
+    },
+    {
+      "id": "bone-walk-party-trust",
+      "trigger": "dungeon",
+      "stageId": "cryptlet-descent",
+      "dungeonRoomId": "pilgrim-bone-walk",
+      "title": "DM: The Bone Walk Measures The Party",
+      "body": "The Pilgrim Bone Walk narrows the party without touching the walls. Everyone's role becomes visible: the Bulwark's pace, the healer's patience, the damage dealers' restraint, Renn's breathing as he follows the safe side of your shield.",
+      "meta": "Narrative Director / Pilgrim Bone Walk",
+      "tension": 2,
+      "sourceNote": "Source-governed Bone Walk party-behavior lesson."
+    },
+    {
+      "id": "warden-before-toll",
+      "trigger": "dungeon",
+      "stageId": "warden-toll",
+      "dungeonRoomId": "warden-chamber",
+      "title": "DM: The Warden Has Been Listening",
+      "body": "The Warden Chamber does not feel empty before the fight. It feels attended. The Bellgrave Warden is not waiting to surprise you; it is waiting to see whether the party learned enough to deserve the next road.",
+      "meta": "Narrative Director / Warden Chamber",
+      "tension": 3,
+      "sourceNote": "Source-governed Bellgrave Warden chamber and final tutorial test."
+    },
+    {
+      "id": "road-seal-cache-opens",
+      "trigger": "loot",
+      "stageId": "road-seal-witness",
+      "requiredFlag": "cryptletComplete",
+      "title": "DM: The Road Accepts The Report",
+      "body": "The cache opens without fanfare because Bellspire is not impressed by noise. Materials, reputation, pity, and staged rewards all leave a trail the Concord can audit. More importantly, the road has a witness now.",
+      "meta": "Narrative Director / Road-Seal Exit",
+      "tension": -2,
+      "sourceNote": "Source-governed Cryptlet reward cache and no-ghost-loot rule."
+    }
+  ]
+}

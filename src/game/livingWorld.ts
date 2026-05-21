@@ -3,7 +3,7 @@ import { addFeed } from "./state";
 import { getCurrentZone } from "./selectors";
 import type { GameState } from "./types";
 
-type PulseReason = "channel" | "travel" | "talk" | "dungeon" | "loot" | "listen" | "social";
+type PulseReason = "channel" | "travel" | "talk" | "dungeon" | "loot" | "listen" | "social" | "rest";
 
 interface AmbientLine {
   channelId: string;
@@ -27,6 +27,10 @@ export interface LivingWorldRhythm {
   dungeonId?: string;
   label: string;
   cadence: string;
+  priority?: number;
+  cooldownTicks?: number;
+  triggers?: PulseReason[];
+  channelRules?: string[];
   likelySpeakers: string[];
   nextPrompt: string;
   sourceNote: string;
@@ -39,19 +43,30 @@ const rhythms = livingWorld.rhythms as LivingWorldRhythm[];
 export function pulseLivingWorld(state: GameState, reason: PulseReason): GameState {
   const zone = getCurrentZone(state);
   const candidates = selectAmbientLines(state, zone.id, reason);
-  const key = `${reason}:${state.activeChannelId}:${zone.id}`;
+  const rhythm = selectRhythmForPulse(state, reason);
+  const key = `${reason}:${rhythm.id}:${state.activeChannelId}:${zone.id}`;
   const cursor = state.livingWorld.ambientCursor[key] ?? 0;
   const line = candidates[cursor % Math.max(1, candidates.length)];
   const nextCursor = candidates.length ? cursor + 1 : cursor;
+  const nextTick = state.livingWorld.tick + 1;
 
   let next: GameState = {
     ...state,
     livingWorld: {
-      tick: state.livingWorld.tick + 1,
+      tick: nextTick,
       ambientCursor: {
         ...state.livingWorld.ambientCursor,
         [key]: nextCursor
       },
+      schedulerCursor: {
+        ...state.livingWorld.schedulerCursor,
+        [rhythm.id]: (state.livingWorld.schedulerCursor[rhythm.id] ?? 0) + 1
+      },
+      rhythmCooldowns: {
+        ...state.livingWorld.rhythmCooldowns,
+        [rhythm.id]: nextTick + (rhythm.cooldownTicks ?? 2)
+      },
+      lastProactiveTick: ["travel", "talk", "dungeon", "loot", "listen", "social", "rest"].includes(reason) ? nextTick : state.livingWorld.lastProactiveTick,
       lastPulseReason: reason
     }
   };
@@ -61,7 +76,7 @@ export function pulseLivingWorld(state: GameState, reason: PulseReason): GameSta
   }
 
   const beat = selectDmBeat(reason);
-  if (beat && ["travel", "dungeon", "loot", "listen"].includes(reason)) {
+  if (beat && ["travel", "dungeon", "loot", "listen", "rest"].includes(reason)) {
     next = addFeed(next, "scene", beat.speaker, beat.body, beat.meta);
   }
 
@@ -121,6 +136,29 @@ export function getLivingWorldRhythm(state: GameState): LivingWorldRhythm {
   );
 }
 
+function selectRhythmForPulse(state: GameState, reason: PulseReason): LivingWorldRhythm {
+  const zone = getCurrentZone(state);
+  const activeDungeonId = state.dungeon?.dungeonId;
+  const readyTick = state.livingWorld.tick;
+  const candidates = rhythms
+    .filter((rhythm) => {
+      if (rhythm.dungeonId && rhythm.dungeonId !== activeDungeonId) {
+        return false;
+      }
+      if (rhythm.zoneId && rhythm.zoneId !== zone.id) {
+        return false;
+      }
+      if (rhythm.triggers?.length && !rhythm.triggers.includes(reason)) {
+        return false;
+      }
+      const cooldownUntil = state.livingWorld.rhythmCooldowns[rhythm.id] ?? 0;
+      return cooldownUntil <= readyTick || rhythm.channelId === state.activeChannelId;
+    })
+    .sort((left, right) => (right.priority ?? 0) - (left.priority ?? 0));
+
+  return candidates[0] ?? getLivingWorldRhythm(state);
+}
+
 function selectAmbientLines(state: GameState, zoneId: string, reason: PulseReason) {
   if (state.activeChannelId === "global-chat") {
     return ambient.filter((line) => line.channelId === "global-chat");
@@ -142,7 +180,7 @@ function selectAmbientLines(state: GameState, zoneId: string, reason: PulseReaso
     return ambient.filter((line) => line.channelId === "party-chat");
   }
 
-  if (reason === "listen") {
+  if (reason === "listen" || reason === "rest") {
     if (state.dungeon) {
       return ambient.filter((line) => line.channelId === "party-chat");
     }

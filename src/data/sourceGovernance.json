@@ -25,6 +25,14 @@
         "note": "Deep zoom entries expose source-governed map focus areas, player verbs, and visual plate usage without creating new shop, vendor, loot, or NPC canon."
       }
     },
+    "activityRecommendations.json": {
+      "default": {
+        "sourceTier": 4,
+        "sourceStatus": "playstyle-governed-activity-board",
+        "sourceRefs": ["Project_Bellspire_Discord_Map_Playstyle_Prompt_v1_1.md", "Project_Bellspire_Codex_Handoff_Prompt_v1_1.md"],
+        "note": "Activity recommendations guide the first-road route and social loop without creating canon facts, loot, or live multiplayer claims."
+      }
+    },
     "canonContextPacks.json": {
       "default": {
         "sourceTier": 4,
@@ -63,6 +71,14 @@
         "sourceStatus": "curated-canon-mvp",
         "sourceRefs": ["Project_Bellspire_Complete_Canon_Compendium_v1_1.pdf", "Project_Bellspire_Complete_Data_Workbook_v1_1.xlsx"],
         "note": "Encounter telegraphs and failure tags are curated for the Cryptlet teaching loop."
+      }
+    },
+    "firstRoadLootRules.json": {
+      "default": {
+        "sourceTier": 2,
+        "sourceStatus": "loot-worktable-governed",
+        "sourceRefs": ["Project_Bellspire_Complete_Data_Workbook_v1_1.xlsx", "project_bellspire_tank_loot_workbook_v0_1.xlsx", "Project_Bellspire_Current_Source_Pack_v0_3_2026-05-18.zip"],
+        "note": "First-road reward rules explicitly label guaranteed materials, conditional object bonuses, staged gear, source status, rarity floor, and source notes."
       }
     },
     "enemies.json": {
@@ -137,6 +153,14 @@
         "note": "Starter NPCs are curated from the first playable slice and local social cast."
       }
     },
+    "npcSchedules.json": {
+      "default": {
+        "sourceTier": 4,
+        "sourceStatus": "local-social-simulation",
+        "sourceRefs": ["Project_Bellspire_Discord_Map_Playstyle_Prompt_v1_1.md", "Project_Bellspire_Codex_Handoff_Prompt_v1_1.md"],
+        "note": "NPC availability schedules are local simulation behavior for source-governed starter contacts and simulated party companions."
+      }
+    },
     "pois.json": {
       "default": {
         "sourceTier": 1,
@@ -167,6 +191,14 @@
         "sourceStatus": "local-social-simulation",
         "sourceRefs": ["Project_Bellspire_Discord_Map_Playstyle_Prompt_v1_1.md", "Project_Bellspire_Codex_Handoff_Prompt_v1_1.md", "Project_Bellspire_Current_Source_Pack_v0_3_2026-05-18.zip"],
         "note": "NPC and simulated-player contacts are local social agents constrained by canon roles and starter route context."
+      }
+    },
+    "saveFixtures.json": {
+      "default": {
+        "sourceTier": 4,
+        "sourceStatus": "developer-test-fixtures",
+        "sourceRefs": ["Project_Bellspire_Codex_Handoff_Prompt_v1_1.md"],
+        "note": "Fixture labels describe developer smoke-test states and do not add runtime canon content."
       }
     },
     "worldFlags.json": {

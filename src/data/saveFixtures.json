@@ -1,0 +1,26 @@
+[
+  {
+    "id": "new-character",
+    "label": "New Bulwark",
+    "description": "Fresh profile at Saint Veyra with the first-road checklist active.",
+    "commands": []
+  },
+  {
+    "id": "at-shrine",
+    "label": "At Little Dawn",
+    "description": "Character has traveled to the Road Shrine and can talk to Olla.",
+    "commands": ["travel Hearthmere Fields", "travel Road Shrine of Little Dawn"]
+  },
+  {
+    "id": "in-cryptlet",
+    "label": "Inside Cryptlet",
+    "description": "Olla permission granted, quest accepted, dungeon entered.",
+    "commands": ["travel Hearthmere Fields", "travel Road Shrine of Little Dawn", "talk Shrinekeeper Olla", "accept quest", "enter dungeon"]
+  },
+  {
+    "id": "post-clear",
+    "label": "Post-Clear Report Ready",
+    "description": "Fixture target for browser smoke tests after combat automation is expanded.",
+    "commands": ["travel Hearthmere Fields", "travel Road Shrine of Little Dawn", "talk Shrinekeeper Olla", "accept quest", "enter dungeon", "world pulse"]
+  }
+]

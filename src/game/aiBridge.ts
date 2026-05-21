@@ -1,6 +1,7 @@
 import canonContextPacks from "../data/canonContextPacks.json";
 import canonRegistry from "../data/canonRegistry.json";
 import { inferIntent } from "./director";
+import { getLivingWorldRhythm } from "./livingWorld";
 import { getNarrativeStatus } from "./narrativeDirector";
 import { getCurrentPoi, getCurrentRoom } from "./selectors";
 import type { GameState } from "./types";
@@ -87,6 +88,7 @@ function createGameSnapshot(state: GameState, message: string) {
   const poi = getCurrentPoi(state);
   const room = getCurrentRoom(state);
   const narrative = getNarrativeStatus(state);
+  const rhythm = getLivingWorldRhythm(state);
 
   return {
     location: {
@@ -127,7 +129,24 @@ function createGameSnapshot(state: GameState, message: string) {
       sceneCount: narrative.sceneCount,
       lastBeatId: narrative.lastBeatId
     },
+    livingWorld: {
+      tick: state.livingWorld.tick,
+      lastPulseReason: state.livingWorld.lastPulseReason,
+      rhythm: {
+        id: rhythm.id,
+        label: rhythm.label,
+        cadence: rhythm.cadence,
+        likelySpeakers: rhythm.likelySpeakers,
+        channelRules: rhythm.channelRules ?? [],
+        sourceNote: rhythm.sourceNote
+      }
+    },
     recentParty: state.social.recentParty,
+    partyReadiness: state.social.partyReadiness.map((entry) => ({
+      contactId: entry.contactId,
+      status: entry.status,
+      updatedAtTick: entry.updatedAtTick
+    })),
     contacts: state.social.contacts.map((contact) => ({
       name: contact.name,
       role: contact.role,
@@ -137,6 +156,26 @@ function createGameSnapshot(state: GameState, message: string) {
       relationshipTag: contact.relationshipTag,
       notes: contact.notes.slice(0, 3),
       voice: contact.voice
+    })),
+    socialMemory: state.social.memoryEvents.slice(0, 10).map((event) => ({
+      contactName: event.contactName,
+      kind: event.kind,
+      summary: event.summary,
+      source: event.source,
+      tick: event.tick
+    })),
+    guildContracts: state.social.guildContracts.map((contract) => ({
+      name: contract.name,
+      status: contract.status,
+      progress: contract.progress,
+      requirement: contract.requirement,
+      reward: contract.reward
+    })),
+    notices: state.social.notices.slice(0, 6).map((notice) => ({
+      title: notice.title,
+      body: notice.body,
+      source: notice.source,
+      createdAtTick: notice.createdAtTick
     })),
     memories: state.social.director.memories.slice(-8).map((memory) => ({
       topic: memory.topic,

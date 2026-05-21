@@ -42,3 +42,16 @@ Generated for the first post-foundation docs pass.
 - Consider adding one early prompt that teaches `party <message>` before combat, because the feature works and feels good once discovered.
 - Consider adding a clearer first-session nudge toward `join cryptlet group` or `invite Renn`, since group finder and social trust are important to the MMO feeling.
 - Keep the early `loot` warning; it correctly teaches source-law reward timing.
+
+## Living World First Road Pass
+
+- Passed: `/login` created a fresh Bulwark after the living-world branch changes.
+- Passed: `guild contracts` now opens the contract board as a command instead of being swallowed as guild chat.
+- Passed: group finder, `join cryptlet group`, and `ready` updated party readiness and social memory.
+- Passed: First Road travel, Olla, quest acceptance, dungeon entry, object inspection, and room progression still work.
+- Passed: Bellgrave Warden wipe recap fires when Final Toll is mishandled.
+- Passed: retrying the Warden, using Road-Seal Bell on the Road-Seal Pulse, guarding Final Toll, clearing adds, and continuing to Road-Seal Exit works.
+- Passed: `loot` grants deterministic source-governed rewards: materials, conditional Bell Sliver, staged Road-Seal Buckler, reputation, and source pity.
+- Passed: `report contract` files a completed guild contract and adds social/guild memory without creating ghost loot.
+- Passed: `recap` includes route, quest, narrative, loot, wipes, reputation, source pity, flags, NPC reactions, and social memory.
+- Note: the in-app browser screenshot call timed out during this pass, so visual proof is from DOM/browser interaction rather than a saved screenshot artifact.

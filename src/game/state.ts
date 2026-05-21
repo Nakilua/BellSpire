@@ -3,7 +3,7 @@ import groupListings from "../data/groupListings.json";
 import guildContracts from "../data/guildContracts.json";
 import socialContacts from "../data/socialContacts.json";
 import worldFlags from "../data/worldFlags.json";
-import type { CharacterCreationInput, FeedEntry, FeedType, GameState, SocialState } from "./types";
+import type { CharacterCreationInput, FeedEntry, FeedType, GameState, NoticeState, SocialState } from "./types";
 
 export const STORAGE_KEY = "bellspire.save.v1";
 
@@ -31,6 +31,17 @@ export function addFeed(state: GameState, type: FeedType, title: string, body: s
   };
 }
 
+export function createNotice(title: string, body: string, source: string, tick: number): NoticeState {
+  return {
+    id: createId("notice"),
+    title,
+    body,
+    source,
+    createdAtTick: tick,
+    read: false
+  };
+}
+
 const defaultCharacter: CharacterCreationInput = {
   name: "Naki",
   origin: "Saint Veyra Ward",
@@ -51,6 +62,25 @@ function createInitialSocialState(characterName = defaultCharacter.name): Social
       "Road Courtesy": 0
     },
     recentParty: ["Pilgrim Renn"],
+    memoryEvents: [],
+    partyReadiness: [
+      {
+        contactId: "pilgrim-renn",
+        status: "joined",
+        updatedAtTick: 0
+      }
+    ],
+    notices: [
+      createNotice(
+        "Welcome to the First Road",
+        "Your save is local. BellSpire simulates the surrounding MMO world until you ask the live Director for help.",
+        "Local realm",
+        0
+      )
+    ],
+    activityRecommendations: {
+      cooldowns: {}
+    },
     director: {
       mode: "local-sim",
       qualityMode: "auto",
@@ -136,14 +166,18 @@ export function createInitialState(characterInput?: CharacterCreationInput): Gam
       createFeedEntry(
         "system",
         "Bellspire session opened",
-        "Saint Veyra waits under stained glass. The first playable road leads to Hearthmere Fields and the Road Shrine of Little Dawn.",
+        characterInput
+          ? "Saint Veyra waits under stained glass. Start with `look`, `listen`, `who`, or `travel Hearthmere Fields`."
+          : "Saint Veyra waits under stained glass. The first playable road leads to Hearthmere Fields and the Road Shrine of Little Dawn.",
         "#saint-veyra-capital"
       )
     ],
     social: createInitialSocialState(name),
     livingWorld: {
       tick: 0,
-      ambientCursor: {}
+      ambientCursor: {},
+      schedulerCursor: {},
+      rhythmCooldowns: {}
     },
     narrative: {
       arcId: "pilgrimage-first-bell",
@@ -155,6 +189,10 @@ export function createInitialState(characterInput?: CharacterCreationInput): Gam
       lastTrigger: undefined,
       lastBeatId: undefined,
       lastVignetteId: undefined
+    },
+    tutorial: {
+      hintsSeen: characterInput ? ["first-road-start"] : [],
+      checklistCompleteIds: []
     },
     sessionRecap: {
       visited: ["Saint Veyra Capital"],
@@ -217,6 +255,14 @@ export function sanitizeImportedState(value: unknown): GameState | null {
         ...maybe.social?.socialReputation
       },
       recentParty: maybe.social?.recentParty ?? base.social.recentParty,
+      memoryEvents: maybe.social?.memoryEvents ?? base.social.memoryEvents,
+      partyReadiness: maybe.social?.partyReadiness ?? base.social.partyReadiness,
+      notices: maybe.social?.notices ?? base.social.notices,
+      activityRecommendations: {
+        ...base.social.activityRecommendations,
+        ...maybe.social?.activityRecommendations,
+        cooldowns: maybe.social?.activityRecommendations?.cooldowns ?? base.social.activityRecommendations.cooldowns
+      },
       director: {
         ...base.social.director,
         ...maybe.social?.director,
@@ -226,13 +272,21 @@ export function sanitizeImportedState(value: unknown): GameState | null {
     livingWorld: {
       ...base.livingWorld,
       ...maybe.livingWorld,
-      ambientCursor: maybe.livingWorld?.ambientCursor ?? base.livingWorld.ambientCursor
+      ambientCursor: maybe.livingWorld?.ambientCursor ?? base.livingWorld.ambientCursor,
+      schedulerCursor: maybe.livingWorld?.schedulerCursor ?? base.livingWorld.schedulerCursor,
+      rhythmCooldowns: maybe.livingWorld?.rhythmCooldowns ?? base.livingWorld.rhythmCooldowns
     },
     narrative: {
       ...base.narrative,
       ...maybe.narrative,
       seenBeatIds: maybe.narrative?.seenBeatIds ?? base.narrative.seenBeatIds,
       vignetteCursor: maybe.narrative?.vignetteCursor ?? base.narrative.vignetteCursor
+    },
+    tutorial: {
+      ...base.tutorial,
+      ...maybe.tutorial,
+      hintsSeen: maybe.tutorial?.hintsSeen ?? base.tutorial.hintsSeen,
+      checklistCompleteIds: maybe.tutorial?.checklistCompleteIds ?? base.tutorial.checklistCompleteIds
     },
     sessionRecap: {
       ...base.sessionRecap,

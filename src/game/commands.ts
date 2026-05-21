@@ -4,13 +4,14 @@ import npcs from "../data/npcs.json";
 import pois from "../data/pois.json";
 import quests from "../data/quests.json";
 import zones from "../data/zones.json";
+import { getBestActivityRecommendation, markActivityUsed } from "./activity";
 import { performCombatAction, startEncounter } from "./combat";
 import { postWorldChat, pulseLivingWorld, showNearbyWorld } from "./livingWorld";
 import { grantCryptletRewards } from "./loot";
 import { pulseNarrative, showNarrativeJournal } from "./narrativeDirector";
-import { addFeed } from "./state";
+import { addFeed, createNotice } from "./state";
 import { getActiveDungeon, getBulwarkAbilities, getCurrentPoi, getCurrentRoom, getCurrentZone, getQuestDefinition } from "./selectors";
-import { handleSocialCommand } from "./social";
+import { handleSocialCommand, progressGuildContract, recordContactMemory, setPartyReadiness } from "./social";
 import type { GameState } from "./types";
 
 export function runCommand(state: GameState, rawCommand: string): GameState {
@@ -45,6 +46,14 @@ export function runCommand(state: GameState, rawCommand: string): GameState {
 
   if (command === "who" || command === "nearby") {
     return showNearbyWorld(next);
+  }
+
+  if (command === "checklist" || command === "first road") {
+    return showFirstRoadChecklist(next);
+  }
+
+  if (command === "activity" || command === "recommendation" || command === "next step") {
+    return showActivityRecommendation(next);
   }
 
   if (command === "story" || command === "main story" || command === "narrative") {
@@ -151,9 +160,28 @@ export function runCommand(state: GameState, rawCommand: string): GameState {
     next,
     "warning",
     "Command not recognized",
-    "Try `look`, `story`, `dm`, `world pulse`, `map`, `travel Hearthmere Fields`, `talk Shrinekeeper Olla`, `accept quest`, `enter dungeon`, `lfg`, `party hello`, `director what does the party notice?`, `guild contracts`, `invite Renn`, `shield oath`, `guard frontline`, `loot`, or use the action buttons.",
+    beginnerHelp(state),
     "MVP parser"
   );
+}
+
+function beginnerHelp(state: GameState) {
+  if (state.locationPoiId === "saint-veyra-capital") {
+    return "Try `look`, `listen`, `who`, `lfg`, `guild contracts`, or `travel Hearthmere Fields`.";
+  }
+  if (state.locationPoiId === "hearthmere-crossing") {
+    return "Try `look`, `party hello`, `ready`, `map`, or `travel Road Shrine of Little Dawn`.";
+  }
+  if (state.locationPoiId === "road-shrine-little-dawn" && !state.flags.ollaPermission) {
+    return "Try `talk Shrinekeeper Olla`, `listen`, `guild contracts`, or `map`.";
+  }
+  if (state.locationPoiId === "road-shrine-little-dawn") {
+    return "Try `accept quest`, `enter dungeon`, `invite Renn`, `ready`, or `director what does the party notice?`.";
+  }
+  if (state.dungeon) {
+    return "Try `look`, `continue`, `inspect <object>`, `guard frontline`, `shield oath <target>`, `loot`, `recap`, or `report contract`.";
+  }
+  return "Try `look`, `story`, `dm`, `world pulse`, `map`, `lfg`, `guild contracts`, `party hello`, `shield oath`, `guard frontline`, or use the action buttons.";
 }
 
 function switchChannel(state: GameState, channelText: string): GameState {
@@ -218,6 +246,44 @@ function showMap(state: GameState): GameState {
   return addFeed(state, "scene", `${zone.name} map`, `${nodes}\n\n${locked}`, zone.levelRange);
 }
 
+function showFirstRoadChecklist(state: GameState): GameState {
+  const lines = [
+    `${state.profileCreated ? "[done]" : "[todo]"} Create your Bulwark`,
+    `${state.livingWorld.tick > 0 ? "[done]" : "[todo]"} Hear the world with listen/world pulse`,
+    `${state.social.groupListings.some((listing) => listing.status === "joined") ? "[done]" : "[todo]"} Form or join a training party`,
+    `${state.sessionRecap.visited.includes("Hearthmere Fields") ? "[done]" : "[todo]"} Reach Hearthmere Fields`,
+    `${state.sessionRecap.visited.includes("Road Shrine of Little Dawn") ? "[done]" : "[todo]"} Reach Little Dawn`,
+    `${state.flags.ollaPermission ? "[done]" : "[todo]"} Talk to Shrinekeeper Olla`,
+    `${state.dungeon ? "[done]" : "[todo]"} Enter Pilgrim Trial Cryptlet`,
+    `${state.flags.cryptletComplete ? "[done]" : "[todo]"} Claim and report the clear`
+  ];
+
+  return addFeed(state, "system", "First Road Checklist", lines.join("\n"), "Beginner route");
+}
+
+function markTutorialStep(state: GameState, id: string): GameState {
+  return {
+    ...state,
+    tutorial: {
+      ...state.tutorial,
+      checklistCompleteIds: state.tutorial.checklistCompleteIds.includes(id)
+        ? state.tutorial.checklistCompleteIds
+        : [...state.tutorial.checklistCompleteIds, id]
+    }
+  };
+}
+
+function showActivityRecommendation(state: GameState): GameState {
+  const recommendation = getBestActivityRecommendation(state);
+  return addFeed(
+    markActivityUsed(state, recommendation.id),
+    "system",
+    `Activity Board: ${recommendation.title}`,
+    `${recommendation.label} / ${recommendation.lane}\n${recommendation.summary}\nMap ping: ${recommendation.mapPing}\nTry: \`${recommendation.command}\`\nSource: ${recommendation.sourceNote}`,
+    "Activity recommendation"
+  );
+}
+
 function travel(state: GameState, targetText: string): GameState {
   if (state.dungeon) {
     return addFeed(state, "warning", "Travel blocked", "You are inside the Cryptlet. Use `continue`, `look`, or finish the dungeon route.", "Dungeon");
@@ -244,8 +310,7 @@ function moveToPoi(state: GameState, poiId: string): GameState {
   const zone = zones.find((entry) => entry.id === poi.zoneId);
   const channelId = zone?.channelId ?? state.activeChannelId;
   const visited = state.sessionRecap.visited.includes(poi.name) ? state.sessionRecap.visited : [...state.sessionRecap.visited, poi.name];
-
-  return pulseNarrative(pulseLivingWorld(addFeed(
+  let next = addFeed(
     {
       ...state,
       activeChannelId: channelId,
@@ -259,7 +324,29 @@ function moveToPoi(state: GameState, poiId: string): GameState {
     poi.name,
     poi.scene,
     zone?.name
-  ), "travel"), "travel");
+  );
+
+  if (poi.id === "hearthmere-crossing") {
+    next = markTutorialStep(next, "reach-hearthmere");
+    next = progressGuildContract(next, "first-road-watch", 35, "Hearthmere road reached");
+  }
+
+  if (poi.id === "road-shrine-little-dawn") {
+    next = markTutorialStep(next, "reach-shrine");
+    next = progressGuildContract(next, "first-road-watch", 70, "Road Shrine reached");
+    next = {
+      ...next,
+      social: {
+        ...next.social,
+        notices: [
+          createNotice("Road Shrine reached", "Little Dawn is now in play. Talk to Olla before entering the Cryptlet.", "Roadwatch", next.livingWorld.tick),
+          ...next.social.notices
+        ].slice(0, 12)
+      }
+    };
+  }
+
+  return pulseNarrative(pulseLivingWorld(next, "travel"), "travel");
 }
 
 function findPoiByAlias(targetText: string) {
@@ -292,6 +379,7 @@ function talk(state: GameState, targetText: string): GameState {
   };
 
   if (npc.id === "shrinekeeper-olla") {
+    next = markTutorialStep(next, "speak-olla");
     next = {
       ...next,
       flags: {
@@ -315,6 +403,8 @@ function talk(state: GameState, targetText: string): GameState {
           : [...next.sessionRecap.flags, "Olla's Permission"]
       }
     };
+    next = recordContactMemory(next, "shrinekeeper-olla", "helped", "Olla granted permission for the Cryptlet route.", "Road Shrine of Little Dawn", 4);
+    next = progressGuildContract(next, "little-dawn-candle-run", 20, "Olla permission");
     next = addFeed(next, "system", "Quest available", "Trial Under Little Dawn is ready. Use `accept quest` or press the action button.", "Shrinekeeper Olla");
   }
 
@@ -327,7 +417,7 @@ function acceptQuest(state: GameState): GameState {
   }
 
   const quest = getQuestDefinition("trial-under-little-dawn")!;
-  return pulseNarrative(addFeed(
+  let next = addFeed(
     {
       ...state,
       quests: {
@@ -348,7 +438,21 @@ function acceptQuest(state: GameState): GameState {
     `Quest accepted: ${quest.name}`,
     quest.steps[1],
     quest.source
-  ), "quest");
+  );
+  next = progressGuildContract(next, "little-dawn-candle-run", 35, "Quest accepted");
+  next = recordContactMemory(next, "shrinekeeper-olla", "helped", "The trial was accepted under Olla's shrine permission.", "Trial Under Little Dawn", 2);
+  next = {
+    ...next,
+    social: {
+      ...next.social,
+      notices: [
+        createNotice("Quest accepted", "Trial Under Little Dawn is active. The Cryptlet entrance is now the main road step.", "Shrinekeeper Olla", next.livingWorld.tick),
+        ...next.social.notices
+      ].slice(0, 12)
+    }
+  };
+
+  return pulseNarrative(next, "quest");
 }
 
 function enterDungeon(state: GameState): GameState {
@@ -361,7 +465,7 @@ function enterDungeon(state: GameState): GameState {
   }
 
   const dungeon = dungeons[0];
-  return pulseNarrative(pulseLivingWorld(addFeed(
+  let next = addFeed(
     {
       ...state,
       activeChannelId: "combat-log",
@@ -396,7 +500,24 @@ function enterDungeon(state: GameState): GameState {
     "Pilgrim Trial Cryptlet",
     "The inward bell opens the roadstone door. Room 1: Shrine Descent. The Road Trial Oath is read and logged.",
     "Training mode"
-  ), "dungeon"), "dungeon");
+  );
+  next = markTutorialStep(next, "enter-cryptlet");
+  next = setPartyReadiness(next, ["pilgrim-renn", "edrin-bellhand", "tallowwick"], "ready");
+  next = recordContactMemory(next, "pilgrim-renn", "ready", "Entered the Cryptlet with Renn prepared to call prayer marks.", "Pilgrim Trial Cryptlet", 3);
+  next = recordContactMemory(next, "shrinekeeper-olla", "helped", "Watched the Cryptlet door open after granting permission.", "Road Shrine of Little Dawn", 1);
+  next = progressGuildContract(next, "cryptlet-training-party", 40, "Cryptlet entered");
+  next = {
+    ...next,
+    social: {
+      ...next.social,
+      notices: [
+        createNotice("Cryptlet entered", "The party frame is now in dungeon mode. Read rooms, inspect objects, and keep lane calls boring.", "Training route", next.livingWorld.tick),
+        ...next.social.notices
+      ].slice(0, 12)
+    }
+  };
+
+  return pulseNarrative(pulseLivingWorld(next, "dungeon"), "dungeon");
 }
 
 function continueDungeon(state: GameState): GameState {
@@ -571,6 +692,7 @@ function loot(state: GameState): GameState {
   }
 
   let next = grantCryptletRewards(state);
+  next = markTutorialStep(next, "claim-cache");
   next = {
     ...next,
     quests: {
@@ -590,6 +712,24 @@ function loot(state: GameState): GameState {
       quests: next.sessionRecap.quests.includes("Trial Under Little Dawn complete")
         ? next.sessionRecap.quests
         : [...next.sessionRecap.quests, "Trial Under Little Dawn complete"]
+    }
+  };
+  next = progressGuildContract(next, "first-road-watch", 100, "Cryptlet clear");
+  next = progressGuildContract(next, "little-dawn-candle-run", 100, "Cryptlet clear");
+  next = progressGuildContract(next, "cryptlet-training-party", 100, "Cryptlet clear");
+  next = setPartyReadiness(next, ["pilgrim-renn", "edrin-bellhand", "tallowwick"], "post-clear");
+  next = recordContactMemory(next, "pilgrim-renn", "cleared", "Cleared the Cryptlet training route together.", "Pilgrim Trial Cryptlet", 6);
+  next = recordContactMemory(next, "edrin-bellhand", "cleared", "Healed a clean training clear with called lanes.", "Pilgrim Trial Cryptlet", 5);
+  next = recordContactMemory(next, "tallowwick", "cleared", "Handled object-duty chatter during the first clear.", "Pilgrim Trial Cryptlet", 4);
+  next = recordContactMemory(next, "shrinekeeper-olla", "cleared", "The First Road party returned with the Cryptlet quieted.", "Road-Seal Cache", 3);
+  next = {
+    ...next,
+    social: {
+      ...next.social,
+      notices: [
+        createNotice("Cryptlet clear recorded", "Guild contracts may now be report-ready. Use `report contract` to file the route.", "Road-Seal Cache", next.livingWorld.tick),
+        ...next.social.notices
+      ].slice(0, 12)
     }
   };
 
@@ -614,7 +754,7 @@ function rest(state: GameState): GameState {
     return addFeed(state, "warning", "No safe rest here", "Find a road shrine or field rest point first.", "Rest");
   }
 
-  return addFeed(
+  const rested = addFeed(
     {
       ...state,
       character: {
@@ -629,6 +769,7 @@ function rest(state: GameState): GameState {
     "HP restored. Oath steadied. The road is still rude, but you are less crunchy.",
     poi.name
   );
+  return pulseNarrative(pulseLivingWorld(rested, "rest"), "rest");
 }
 
 function recap(state: GameState): GameState {

@@ -4,11 +4,16 @@ import { Archive, BookOpen, Map, Package, ScrollText, Shield, UsersRound } from 
 import { ActivityBoard } from "./ActivityBoard";
 import { CanonLibraryPanel } from "./CanonLibraryPanel";
 import { CharacterPanel } from "./CharacterPanel";
+import { FirstRoadChecklist } from "./FirstRoadChecklist";
+import { GuildBoardPanel } from "./GuildBoardPanel";
 import { InventoryPanel } from "./InventoryPanel";
 import { MapPanel } from "./MapPanel";
+import { NoticePanel } from "./NoticePanel";
+import { NpcSchedulePanel } from "./NpcSchedulePanel";
 import { PartyPanel } from "./PartyPanel";
 import { QuestTracker } from "./QuestTracker";
 import { SaveTools } from "./SaveTools";
+import { SocialLedgerPanel } from "./SocialLedgerPanel";
 import { SocialWorldPanel } from "./SocialWorldPanel";
 import { WorldStatePanel } from "./WorldStatePanel";
 import type { GameState } from "../game/types";
@@ -75,12 +80,15 @@ export function HudPanelTabs({
 
           <Tabs.Content className="hud-tab-content" value="party">
             <PartyPanel state={state} />
+            <SocialLedgerPanel state={state} onCommand={onCommand} />
             <SocialWorldPanel state={state} onCommand={onCommand} />
           </Tabs.Content>
 
           <Tabs.Content className="hud-tab-content" value="quests">
+            <FirstRoadChecklist state={state} onCommand={onCommand} />
             <QuestTracker state={state} />
             <ActivityBoard state={state} onCommand={onCommand} />
+            <GuildBoardPanel state={state} onCommand={onCommand} />
           </Tabs.Content>
 
           <Tabs.Content className="hud-tab-content" value="bags">
@@ -89,6 +97,8 @@ export function HudPanelTabs({
 
           <Tabs.Content className="hud-tab-content" value="world">
             <SocialWorldPanel state={state} onCommand={onCommand} />
+            <NoticePanel state={state} />
+            <NpcSchedulePanel state={state} />
             <WorldStatePanel state={state} />
           </Tabs.Content>
 

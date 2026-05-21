@@ -1,3 +1,4 @@
+import lootRules from "../data/firstRoadLootRules.json";
 import items from "../data/items.json";
 import { addFeed } from "./state";
 import type { GameState, InventoryItem } from "./types";
@@ -100,6 +101,7 @@ export function grantCryptletRewards(state: GameState): GameState {
     "BOSS DEFEATED: The Bellgrave Warden",
     [
       "Source: Pilgrimage of the First Bell.",
+      `Loot rules: ${(lootRules as { sourceName: string; ruleType: string; sourceStatus: string }[]).map((rule) => `${rule.sourceName} (${rule.ruleType}, ${rule.sourceStatus})`).join("; ")}.`,
       "Guaranteed: Pilgrim Wax x2, Bone Fragment x2, Bellspire Concord +25, Roadwardens +10.",
       state.flags.brokenBellStabilized ? "Object bonus: Bell Sliver x1 from the stabilized bell niche." : "Object bonus missed: stabilize the bell niche on a future run for a Bell Sliver chance.",
       "Gear: Road-Seal Buckler x1. Status: Staged source reward - final Master_Loot_DB item ID pending.",

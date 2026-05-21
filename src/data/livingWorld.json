@@ -106,6 +106,37 @@
       "speaker": "Ysabet Cord",
       "body": "Filed reminder: simulated local parties are valid for training reports. The report must say who witnessed what and which reward source was used.",
       "meta": "guild board / source law"
+    },
+    {
+      "channelId": "global-chat",
+      "speaker": "Pilgrim Ledger",
+      "body": "First Road queue note: new Bulwarks should name their route before the shrine, not after the bell starts making opinions.",
+      "meta": "global / beginner route"
+    },
+    {
+      "channelId": "zone-chat",
+      "zoneId": "hearthmere-fields",
+      "speaker": "Candle Runner Iset",
+      "body": "Little Dawn candles are short again. If anyone is walking past the wax beds, bring steady hands and do not argue with Olla's knots.",
+      "meta": "zone / candle run"
+    },
+    {
+      "channelId": "party-chat",
+      "speaker": "Pilgrim Renn",
+      "body": "Ready means boring. Boring means alive. I am becoming very fond of boring.",
+      "meta": "party / trust"
+    },
+    {
+      "channelId": "party-chat",
+      "speaker": "Edrin Bellhand",
+      "body": "If you call the pull before moving, I heal better. It is not magic. It is basic courtesy wearing a robe.",
+      "meta": "party / healer rhythm"
+    },
+    {
+      "channelId": "guild-board",
+      "speaker": "Dawnward Table",
+      "body": "First Road Watch accepts reports after clear, wipe, or useful warning. The board values honest failure more than imaginary heroics.",
+      "meta": "guild board / contract rhythm"
     }
   ],
   "dmBeats": [
@@ -138,6 +169,12 @@
       "speaker": "Bellspire Director",
       "body": "You stop long enough to hear the server breathe: recruitment posts, road warnings, party jokes, and NPC routines moving around the edges of the scene.",
       "meta": "local DM / listen"
+    },
+    {
+      "reason": "rest",
+      "speaker": "Bellspire Director",
+      "body": "Rest does not pause the world. It lowers your shoulders enough that the road's smaller sounds come back: wax settling, mail runners passing, party voices checking gear.",
+      "meta": "local DM / rest"
     }
   ],
   "rhythms": [
@@ -146,6 +183,10 @@
       "channelId": "global-chat",
       "label": "Global Roadwatch",
       "cadence": "Slow server-wide road reports, recruitment pings, and locked-preview chatter.",
+      "priority": 10,
+      "cooldownTicks": 3,
+      "triggers": ["listen", "social", "channel"],
+      "channelRules": ["Use broad server chatter", "Never imply real multiplayer", "Keep locked zones as previews"],
       "likelySpeakers": ["Server Notice", "Roadwarden Pell", "Dawnward Table"],
       "nextPrompt": "Use `global <message>` or `world pulse` to hear the wider realm without leaving the current route.",
       "sourceNote": "Local-first MMO social simulation; global lines are staged atmosphere, not live multiplayer."
@@ -156,6 +197,10 @@
       "zoneId": "hearthmere-fields",
       "label": "Hearthmere Zone Watch",
       "cadence": "Fieldhands, roadwardens, pilgrims, and shrine traffic trade practical warnings.",
+      "priority": 40,
+      "cooldownTicks": 2,
+      "triggers": ["travel", "talk", "listen", "social", "rest"],
+      "channelRules": ["Mention route conditions", "Surface shrine danger", "Keep shop/service claims generic unless sourced"],
       "likelySpeakers": ["Fieldhand Mara", "Roadwarden Ila", "Shrinekeeper Olla"],
       "nextPrompt": "Use `listen`, `zone <message>`, or ask the Director for a scene read before traveling.",
       "sourceNote": "Hearthmere Fields and Road Shrine of Little Dawn source-governed starter-zone social texture."
@@ -166,6 +211,10 @@
       "zoneId": "saint-veyra",
       "label": "Saint Veyra Docket",
       "cadence": "Concord clerks, trainees, guild boards, and market districts keep the capital moving.",
+      "priority": 35,
+      "cooldownTicks": 2,
+      "triggers": ["channel", "listen", "social"],
+      "channelRules": ["Favor civic notices", "Teach First Road next steps", "Keep city services source-governed"],
       "likelySpeakers": ["Concord Scribe", "Ysabet Cord", "Dawnward Table"],
       "nextPrompt": "Use `map`, `guild contracts`, or `dm` to turn the city into a usable social hub.",
       "sourceNote": "Saint Veyra district and service data from compendium/workbook-backed runtime files."
@@ -176,6 +225,10 @@
       "dungeonId": "pilgrim-trial-cryptlet",
       "label": "Cryptlet Party Comms",
       "cadence": "Party-like contacts call lanes, object duty, healing pressure, and small human reactions.",
+      "priority": 60,
+      "cooldownTicks": 1,
+      "triggers": ["dungeon", "loot", "listen", "social"],
+      "channelRules": ["Mention lane pressure", "Give one tactical clue", "Let companions react like people, not menus"],
       "likelySpeakers": ["Pilgrim Renn", "Edrin Bellhand", "Tallowwick"],
       "nextPrompt": "Use `party <message>`, `director what do they notice`, or `world pulse` between pulls.",
       "sourceNote": "Local staged party simulation for the first playable Cryptlet route."
@@ -185,6 +238,10 @@
       "channelId": "guild-recruitment",
       "label": "Guild Recruitment Board",
       "cadence": "Guild tables post patient route calls, contract norms, and source-law expectations.",
+      "priority": 20,
+      "cooldownTicks": 4,
+      "triggers": ["channel", "listen", "social"],
+      "channelRules": ["Keep recruitment local-sim", "Offer guild identity", "Avoid real-player claims"],
       "likelySpeakers": ["Dawnward Table", "Candleknots", "Ysabet Cord"],
       "nextPrompt": "Use `channel guild-recruitment`, `guild <message>`, or `accept contract First Road Watch`.",
       "sourceNote": "Local guild board simulation; no real multiplayer backend claim."

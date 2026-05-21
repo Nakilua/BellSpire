@@ -1,6 +1,7 @@
 import encounters from "../data/encounters.json";
 import enemies from "../data/enemies.json";
 import { addFeed, createId, reviveForRetry } from "./state";
+import { recordContactMemory, setPartyReadiness } from "./social";
 import type { CombatEnemyState, EncounterState, GameState, Lane } from "./types";
 
 function getEncounterDefinition(encounterId: string) {
@@ -120,9 +121,17 @@ function allEnemiesDefeated(encounter: EncounterState) {
   return encounter.enemies.every((enemy) => enemy.hp <= 0);
 }
 
+function targetHint(encounter: EncounterState, target: CombatEnemyState, targetText?: string) {
+  const normalized = targetText?.trim().toLowerCase();
+  if (!normalized || target.name.toLowerCase().includes(normalized)) {
+    return "";
+  }
+  return ` Target "${targetText}" was not present, so BellSpire used current threat: ${target.name}.`;
+}
+
 function applyEnemyDamage(state: GameState, damage: number, failureTag: string, line: string): GameState {
   const hp = Math.max(0, state.character.hp - damage);
-  const next = {
+  const next: GameState = {
     ...state,
     character: {
       ...state.character,
@@ -143,14 +152,17 @@ function applyEnemyDamage(state: GameState, damage: number, failureTag: string, 
   }
 
   const wipeLine = buildWipeRecap(failureTag);
-  const revived = reviveForRetry({
+  let wiped: GameState = {
     ...next,
     encounter: undefined,
     sessionRecap: {
       ...next.sessionRecap,
       wipes: [...next.sessionRecap.wipes, `${failureTag}: ${wipeLine}`]
     }
-  });
+  };
+  wiped = setPartyReadiness(wiped, ["pilgrim-renn", "edrin-bellhand", "tallowwick"], "post-wipe");
+  wiped = recordContactMemory(wiped, "edrin-bellhand", "wiped", `Wipe noted: ${wipeLine}`, "Combat recap", 1);
+  const revived = reviveForRetry(wiped);
 
   return addFeed(revived, "warning", "Wipe recap", wipeLine, failureTag);
 }
@@ -379,7 +391,7 @@ export function performCombatAction(state: GameState, action: "guard" | "shield-
           oath: Math.min(100, next.character.oath + 10)
         }
       };
-      actionLine = `Shield Oath hits ${target.name}. Threat Seal applied. Oath +10.`;
+      actionLine = `Shield Oath hits ${target.name}. Threat Seal applied. Oath +10.${targetHint(encounter, target, detail)}`;
     }
   }
 
@@ -396,7 +408,7 @@ export function performCombatAction(state: GameState, action: "guard" | "shield-
           oath: Math.min(100, next.character.oath + 2)
         }
       };
-      actionLine = `Road-Iron Strike hits ${target.name}. Oath +2.`;
+      actionLine = `Road-Iron Strike hits ${target.name}. Oath +2.${targetHint(encounter, target, detail)}`;
     }
   }
 

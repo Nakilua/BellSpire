@@ -67,6 +67,7 @@ Start with:
 - [Classic-Style Loot System v1](docs/CLASSIC_STYLE_LOOT_SYSTEM_V1.md)
 - [125-Step Classic Loot Plan](docs/MASTER_PLAN_125_CLASSIC_LOOT_STEPS.md)
 - [Bible Content Gap Audit](docs/BIBLE_CONTENT_GAP_AUDIT.md)
+- [Compendium/Workbook Update Queue](docs/COMPENDIUM_WORKBOOK_UPDATE_QUEUE.md)
 - [70-Step Master Plan](docs/MASTER_PLAN_70_STEPS.md)
 - [Release Checklist](docs/RELEASE_CHECKLIST.md)
 

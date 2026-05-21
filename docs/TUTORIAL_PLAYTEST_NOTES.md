@@ -55,3 +55,20 @@ Generated for the first post-foundation docs pass.
 - Passed: `report contract` files a completed guild contract and adds social/guild memory without creating ghost loot.
 - Passed: `recap` includes route, quest, narrative, loot, wipes, reputation, source pity, flags, NPC reactions, and social memory.
 - Note: the in-app browser screenshot call timed out during this pass, so visual proof is from DOM/browser interaction rather than a saved screenshot artifact.
+
+## Classic Loot And Source Queue QA Pass
+
+- Passed: `/login` loaded, detected an existing save, and protected replacement behind a confirmation dialog.
+- Passed: creating a fresh Bulwark save in a separate QA port entered the main game shell without touching the user's active `5173` save.
+- Passed: typed commands worked through the command input using `look`, `listen`, `who`, travel commands, Olla interaction, quest acceptance, dungeon entry, inspection, combat commands, loot, and Need roll commands.
+- Passed: channel clicks worked for `#guild-board` and `#party-chat`.
+- Passed: right-panel tabs worked for Bags, World, and Archive.
+- Passed: First Road route progressed from Saint Veyra to Hearthmere, Little Dawn, Cryptlet, Road-Seal Exit, and reward claim.
+- Passed: Broken Bell Niche object counterplay worked when using `inspect wax seal channel`; the reward cache then included the conditional Bell Sliver.
+- Passed: Bellgrave Warden mechanics showed Road-Seal Pulse, Road-Seal Bell use, Final Toll, wipe recap, retry, clear, Road-Seal Exit, source-governed cache opening, and Need/Greed/Pass resolution.
+- Passed: Road-Seal Buckler entered inventory only through the loot engine and remained labeled as staged/source-governed.
+- Passed: refresh persistence kept the Road-Seal Buckler, location/progress, and visible save state.
+- Passed: the new export receipt appeared in Archive after Download with filename, byte count, `download` action, timestamp, and SHA-256 checksum.
+- Passed: no app-origin browser console errors were recorded during the QA tab checks.
+- Note: the Codex in-app browser still does not support proving an operating-system download event. The app-level export receipt is the reliable proof inside this browser; normal Chrome/Edge should still download the file.
+- Follow-up: add clearer beginner wording or a stronger action hint for object-counterplay rooms, especially `inspect wax seal channel` and `use road-seal bell`.

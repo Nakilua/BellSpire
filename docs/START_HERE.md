@@ -83,6 +83,7 @@ Start here for project law:
 - [Classic-Style Loot System v1](./CLASSIC_STYLE_LOOT_SYSTEM_V1.md): boss/cache/source tables, bindings, thresholds, rolls, and source-pity law.
 - [125-Step Classic Loot Plan](./MASTER_PLAN_125_CLASSIC_LOOT_STEPS.md): implementation checklist for the current loot pass.
 - [Bible Content Gap Audit](./BIBLE_CONTENT_GAP_AUDIT.md): what the compendium/workbooks contain that is not playable yet.
+- [Compendium/Workbook Update Queue](./COMPENDIUM_WORKBOOK_UPDATE_QUEUE.md): new app rules and data fields that should be folded into a future v1.2 source pass.
 - [Canon Rules](./CANON_RULES.md): source authority, no ghost loot, audit law, and protected canon names.
 - [70-Step Master Plan](./MASTER_PLAN_70_STEPS.md): the current build roadmap for the living-world first-road pass.
 - [Release Checklist](./RELEASE_CHECKLIST.md): what to verify before merging serious changes.

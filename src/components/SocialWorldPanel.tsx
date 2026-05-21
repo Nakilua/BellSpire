@@ -1,5 +1,6 @@
 import { CheckCircle2, ClipboardList, Gauge, MessageCircle, Radio, Sparkles, UserPlus, UsersRound } from "lucide-react";
 import type { ReactNode } from "react";
+import { getLivingWorldRhythm } from "../game/livingWorld";
 import { getNarrativeStatus } from "../game/narrativeDirector";
 import type { GameState, SocialContactState } from "../game/types";
 
@@ -13,6 +14,7 @@ export function SocialWorldPanel({ state, onCommand }: Props) {
   const visibleContacts = [...state.social.contacts].sort(sortContacts).slice(0, 5);
   const director = state.social.director;
   const narrative = getNarrativeStatus(state);
+  const rhythm = getLivingWorldRhythm(state);
   const budgetPercent = Math.min(100, Math.round((director.estimatedSpendUsd / director.monthlyBudgetUsd) * 100));
   const stopPercent = Math.min(100, Math.round((director.stopAtUsd / director.monthlyBudgetUsd) * 100));
 
@@ -38,6 +40,20 @@ export function SocialWorldPanel({ state, onCommand }: Props) {
             <strong>{value}</strong>
           </div>
         ))}
+      </div>
+
+      <div className="world-rhythm-card">
+        <div className="split-row tight">
+          <h3>{rhythm.label}</h3>
+          <span className="status-pill active">tick {state.livingWorld.tick}</span>
+        </div>
+        <p>{rhythm.cadence}</p>
+        <small>Likely voices: {rhythm.likelySpeakers.join(", ")}</small>
+        <button className="action-button quiet full-width" type="button" onClick={() => onCommand("world pulse")}>
+          <Radio size={14} />
+          World Pulse
+        </button>
+        <small>{rhythm.sourceNote}</small>
       </div>
 
       <div className="director-card narrative-director-card">

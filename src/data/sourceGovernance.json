@@ -17,6 +17,14 @@
         "note": "Bulwark is the first playable class; starter ability behavior is curated for the first playable slice."
       }
     },
+    "atlasDeepZooms.json": {
+      "default": {
+        "sourceTier": 1,
+        "sourceStatus": "curated-canon-map-zoom",
+        "sourceRefs": ["Project_Bellspire_Complete_Canon_Compendium_v1_1.pdf", "Project_Bellspire_Complete_Data_Workbook_v1_1.xlsx", "Project_Bellspire_Discord_Map_Playstyle_Prompt_v1_1.md"],
+        "note": "Deep zoom entries expose source-governed map focus areas, player verbs, and visual plate usage without creating new shop, vendor, loot, or NPC canon."
+      }
+    },
     "canonContextPacks.json": {
       "default": {
         "sourceTier": 4,

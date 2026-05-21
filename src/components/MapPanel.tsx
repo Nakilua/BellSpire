@@ -21,6 +21,7 @@ import {
   X,
   type LucideIcon
 } from "lucide-react";
+import atlasDeepZooms from "../data/atlasDeepZooms.json";
 import mapAnnotations from "../data/mapAnnotations.json";
 import mapServices from "../data/mapServices.json";
 import pois from "../data/pois.json";
@@ -99,9 +100,23 @@ interface DungeonDefinition {
   rooms: DungeonRoom[];
 }
 
+interface AtlasDeepZoom {
+  id: string;
+  scope: "zone" | "dungeon";
+  zoneId?: string;
+  dungeonId?: string;
+  title: string;
+  subtitle: string;
+  imageClass: string;
+  focus: string[];
+  verbs: string[];
+  sourceNote: string;
+}
+
 const regions = regionTopography as RegionTopography[];
 const services = mapServices as MapService[];
 const annotations = mapAnnotations as MapAnnotation[];
+const deepZooms = atlasDeepZooms as AtlasDeepZoom[];
 const layerLabels: Record<MapLayer, string> = {
   routes: "Routes",
   services: "Services",
@@ -530,6 +545,7 @@ function AtlasAnnotationLayer({
 
 function AtlasCloseupPanel({ zoneId, services }: { zoneId: string; services: MapService[] }) {
   const config = getZoneCloseup(zoneId);
+  const zooms = deepZooms.filter((entry) => entry.scope === "zone" && entry.zoneId === zoneId);
 
   if (!config) {
     return null;
@@ -550,31 +566,63 @@ function AtlasCloseupPanel({ zoneId, services }: { zoneId: string; services: Map
           </span>
         ))}
       </div>
+      <DeepZoomLedger zooms={zooms} />
       <small>{config.sourceNote}</small>
     </aside>
   );
 }
 
 function AtlasDungeonCloseup({ dungeon }: { dungeon: DungeonDefinition }) {
-  if (dungeon.id !== "pilgrim-trial-cryptlet") {
+  const zooms = deepZooms.filter((entry) => entry.scope === "dungeon" && entry.dungeonId === dungeon.id);
+
+  if (zooms.length === 0) {
     return null;
   }
+
+  const primary = zooms.find((entry) => entry.imageClass === "closeup-warden-chamber") ?? zooms[0];
 
   return (
     <aside className="atlas-closeup-panel" aria-label="Warden Chamber close-up">
       <div>
         <span>Boss-Room Plate</span>
-        <strong>Warden Chamber Close-Up</strong>
-        <p>Fresh tactical art for lane pressure, Road-Seal Bell reads, adds, pulse timing, and Final Toll staging.</p>
+        <strong>{primary.title}</strong>
+        <p>{primary.subtitle}</p>
       </div>
-      <div className="atlas-closeup-plate closeup-warden-chamber" aria-hidden="true" />
+      <div className={`atlas-closeup-plate ${primary.imageClass}`} aria-hidden="true" />
       <div className="atlas-closeup-services">
-        <span className="service-kind-chip dungeon">Road-Seal Bell</span>
-        <span className="service-kind-chip danger">Lane Pressure</span>
-        <span className="service-kind-chip shrine">Final Toll</span>
+        {primary.focus.slice(0, 5).map((label) => (
+          <span className="service-kind-chip dungeon" key={label}>
+            {label}
+          </span>
+        ))}
       </div>
-      <small>Pilgrim Trial Cryptlet runtime room and Bellgrave Warden encounter data. Art is a visual aid, not independent canon authority.</small>
+      <DeepZoomLedger zooms={zooms} />
+      <small>{primary.sourceNote}</small>
     </aside>
+  );
+}
+
+function DeepZoomLedger({ zooms }: { zooms: AtlasDeepZoom[] }) {
+  if (!zooms.length) {
+    return null;
+  }
+
+  return (
+    <div className="deep-zoom-ledger" aria-label="Deep zoom atlas entries">
+      <span>Deep Zooms</span>
+      {zooms.map((zoom) => (
+        <article className="deep-zoom-card" key={zoom.id}>
+          <strong>{zoom.title}</strong>
+          <p>{zoom.subtitle}</p>
+          <div className="deep-zoom-chip-row">
+            {zoom.focus.slice(0, 6).map((item) => (
+              <i key={item}>{item}</i>
+            ))}
+          </div>
+          <small>Player verbs: {zoom.verbs.join(" / ")}</small>
+        </article>
+      ))}
+    </div>
   );
 }
 

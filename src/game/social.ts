@@ -16,6 +16,9 @@ const exactGameCommands = new Set([
   "recap",
   "listen",
   "wait",
+  "world pulse",
+  "social pulse",
+  "pulse",
   "who",
   "nearby"
 ]);

@@ -1265,6 +1265,31 @@ button {
   font-size: 0.95rem;
 }
 
+.world-rhythm-card {
+  display: grid;
+  gap: 8px;
+  border: 1px solid rgba(78, 163, 163, 0.34);
+  border-radius: 4px;
+  background:
+    linear-gradient(135deg, rgba(78, 163, 163, 0.12), rgba(118, 37, 66, 0.08)),
+    rgba(9, 8, 15, 0.42);
+  padding: 10px;
+}
+
+.world-rhythm-card h3 {
+  margin: 0;
+  color: var(--bell-bone);
+  font-size: 0.88rem;
+}
+
+.world-rhythm-card p,
+.world-rhythm-card small {
+  margin: 0;
+  color: var(--bell-ash);
+  font-size: 0.72rem;
+  line-height: 1.4;
+}
+
 .director-card {
   display: grid;
   gap: 8px;
@@ -2752,6 +2777,10 @@ body::after {
   background-image: url("./assets/maps/warden-chamber-closeup.png");
 }
 
+.atlas-closeup-plate.dungeon-overview {
+  background-image: url("./assets/maps/pilgrim-cryptlet-map.png");
+}
+
 .custom-map-plate .handdrawn-atlas,
 .custom-map-plate .topography-routes {
   opacity: 0;
@@ -4091,6 +4120,60 @@ body::after {
   letter-spacing: 0.04em;
   padding: 4px 7px;
   text-transform: uppercase;
+}
+
+.deep-zoom-ledger {
+  display: grid;
+  gap: 8px;
+  border-top: 1px solid rgba(183, 135, 76, 0.22);
+  padding-top: 9px;
+}
+
+.deep-zoom-ledger > span {
+  color: var(--bell-fog);
+  font-size: 0.62rem;
+  font-weight: 900;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.deep-zoom-card {
+  display: grid;
+  gap: 6px;
+  border: 1px solid rgba(183, 135, 76, 0.26);
+  border-radius: 4px;
+  background:
+    linear-gradient(180deg, rgba(229, 201, 143, 0.06), rgba(12, 8, 10, 0.2)),
+    rgba(9, 8, 15, 0.2);
+  padding: 8px;
+}
+
+.deep-zoom-card strong {
+  margin: 0;
+  font-size: 0.84rem;
+}
+
+.deep-zoom-card p,
+.deep-zoom-card small {
+  margin: 0;
+  font-size: 0.68rem;
+}
+
+.deep-zoom-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.deep-zoom-chip-row i {
+  border: 1px solid rgba(183, 135, 76, 0.22);
+  border-radius: 999px;
+  background: rgba(229, 201, 143, 0.06);
+  color: var(--bell-wax);
+  font-size: 0.56rem;
+  font-style: normal;
+  font-weight: 900;
+  padding: 3px 6px;
 }
 
 .atlas-dialog-content .custom-map-plate {

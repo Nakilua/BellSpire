@@ -74,6 +74,38 @@
       "speaker": "Candleknots",
       "body": "Small guild forming for shrine work, material runs, and quiet dungeon clears. We explain mechanics before bells explain them harder.",
       "meta": "guild recruitment"
+    },
+    {
+      "channelId": "zone-chat",
+      "zoneId": "saint-veyra",
+      "speaker": "Oath-Iron Yard",
+      "body": "Bulwark trainees rotate shields at the yard. Repair clerks remind everyone that dents with witness names are easier to file.",
+      "meta": "zone / Saint Veyra"
+    },
+    {
+      "channelId": "zone-chat",
+      "zoneId": "saint-veyra",
+      "speaker": "Seven Lanterns Runner",
+      "body": "Market note: starter supplies are moving east. If you are taking the first road, buy practical and brag later.",
+      "meta": "zone / market"
+    },
+    {
+      "channelId": "party-chat",
+      "speaker": "Edrin Bellhand",
+      "body": "Ready-check rhythm: tank names the pull, healer confirms sightline, object duty repeats the object. We keep this boring and survive.",
+      "meta": "party / ready check"
+    },
+    {
+      "channelId": "party-chat",
+      "speaker": "Pilgrim Renn",
+      "body": "If the room has a bell, a tag, or wax running through stone, I am assuming it matters until proven otherwise.",
+      "meta": "party / dungeon read"
+    },
+    {
+      "channelId": "guild-board",
+      "speaker": "Ysabet Cord",
+      "body": "Filed reminder: simulated local parties are valid for training reports. The report must say who witnessed what and which reward source was used.",
+      "meta": "guild board / source law"
     }
   ],
   "dmBeats": [
@@ -106,6 +138,56 @@
       "speaker": "Bellspire Director",
       "body": "You stop long enough to hear the server breathe: recruitment posts, road warnings, party jokes, and NPC routines moving around the edges of the scene.",
       "meta": "local DM / listen"
+    }
+  ],
+  "rhythms": [
+    {
+      "id": "global-roadwatch",
+      "channelId": "global-chat",
+      "label": "Global Roadwatch",
+      "cadence": "Slow server-wide road reports, recruitment pings, and locked-preview chatter.",
+      "likelySpeakers": ["Server Notice", "Roadwarden Pell", "Dawnward Table"],
+      "nextPrompt": "Use `global <message>` or `world pulse` to hear the wider realm without leaving the current route.",
+      "sourceNote": "Local-first MMO social simulation; global lines are staged atmosphere, not live multiplayer."
+    },
+    {
+      "id": "hearthmere-zone-watch",
+      "channelId": "zone-chat",
+      "zoneId": "hearthmere-fields",
+      "label": "Hearthmere Zone Watch",
+      "cadence": "Fieldhands, roadwardens, pilgrims, and shrine traffic trade practical warnings.",
+      "likelySpeakers": ["Fieldhand Mara", "Roadwarden Ila", "Shrinekeeper Olla"],
+      "nextPrompt": "Use `listen`, `zone <message>`, or ask the Director for a scene read before traveling.",
+      "sourceNote": "Hearthmere Fields and Road Shrine of Little Dawn source-governed starter-zone social texture."
+    },
+    {
+      "id": "saint-veyra-docket",
+      "channelId": "zone-chat",
+      "zoneId": "saint-veyra",
+      "label": "Saint Veyra Docket",
+      "cadence": "Concord clerks, trainees, guild boards, and market districts keep the capital moving.",
+      "likelySpeakers": ["Concord Scribe", "Ysabet Cord", "Dawnward Table"],
+      "nextPrompt": "Use `map`, `guild contracts`, or `dm` to turn the city into a usable social hub.",
+      "sourceNote": "Saint Veyra district and service data from compendium/workbook-backed runtime files."
+    },
+    {
+      "id": "cryptlet-party-comms",
+      "channelId": "party-chat",
+      "dungeonId": "pilgrim-trial-cryptlet",
+      "label": "Cryptlet Party Comms",
+      "cadence": "Party-like contacts call lanes, object duty, healing pressure, and small human reactions.",
+      "likelySpeakers": ["Pilgrim Renn", "Edrin Bellhand", "Tallowwick"],
+      "nextPrompt": "Use `party <message>`, `director what do they notice`, or `world pulse` between pulls.",
+      "sourceNote": "Local staged party simulation for the first playable Cryptlet route."
+    },
+    {
+      "id": "guild-recruitment-board",
+      "channelId": "guild-recruitment",
+      "label": "Guild Recruitment Board",
+      "cadence": "Guild tables post patient route calls, contract norms, and source-law expectations.",
+      "likelySpeakers": ["Dawnward Table", "Candleknots", "Ysabet Cord"],
+      "nextPrompt": "Use `channel guild-recruitment`, `guild <message>`, or `accept contract First Road Watch`.",
+      "sourceNote": "Local guild board simulation; no real multiplayer backend claim."
     }
   ]
 }

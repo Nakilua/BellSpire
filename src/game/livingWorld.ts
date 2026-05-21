@@ -20,8 +20,21 @@ interface DmBeat {
   meta: string;
 }
 
+export interface LivingWorldRhythm {
+  id: string;
+  channelId: string;
+  zoneId?: string;
+  dungeonId?: string;
+  label: string;
+  cadence: string;
+  likelySpeakers: string[];
+  nextPrompt: string;
+  sourceNote: string;
+}
+
 const ambient = livingWorld.ambient as AmbientLine[];
 const dmBeats = livingWorld.dmBeats as DmBeat[];
+const rhythms = livingWorld.rhythms as LivingWorldRhythm[];
 
 export function pulseLivingWorld(state: GameState, reason: PulseReason): GameState {
   const zone = getCurrentZone(state);
@@ -76,12 +89,15 @@ export function postWorldChat(state: GameState, channelId: "global-chat" | "zone
 
 export function showNearbyWorld(state: GameState): GameState {
   const zone = getCurrentZone(state);
+  const rhythm = getLivingWorldRhythm(state);
   const contacts = state.social.contacts
     .filter((contact) => contact.availability === "online" || state.social.recentParty.includes(contact.name))
     .map((contact) => `${contact.name} - ${contact.role} (${contact.relationshipTag}, ${contact.availability})`);
   const body = [
     `Location: ${zone.name}`,
     `World tick: ${state.livingWorld.tick}`,
+    `Current rhythm: ${rhythm.label}`,
+    rhythm.cadence,
     "",
     "Visible contacts:",
     contacts.join("\n") || "No visible contacts.",
@@ -92,9 +108,26 @@ export function showNearbyWorld(state: GameState): GameState {
   return addFeed(state, "social", "Nearby social world", body, "#zone");
 }
 
+export function getLivingWorldRhythm(state: GameState): LivingWorldRhythm {
+  const zone = getCurrentZone(state);
+  const activeDungeonId = state.dungeon?.dungeonId;
+
+  return (
+    rhythms.find((rhythm) => activeDungeonId && rhythm.dungeonId === activeDungeonId) ??
+    rhythms.find((rhythm) => rhythm.channelId === state.activeChannelId && (!rhythm.zoneId || rhythm.zoneId === zone.id)) ??
+    rhythms.find((rhythm) => rhythm.channelId === "zone-chat" && rhythm.zoneId === zone.id) ??
+    rhythms.find((rhythm) => rhythm.channelId === "global-chat") ??
+    rhythms[0]
+  );
+}
+
 function selectAmbientLines(state: GameState, zoneId: string, reason: PulseReason) {
   if (state.activeChannelId === "global-chat") {
     return ambient.filter((line) => line.channelId === "global-chat");
+  }
+
+  if (state.dungeon && (state.activeChannelId === "combat-log" || reason === "dungeon")) {
+    return ambient.filter((line) => line.channelId === "party-chat");
   }
 
   if (state.activeChannelId === "zone-chat" || reason === "travel" || reason === "talk") {
@@ -110,6 +143,10 @@ function selectAmbientLines(state: GameState, zoneId: string, reason: PulseReaso
   }
 
   if (reason === "listen") {
+    if (state.dungeon) {
+      return ambient.filter((line) => line.channelId === "party-chat");
+    }
+
     return ambient.filter((line) => line.channelId === "global-chat" || line.channelId === "zone-chat" && (!line.zoneId || line.zoneId === zoneId));
   }
 

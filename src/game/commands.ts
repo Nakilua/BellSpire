@@ -39,7 +39,7 @@ export function runCommand(state: GameState, rawCommand: string): GameState {
     return showMap(next);
   }
 
-  if (command === "listen" || command === "wait") {
+  if (command === "listen" || command === "wait" || command === "world pulse" || command === "social pulse" || command === "pulse") {
     return pulseNarrative(pulseLivingWorld(next, "listen"), "listen");
   }
 
@@ -151,7 +151,7 @@ export function runCommand(state: GameState, rawCommand: string): GameState {
     next,
     "warning",
     "Command not recognized",
-    "Try `look`, `story`, `dm`, `map`, `travel Hearthmere Fields`, `talk Shrinekeeper Olla`, `accept quest`, `enter dungeon`, `lfg`, `party hello`, `director what does the party notice?`, `guild contracts`, `invite Renn`, `shield oath`, `guard frontline`, `loot`, or use the action buttons.",
+    "Try `look`, `story`, `dm`, `world pulse`, `map`, `travel Hearthmere Fields`, `talk Shrinekeeper Olla`, `accept quest`, `enter dungeon`, `lfg`, `party hello`, `director what does the party notice?`, `guild contracts`, `invite Renn`, `shield oath`, `guard frontline`, `loot`, or use the action buttons.",
     "MVP parser"
   );
 }

@@ -9,6 +9,7 @@
     "canon:build": "node scripts/build-canon-registry.mjs",
     "canon:audit": "node scripts/build-canon-registry.mjs --audit",
     "loot:audit": "node scripts/audit-loot-rules.mjs",
+    "loot:simulate": "node scripts/simulate-loot.mjs",
     "fixtures:audit": "node scripts/verify-save-fixtures.mjs",
     "assets:audit": "node scripts/check-map-assets.mjs",
     "build": "tsc && rsbuild build",

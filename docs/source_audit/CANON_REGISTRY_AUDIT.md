@@ -1,6 +1,6 @@
 # Bellspire Canon Registry Audit
 
-Generated: 2026-05-21T01:30:04.996Z
+Generated: 2026-05-21T16:43:36.604Z
 
 ## Summary
 
@@ -11,8 +11,8 @@ Generated: 2026-05-21T01:30:04.996Z
 - Workbook sheets scanned: 62
 - Workbook rows normalized: 910
 - PDF files represented by reading index: 8
-- Runtime data files governed: 26/26
-- Runtime records governed: 231/231
+- Runtime data files governed: 30/30
+- Runtime records governed: 257/257
 - Zones extracted: 11
 - Dungeons/instances extracted: 12
 - Boss rows extracted: 38
@@ -30,8 +30,8 @@ Generated: 2026-05-21T01:30:04.996Z
 
 ## Runtime Source Governance
 
-- Runtime data files governed: 26/26
-- Runtime records governed: 231/231
+- Runtime data files governed: 30/30
+- Runtime records governed: 257/257
 - Governance map: src/data/sourceGovernance.json
 
 ## Source Authority Ladder

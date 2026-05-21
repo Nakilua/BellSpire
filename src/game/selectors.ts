@@ -43,6 +43,16 @@ export function getBulwarkAbilities() {
 }
 
 export function getAvailableActions(state: GameState): ActionButton[] {
+  if (state.pendingLootRoll) {
+    return [
+      ...(state.pendingLootRoll.canNeed ? [{ label: "Need", command: "need", tone: "primary" as const }] : []),
+      { label: "Greed", command: "greed" },
+      { label: "Pass", command: "pass", tone: "quiet" },
+      { label: "Inventory", command: "inventory", tone: "quiet" },
+      { label: "Recap", command: "recap", tone: "quiet" }
+    ];
+  }
+
   if (state.encounter) {
     const firstEnemy = state.encounter.enemies.find((enemy) => enemy.hp > 0);
     const actions: ActionButton[] = [

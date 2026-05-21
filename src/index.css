@@ -1199,6 +1199,33 @@ button {
   font-weight: 700;
 }
 
+.inventory-row > div {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.loot-history {
+  display: grid;
+  gap: 5px;
+  border: 1px solid rgba(215, 167, 86, 0.28);
+  border-radius: 4px;
+  background: rgba(215, 167, 86, 0.06);
+  padding: 9px 10px;
+}
+
+.loot-history strong {
+  color: var(--bell-bone);
+  font-size: 0.76rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.loot-history small {
+  color: var(--bell-fog);
+  line-height: 1.35;
+}
+
 .party-row.muted {
   opacity: 0.7;
 }

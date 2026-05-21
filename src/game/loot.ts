@@ -1,32 +1,6 @@
-import lootRules from "../data/firstRoadLootRules.json";
-import items from "../data/items.json";
-import { addFeed } from "./state";
-import type { GameState, InventoryItem } from "./types";
-
-function toInventoryItem(itemId: string, quantity: number): InventoryItem {
-  const item = items.find((entry) => entry.id === itemId);
-  if (!item) {
-    throw new Error(`Unknown loot item: ${itemId}`);
-  }
-
-  return {
-    id: item.id,
-    name: item.name,
-    kind: item.kind,
-    quantity,
-    slot: item.slot,
-    armorType: item.armorType,
-    rarity: item.rarity,
-    classTags: item.classTags,
-    sourceType: item.sourceType,
-    sourceId: item.sourceId,
-    zoneId: item.zoneId,
-    dungeonId: item.dungeonId,
-    source: item.source,
-    sourceStatus: item.sourceStatus,
-    description: item.description
-  };
-}
+import { addFeed, createId } from "./state";
+import { describeLootPolicy, resolveCryptletFirstClearLoot, resolvePendingRoll } from "./lootEngine";
+import type { GameState, InventoryItem, LootRollChoice } from "./types";
 
 function addInventoryItems(state: GameState, additions: InventoryItem[]): GameState {
   const nextInventory = [...state.inventory];
@@ -51,16 +25,30 @@ export function grantCryptletRewards(state: GameState): GameState {
     return addFeed(state, "loot", "Reward already claimed", "The Road-Seal cache is empty. No double dipping, darling.", "Pilgrim Trial Cryptlet");
   }
 
-  const rewards = [
-    toInventoryItem("pilgrim-wax", 2),
-    toInventoryItem("bone-fragment", 2),
-    toInventoryItem("bell-sliver", state.flags.brokenBellStabilized ? 1 : 0),
-    toInventoryItem("road-seal-buckler", 1)
-  ].filter((item) => item.quantity > 0);
+  if (state.pendingLootRoll) {
+    return addFeed(
+      state,
+      "loot",
+      `Loot roll pending: ${state.pendingLootRoll.itemName}`,
+      formatPendingRoll(state),
+      "Need / Greed / Pass"
+    );
+  }
 
-  let next = addInventoryItems(state, rewards);
+  if (state.flags.cryptletCacheOpened) {
+    return addFeed(state, "warning", "Loot roll missing", "The cache has already opened. No extra item can be created without a pending source-governed roll.", "No ghost loot");
+  }
+
+  const resolved = resolveCryptletFirstClearLoot(state);
+  let next = addInventoryItems(state, resolved.autoRewards);
+  const pending = resolved.pendingRolls[0];
+
   next = {
     ...next,
+    flags: {
+      ...next.flags,
+      cryptletCacheOpened: true
+    },
     reputation: {
       ...next.reputation,
       "Bellspire Concord": (next.reputation["Bellspire Concord"] ?? 0) + 25,
@@ -70,9 +58,65 @@ export function grantCryptletRewards(state: GameState): GameState {
       ...next.sourcePity,
       "Pilgrimage of the First Bell": (next.sourcePity["Pilgrimage of the First Bell"] ?? 0) + 1
     },
+    pendingLootRoll: pending
+      ? {
+          ...pending,
+          id: createId("loot-roll")
+        }
+      : undefined,
+    sessionRecap: {
+      ...next.sessionRecap,
+      loot: [
+        ...next.sessionRecap.loot,
+        ...resolved.autoRewards.map((item) => `${item.name} x${item.quantity} - ${item.sourceStatus}`)
+      ],
+      reputation: [...next.sessionRecap.reputation, "Bellspire Concord +25", "Roadwardens +10"],
+      sourcePity: [...next.sessionRecap.sourcePity, "Pilgrimage of the First Bell +1"],
+      flags: next.sessionRecap.flags.includes("Cryptlet Cache Opened")
+        ? next.sessionRecap.flags
+        : [...next.sessionRecap.flags, "Cryptlet Cache Opened"]
+    }
+  };
+
+  const body = [
+    "Source: Pilgrimage of the First Bell.",
+    describeLootPolicy(),
+    ...resolved.explanations,
+    ...resolved.blocked.map((line) => `Blocked: ${line}`),
+    resolved.autoRewards.length
+      ? `Auto rewards: ${resolved.autoRewards.map((item) => `${item.name} x${item.quantity}`).join(", ")}.`
+      : "Auto rewards: none.",
+    pending
+      ? `Roll now: ${pending.itemName} (${pending.rarity}, ${pending.binding}). Type \`need\`, \`greed\`, or \`pass\`.`
+      : "No rollable item remained."
+  ].join("\n");
+
+  return addFeed(next, "loot", "Road-Seal Cache opened", body, "Classic-style source loot");
+}
+
+export function resolveCryptletLootRoll(state: GameState, choice: LootRollChoice): GameState {
+  if (!state.pendingLootRoll) {
+    return addFeed(state, "warning", "No active loot roll", "There is no Need/Greed/Pass roll waiting right now.", "Loot");
+  }
+
+  if (choice === "need" && !state.pendingLootRoll.canNeed) {
+    return addFeed(state, "warning", "Need unavailable", "Your class cannot Need this item. Choose `greed` or `pass`.", "Loot rules");
+  }
+
+  const pending = state.pendingLootRoll;
+  const resolution = resolvePendingRoll(state, choice);
+  let next = resolution.grantedReward ? addInventoryItems(state, [resolution.grantedReward]) : state;
+  const awardedLine = resolution.grantedReward
+    ? `${resolution.grantedReward.name} x${resolution.grantedReward.quantity} - ${resolution.grantedReward.sourceStatus}`
+    : `${pending.itemName} was not awarded to ${state.character.name}.`;
+
+  next = {
+    ...next,
+    pendingLootRoll: undefined,
     flags: {
       ...next.flags,
-      cryptletComplete: true
+      cryptletComplete: true,
+      wardenDefeated: true
     },
     dungeon: next.dungeon
       ? {
@@ -82,31 +126,39 @@ export function grantCryptletRewards(state: GameState): GameState {
       : undefined,
     sessionRecap: {
       ...next.sessionRecap,
-      loot: [
-        ...next.sessionRecap.loot,
-        "Pilgrim Wax x2",
-        "Bone Fragment x2",
-        ...(state.flags.brokenBellStabilized ? ["Bell Sliver x1"] : []),
-        "Road-Seal Buckler x1 - Staged source reward"
-      ],
-      reputation: [...next.sessionRecap.reputation, "Bellspire Concord +25", "Roadwardens +10"],
-      sourcePity: [...next.sessionRecap.sourcePity, "Pilgrimage of the First Bell +1"],
-      flags: [...next.sessionRecap.flags, "Cryptlet Complete"]
+      loot: [...next.sessionRecap.loot, awardedLine],
+      lootRolls: [...next.sessionRecap.lootRolls, ...resolution.lines],
+      flags: next.sessionRecap.flags.includes("Cryptlet Complete")
+        ? next.sessionRecap.flags
+        : [...next.sessionRecap.flags, "Cryptlet Complete"]
     }
   };
 
   return addFeed(
     next,
     "loot",
-    "BOSS DEFEATED: The Bellgrave Warden",
+    `Loot roll resolved: ${pending.itemName}`,
     [
-      "Source: Pilgrimage of the First Bell.",
-      `Loot rules: ${(lootRules as { sourceName: string; ruleType: string; sourceStatus: string }[]).map((rule) => `${rule.sourceName} (${rule.ruleType}, ${rule.sourceStatus})`).join("; ")}.`,
-      "Guaranteed: Pilgrim Wax x2, Bone Fragment x2, Bellspire Concord +25, Roadwardens +10.",
-      state.flags.brokenBellStabilized ? "Object bonus: Bell Sliver x1 from the stabilized bell niche." : "Object bonus missed: stabilize the bell niche on a future run for a Bell Sliver chance.",
-      "Gear: Road-Seal Buckler x1. Status: Staged source reward - final Master_Loot_DB item ID pending.",
-      "Source Progress: Pilgrimage of the First Bell pity +1."
+      ...resolution.lines,
+      `Source: ${pending.sourceName}.`,
+      `Status: ${pending.sourceNote}`,
+      "The AI Director may describe this moment, but the loot engine granted the item."
     ].join("\n"),
-    "No ghost loot"
+    "Need / Greed / Pass"
   );
+}
+
+function formatPendingRoll(state: GameState) {
+  const pending = state.pendingLootRoll;
+  if (!pending) {
+    return "No pending loot roll.";
+  }
+
+  return [
+    `${pending.itemName} x${pending.quantity}`,
+    `${pending.rarity} / ${pending.binding}`,
+    `Source: ${pending.sourceName}`,
+    pending.reason,
+    "Type `need`, `greed`, or `pass`."
+  ].join("\n");
 }

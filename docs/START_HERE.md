@@ -36,6 +36,7 @@ Rebuild the canon registry and loot audit after source files change:
 ```powershell
 npm.cmd run canon:audit
 npm.cmd run loot:audit
+npm.cmd run loot:simulate -- 1000 1935
 npm.cmd run fixtures:audit
 npm.cmd run assets:audit
 ```
@@ -62,6 +63,7 @@ The MVP includes:
 - Pilgrim Trial Cryptlet room flow
 - Bellgrave Warden encounter
 - Source-pity and staged reward display
+- Classic-style Group Loot with Need/Greed/Pass for rollable First Road rewards
 - Local character creation through `/login`
 - Local AI Director fallback for party/guild chat
 - Optional OpenAI-powered AI Director bridge using `.env.local`
@@ -78,6 +80,8 @@ Start here for project law:
 
 - [Root README](../README.md): fastest plain-English repo entrypoint.
 - [MMO Rules Bible](./MMO_RULES_BIBLE.md): how the solo-local MMO, AI Director, social world, maps, combat, loot, saves, and expansion rules work.
+- [Classic-Style Loot System v1](./CLASSIC_STYLE_LOOT_SYSTEM_V1.md): boss/cache/source tables, bindings, thresholds, rolls, and source-pity law.
+- [125-Step Classic Loot Plan](./MASTER_PLAN_125_CLASSIC_LOOT_STEPS.md): implementation checklist for the current loot pass.
 - [Canon Rules](./CANON_RULES.md): source authority, no ghost loot, audit law, and protected canon names.
 - [70-Step Master Plan](./MASTER_PLAN_70_STEPS.md): the current build roadmap for the living-world first-road pass.
 - [Release Checklist](./RELEASE_CHECKLIST.md): what to verify before merging serious changes.
@@ -129,6 +133,8 @@ The live AI Director receives a small canon packet selected from `src/data/canon
 `npm.cmd run canon:audit` scans the local source workbooks and source pack in `C:\Users\steph\Downloads`, normalizes workbook rows into `src/data/canonRegistry.json`, and writes [CANON_REGISTRY_AUDIT.md](./source_audit/CANON_REGISTRY_AUDIT.md). The current registry includes source rows for zones, POIs, instances, bosses, public events, materials, loot sources, tank loot items, rarity config, drop rules, class hooks, source-pack entries, and research references.
 
 Permanent gear still follows source law. Runtime rewards must be canonical, staged, or prototype-labeled.
+
+The loot engine now owns item grants. The AI Director may narrate the reward moment, but it cannot create items. The default First Road loot style is Group Loot with an Uncommon threshold: Need beats Greed, Greed beats Pass, and future-zone loot remains preview-locked.
 
 The existing runtime JSON is also source-governed through `src/data/sourceGovernance.json`. The audit fails if a new runtime data file is added without a source tier, source status, and source references.
 

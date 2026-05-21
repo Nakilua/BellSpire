@@ -1,0 +1,42 @@
+[
+  {
+    "id": "tradable",
+    "label": "Tradable",
+    "classicMeaning": "No binding.",
+    "runtimeMeaning": "Materials, supplies, and low-risk rewards may stack freely in the local inventory.",
+    "allowedOnPermanentGear": false,
+    "sourceNote": "Classic-style binding concept adapted for BellSpire source law."
+  },
+  {
+    "id": "oathbound-on-pickup",
+    "label": "Oathbound on Pickup",
+    "classicMeaning": "Bind on Pickup.",
+    "runtimeMeaning": "The item belongs to the character when awarded and is not a trade/economy object.",
+    "allowedOnPermanentGear": true,
+    "sourceNote": "Classic-style binding concept adapted for BellSpire source law."
+  },
+  {
+    "id": "oathbound-on-equip",
+    "label": "Oathbound on Equip",
+    "classicMeaning": "Bind on Equip.",
+    "runtimeMeaning": "The item may later support trade/economy simulation, but binds once equipped.",
+    "allowedOnPermanentGear": true,
+    "sourceNote": "Classic-style binding concept adapted for BellSpire source law."
+  },
+  {
+    "id": "quest-bound",
+    "label": "Quest-bound",
+    "classicMeaning": "Quest item.",
+    "runtimeMeaning": "The item exists only to move a quest or source flag forward.",
+    "allowedOnPermanentGear": false,
+    "sourceNote": "Classic-style quest loot concept adapted for BellSpire source law."
+  },
+  {
+    "id": "staged-bound",
+    "label": "Staged-bound",
+    "classicMeaning": "Prototype or staged reward.",
+    "runtimeMeaning": "The reward is useful in the prototype, but final permanent ownership waits for approved source rows.",
+    "allowedOnPermanentGear": true,
+    "sourceNote": "BellSpire-specific safety label for staged or prototype rewards."
+  }
+]

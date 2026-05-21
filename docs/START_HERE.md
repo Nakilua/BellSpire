@@ -64,6 +64,7 @@ The MVP includes:
 - Bellgrave Warden encounter
 - Source-pity and staged reward display
 - Classic-style Group Loot with Need/Greed/Pass for rollable First Road rewards
+- Gameplay Loop v2 staged road travel, focus exploration, NPC topics, objective pings, and combat/object lesson prompts
 - Local character creation through `/login`
 - Local AI Director fallback for party/guild chat
 - Optional OpenAI-powered AI Director bridge using `.env.local`
@@ -81,6 +82,7 @@ Start here for project law:
 - [Root README](../README.md): fastest plain-English repo entrypoint.
 - [MMO Rules Bible](./MMO_RULES_BIBLE.md): how the solo-local MMO, AI Director, social world, maps, combat, loot, saves, and expansion rules work.
 - [Classic-Style Loot System v1](./CLASSIC_STYLE_LOOT_SYSTEM_V1.md): boss/cache/source tables, bindings, thresholds, rolls, and source-pity law.
+- [Gameplay Loop v2 Goals](./GAMEPLAY_LOOP_V2_GOALS.md): the current immersion pass for travel, exploration, conversation, party texture, map play, and combat teaching.
 - [125-Step Classic Loot Plan](./MASTER_PLAN_125_CLASSIC_LOOT_STEPS.md): implementation checklist for the current loot pass.
 - [Bible Content Gap Audit](./BIBLE_CONTENT_GAP_AUDIT.md): what the compendium/workbooks contain that is not playable yet.
 - [Compendium/Workbook Update Queue](./COMPENDIUM_WORKBOOK_UPDATE_QUEUE.md): new app rules and data fields that should be folded into a future v1.2 source pass.

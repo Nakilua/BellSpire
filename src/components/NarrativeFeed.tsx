@@ -49,7 +49,7 @@ export function NarrativeFeed({ entries, actions, onCommand }: Props) {
           <div className="action-row">
             {actions.map((action) => (
               <button
-                className={`action-button ${action.tone ?? ""}`}
+                className={`action-button ${action.tone ?? ""} ${action.category ? `category-${action.category}` : ""}`}
                 key={`${action.command}-${action.label}`}
                 type="button"
                 onClick={() => onCommand(action.command)}

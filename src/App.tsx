@@ -379,7 +379,7 @@ export default function App() {
           <main className="main-panel">
             <EncounterBubble state={state} onCommand={dispatchCommand} />
             <NarrativeFeed entries={state.feed} actions={actions} onCommand={dispatchCommand} />
-            <CommandBar actions={actions} onCommand={dispatchCommand} />
+            <CommandBar actions={actions} objective={state.gameplay.currentObjective} onCommand={dispatchCommand} />
           </main>
 
           <aside className="right-panel">
@@ -528,6 +528,22 @@ function isKnownNonChatCommand(command: string) {
     "narrate",
     "who",
     "nearby",
+    "explore",
+    "search",
+    "observe",
+    "look deeper",
+    "what do i notice",
+    "what do i notice?",
+    "what should i do",
+    "what should i do?",
+    "ask around",
+    "follow road",
+    "continue road",
+    "walk road",
+    "listen while walking",
+    "move cautiously",
+    "check party",
+    "party check",
     "ready",
     "thanks",
     "thank you",
@@ -559,6 +575,11 @@ function isKnownNonChatCommand(command: string) {
     "channel ",
     "travel ",
     "talk",
+    "ask ",
+    "explore ",
+    "search ",
+    "observe ",
+    "look deeper ",
     "guard",
     "shield oath",
     "attack",

@@ -41,6 +41,14 @@
         "note": "Small AI context packets summarize canon instead of loading source archives at runtime."
       }
     },
+    "gameplayHints.json": {
+      "default": {
+        "sourceTier": 4,
+        "sourceStatus": "playstyle-governed-tutorial-support",
+        "sourceRefs": ["Project_Bellspire_Complete_Canon_Compendium_v1_1.pdf", "Project_Bellspire_Complete_Data_Workbook_v1_1.xlsx", "Project_Bellspire_Discord_Map_Playstyle_Prompt_v1_1.md", "Project_Bellspire_Codex_Handoff_Prompt_v1_1.md"],
+        "note": "Combat and object hints explain existing First Road lessons without granting loot, changing canon, or advancing state without player input."
+      }
+    },
     "channels.json": {
       "default": {
         "sourceTier": 4,
@@ -145,6 +153,14 @@
         "note": "Ambient lines are local simulation texture shaped by social/MMO research and constrained by canon names."
       }
     },
+    "locationFocusOptions.json": {
+      "default": {
+        "sourceTier": 4,
+        "sourceStatus": "playstyle-governed-exploration",
+        "sourceRefs": ["Project_Bellspire_Complete_Canon_Compendium_v1_1.pdf", "Project_Bellspire_Complete_Data_Workbook_v1_1.xlsx", "Project_Bellspire_Discord_Map_Playstyle_Prompt_v1_1.md", "Project_Bellspire_Codex_Handoff_Prompt_v1_1.md"],
+        "note": "Exploration focuses deepen source-governed First Road POIs and Cryptlet room lessons without creating new permanent rewards, shops, NPCs, or playable regions."
+      }
+    },
     "mapServices.json": {
       "default": {
         "sourceTier": 1,
@@ -185,6 +201,14 @@
         "note": "NPC availability schedules are local simulation behavior for source-governed starter contacts and simulated party companions."
       }
     },
+    "npcTopics.json": {
+      "default": {
+        "sourceTier": 4,
+        "sourceStatus": "playstyle-governed-conversation",
+        "sourceRefs": ["Project_Bellspire_Complete_Canon_Compendium_v1_1.pdf", "Project_Bellspire_Complete_Data_Workbook_v1_1.xlsx", "Project_Bellspire_Discord_Map_Playstyle_Prompt_v1_1.md", "Project_Bellspire_Codex_Handoff_Prompt_v1_1.md"],
+        "note": "NPC topic replies add local conversational texture to source-governed First Road NPCs and may react to existing flags without introducing new canon facts."
+      }
+    },
     "rarityConfig.json": {
       "default": {
         "sourceTier": 2,
@@ -223,6 +247,14 @@
         "sourceStatus": "local-social-simulation",
         "sourceRefs": ["Project_Bellspire_Discord_Map_Playstyle_Prompt_v1_1.md", "Project_Bellspire_Codex_Handoff_Prompt_v1_1.md", "Project_Bellspire_Current_Source_Pack_v0_3_2026-05-18.zip"],
         "note": "NPC and simulated-player contacts are local social agents constrained by canon roles and starter route context."
+      }
+    },
+    "travelRoutes.json": {
+      "default": {
+        "sourceTier": 4,
+        "sourceStatus": "playstyle-governed-travel",
+        "sourceRefs": ["Project_Bellspire_Complete_Canon_Compendium_v1_1.pdf", "Project_Bellspire_Complete_Data_Workbook_v1_1.xlsx", "Project_Bellspire_Discord_Map_Playstyle_Prompt_v1_1.md", "Project_Bellspire_Codex_Handoff_Prompt_v1_1.md"],
+        "note": "Staged travel beats convert existing First Road connections into immersive road movement while keeping POI and zone canon in runtime data."
       }
     },
     "saveFixtures.json": {

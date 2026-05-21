@@ -15,7 +15,7 @@ import { applyExternalDirectorChat, markDirectorFallback, runDirectorChat, runDi
 import { postGuildChat, postPartyChat } from "./game/social";
 import { addFeed, createInitialState, sanitizeImportedState, STORAGE_KEY } from "./game/state";
 import { getAvailableActions, getCurrentPoi } from "./game/selectors";
-import type { CharacterCreationInput, GameState } from "./game/types";
+import type { CharacterCreationInput, ExportReceipt, GameState } from "./game/types";
 
 type AppRoute = "game" | "login";
 type LiveDirectorRequest = { channelId: "party-chat" | "guild-board" | "director"; message: string };
@@ -65,11 +65,26 @@ async function copyTextToClipboard(text: string) {
   }
 }
 
+async function buildExportReceipt(text: string, action: ExportReceipt["action"]): Promise<ExportReceipt> {
+  const bytes = new TextEncoder().encode(text);
+  const digest = await crypto.subtle.digest("SHA-256", bytes);
+  const checksum = [...new Uint8Array(digest)].map((byte) => byte.toString(16).padStart(2, "0")).join("");
+
+  return {
+    filename: "bellspire-save-v1.json",
+    byteCount: bytes.byteLength,
+    checksum,
+    generatedAt: new Date().toISOString(),
+    action
+  };
+}
+
 export default function App() {
   const [state, setState] = useState<GameState>(loadInitialState);
   const [route, setRoute] = useState<AppRoute>(getRouteFromPath);
   const [saveStatus, setSaveStatus] = useState("Autosaved locally");
   const [exportText, setExportText] = useState("");
+  const [exportReceipt, setExportReceipt] = useState<ExportReceipt | null>(null);
   const [importText, setImportText] = useState("");
   const importInputRef = useRef<HTMLInputElement>(null);
   const stateChangeStatusRef = useRef<string | null>(null);
@@ -213,25 +228,32 @@ export default function App() {
     navigate("game");
   }
 
-  function prepareSaveText(status = "Save JSON prepared") {
+  async function prepareSaveText(action: ExportReceipt["action"], status = "Save JSON prepared") {
     setExportText(currentSaveJson);
-    setSaveStatus(`${status} (${currentSaveJson.length} chars)`);
+    const receipt = await buildExportReceipt(currentSaveJson, action);
+    setExportReceipt(receipt);
+    setSaveStatus(`${status} (${receipt.byteCount} bytes / sha256 ${receipt.checksum.slice(0, 12)})`);
     return currentSaveJson;
   }
 
-  function downloadSave() {
-    const text = prepareSaveText("Save JSON prepared; download requested");
+  async function downloadSave() {
+    const text = await prepareSaveText("download", "Download verified locally; browser save requested");
     const blob = new Blob([text], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const anchor = document.createElement("a");
     anchor.href = url;
     anchor.download = "bellspire-save-v1.json";
+    anchor.rel = "noopener";
+    document.body.appendChild(anchor);
     anchor.click();
-    window.setTimeout(() => URL.revokeObjectURL(url), 0);
+    window.setTimeout(() => {
+      anchor.remove();
+      URL.revokeObjectURL(url);
+    }, 1000);
   }
 
   async function copySave() {
-    const text = prepareSaveText("Save JSON copied");
+    const text = await prepareSaveText("copy", "Save JSON copied");
     const copied = await copyTextToClipboard(text);
     if (!copied) {
       setSaveStatus("Clipboard blocked; save JSON is visible below");
@@ -253,6 +275,7 @@ export default function App() {
         stateChangeStatusRef.current = "Save JSON imported";
         setState(imported);
         setExportText("");
+        setExportReceipt(null);
         setImportText("");
       } catch {
         setSaveStatus("Import failed: unreadable JSON");
@@ -271,16 +294,19 @@ export default function App() {
       stateChangeStatusRef.current = "Pasted save JSON imported";
       setState(imported);
       setExportText("");
+      setExportReceipt(null);
       setImportText("");
     } catch {
       setSaveStatus("Paste import failed: unreadable JSON");
     }
   }
 
-  function validateCurrentSave() {
-    const text = prepareSaveText("Current save validated");
+  async function validateCurrentSave() {
+    const text = await prepareSaveText("validate", "Current save validated");
     const imported = sanitizeImportedState(JSON.parse(text));
-    setSaveStatus(imported ? `Current save valid (${text.length} chars)` : "Current save failed validation");
+    if (!imported) {
+      setSaveStatus("Current save failed validation");
+    }
   }
 
   function resetSave() {
@@ -289,6 +315,7 @@ export default function App() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
     setState(next);
     setExportText("");
+    setExportReceipt(null);
     setImportText("");
     navigate("login");
   }
@@ -359,6 +386,7 @@ export default function App() {
             <HudPanelTabs
               state={state}
               exportText={exportText}
+              exportReceipt={exportReceipt}
               importText={importText}
               onCommand={dispatchCommand}
               onCopy={copySave}

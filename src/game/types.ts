@@ -11,6 +11,14 @@ export interface FeedEntry {
   meta?: string;
 }
 
+export interface ExportReceipt {
+  filename: string;
+  byteCount: number;
+  checksum: string;
+  generatedAt: string;
+  action: "validate" | "copy" | "download";
+}
+
 export interface CharacterState {
   name: string;
   className: "Bulwark";

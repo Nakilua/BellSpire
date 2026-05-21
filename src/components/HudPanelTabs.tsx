@@ -16,11 +16,12 @@ import { SaveTools } from "./SaveTools";
 import { SocialLedgerPanel } from "./SocialLedgerPanel";
 import { SocialWorldPanel } from "./SocialWorldPanel";
 import { WorldStatePanel } from "./WorldStatePanel";
-import type { GameState } from "../game/types";
+import type { ExportReceipt, GameState } from "../game/types";
 
 interface Props {
   state: GameState;
   exportText: string;
+  exportReceipt: ExportReceipt | null;
   importText: string;
   onCommand: (command: string) => void;
   onCopy: () => void;
@@ -44,6 +45,7 @@ const tabs = [
 export function HudPanelTabs({
   state,
   exportText,
+  exportReceipt,
   importText,
   onCommand,
   onCopy,
@@ -106,6 +108,7 @@ export function HudPanelTabs({
             <CanonLibraryPanel />
             <SaveTools
               exportText={exportText}
+              exportReceipt={exportReceipt}
               importText={importText}
               onCopy={onCopy}
               onDownload={onDownload}

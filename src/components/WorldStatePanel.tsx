@@ -24,6 +24,17 @@ export function WorldStatePanel({ state }: Props) {
           );
         })}
       </div>
+      {state.gameplay.recentDiscoveries.length ? (
+        <div className="recent-discovery-list">
+          <strong>Recent discoveries</strong>
+          {state.gameplay.recentDiscoveries.map((entry) => (
+            <div className="recent-discovery-row" key={entry.id}>
+              <span>{entry.title}</span>
+              <small>{entry.summary}</small>
+            </div>
+          ))}
+        </div>
+      ) : null}
     </section>
   );
 }

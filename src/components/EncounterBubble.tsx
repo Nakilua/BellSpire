@@ -1,4 +1,5 @@
 import { ShieldAlert, Swords } from "lucide-react";
+import gameplayHints from "../data/gameplayHints.json";
 import type { GameState } from "../game/types";
 
 interface Props {
@@ -25,6 +26,8 @@ export function EncounterBubble({ state, onCommand }: Props) {
 
   const encounter = state.encounter;
   const lanes = ["Frontline", "Midline", "Backline"] as const;
+  const hint = gameplayHints.combatIntentHints.find((entry) => entry.intentId === encounter.currentIntentId);
+  const aliveEnemies = encounter.enemies.filter((enemy) => enemy.hp > 0);
 
   return (
     <section className="encounter-active">
@@ -46,6 +49,29 @@ export function EncounterBubble({ state, onCommand }: Props) {
           <p>Enemy Intent</p>
           <strong>{encounter.currentIntentName}</strong>
           <span>{encounter.currentTelegraph}</span>
+          {hint ? (
+            <button className="intent-response-button" type="button" onClick={() => onCommand(hint.recommendedCommand)}>
+              {hint.label}: {hint.recommendedCommand}
+            </button>
+          ) : null}
+        </div>
+
+        {hint ? (
+          <div className="combat-lesson-card">
+            <strong>Room read</strong>
+            <span>{hint.reason}</span>
+          </div>
+        ) : null}
+
+        <div className="target-chip-row" aria-label="Active enemy targets">
+          {aliveEnemies.map((enemy) => (
+            <button type="button" key={enemy.instanceId} onClick={() => onCommand(`shield oath ${enemy.name}`)}>
+              <span>{enemy.name}</span>
+              <small>
+                {enemy.hp}/{enemy.maxHp}
+              </small>
+            </button>
+          ))}
         </div>
 
         <div className="lane-grid">

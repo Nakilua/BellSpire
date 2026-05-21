@@ -1,5 +1,6 @@
 import encounters from "../data/encounters.json";
 import enemies from "../data/enemies.json";
+import gameplayHints from "../data/gameplayHints.json";
 import { addFeed, createId, reviveForRetry } from "./state";
 import { recordContactMemory, setPartyReadiness } from "./social";
 import type { CombatEnemyState, EncounterState, GameState, Lane } from "./types";
@@ -23,6 +24,10 @@ function getEnemyDefinition(enemyId: string) {
 function getIntent(encounterId: string, round: number) {
   const encounter = getEncounterDefinition(encounterId);
   return encounter.intents[(round - 1) % encounter.intents.length];
+}
+
+function getIntentHint(intentId: string) {
+  return gameplayHints.combatIntentHints.find((entry) => entry.intentId === intentId);
 }
 
 function buildEnemies(encounterId: string): CombatEnemyState[] {
@@ -61,11 +66,24 @@ export function startEncounter(state: GameState, encounterId: string): GameState
     roadSealPrimed: false
   };
 
+  const hint = getIntentHint(intent.id);
+
   return addFeed(
     {
       ...state,
       activeChannelId: "combat-log",
       encounter,
+      gameplay: {
+        ...state.gameplay,
+        currentObjective: hint
+          ? {
+              label: hint.label,
+              command: hint.recommendedCommand,
+              mapPing: definition.name,
+              source: "Combat tutorial hint"
+            }
+          : state.gameplay.currentObjective
+      },
       character: {
         ...state.character,
         guardStance: false,
@@ -74,7 +92,7 @@ export function startEncounter(state: GameState, encounterId: string): GameState
     },
     "combat",
     `Encounter started: ${definition.name}`,
-    `Enemy intent: ${intent.name}. ${intent.telegraph}`,
+    `What this room teaches: read the intent before acting.\nEnemy intent: ${intent.name}. ${intent.telegraph}${hint ? `\nRecommended response: \`${hint.recommendedCommand}\` because ${hint.reason}` : ""}`,
     "Frontline / Midline / Backline"
   );
 }
@@ -170,15 +188,15 @@ function applyEnemyDamage(state: GameState, damage: number, failureTag: string, 
 function buildWipeRecap(failureTag: string) {
   switch (failureTag) {
     case "Tank Positioning Failure":
-      return "The heavy hit crossed out of the Frontline. Keep the boss faced away from Midline and Backline before the swing lands.";
+      return "The heavy hit crossed out of the Frontline. Next pull: use `guard frontline` before the swing lands.";
     case "Object Failure":
-      return "The room object mattered. Use the wax channel or Road-Seal Bell when the telegraph calls for it.";
+      return "The room object mattered. Next pull: use `inspect wax seal channel` in the niche, or `use road-seal bell` when Road-Seal Pulse appears.";
     case "Resource Misuse":
-      return "Final Toll landed while your defensive timing was weak. Save Guard Stance for the big bell, not the little cuts.";
+      return "Final Toll landed while your defensive timing was weak. Next pull: save `guard frontline` for the big bell, not the little cuts.";
     case "DPS Target Failure":
-      return "Adds and marked targets stayed alive too long. Swap targets before pressure stacks.";
+      return "Adds and marked targets stayed alive too long. Next pull: use `attack Bone Rattle Add` as soon as the add appears, then return to the main threat.";
     case "Lane Control Failure":
-      return "The enemy moved the fight through unsafe lanes. Hold Frontline before the hook or drag resolves.";
+      return "The enemy moved the fight through unsafe lanes. Next pull: hold `guard frontline` before the hook or drag resolves.";
     default:
       return "The party collapsed under overlapping pressure. Read the next telegraph, then answer the specific problem.";
   }
@@ -352,7 +370,24 @@ function completeEncounter(state: GameState, encounter: EncounterState): GameSta
       : state.sessionRecap
   };
 
-  return addFeed(next, "combat", `Encounter cleared: ${encounter.name}`, "The lane pressure drops. Continue when you are ready.", definition.source);
+  return addFeed(
+    {
+      ...next,
+      gameplay: {
+        ...next.gameplay,
+        currentObjective: {
+          label: bossCleared ? "Reach The Road-Seal Exit" : "Step Deeper",
+          command: "continue",
+          mapPing: bossCleared ? "Road-Seal Exit" : definition.name,
+          source: definition.source
+        }
+      }
+    },
+    "combat",
+    `Encounter cleared: ${encounter.name}`,
+    "The lane pressure drops. After-action: the party is alive, the threat is quiet, and the next clean command is `continue`.",
+    definition.source
+  );
 }
 
 export function performCombatAction(state: GameState, action: "guard" | "shield-oath" | "attack" | "move" | "use-object", detail?: string): GameState {
@@ -443,7 +478,9 @@ export function performCombatAction(state: GameState, action: "guard" | "shield-
       }
     };
     encounter = next.encounter!;
-    actionLine = canPrime ? "Naki rings the Road-Seal Bell at the correct pulse." : "Naki reaches for the object, but the room gives no answer.";
+    actionLine = canPrime
+      ? "Naki rings the Road-Seal Bell at the correct pulse. Why it mattered: Final Toll is now weakened if you brace for it."
+      : "Naki reaches for the object, but the room gives no answer. Wait for Road-Seal Pulse before spending that motion.";
   }
 
   if (!actionLine) {
@@ -464,16 +501,36 @@ export function performCombatAction(state: GameState, action: "guard" | "shield-
 
   next = resolveEnemyTurn(next);
 
+  if (!next.encounter) {
+    return next;
+  }
+
   if (next.encounter && allEnemiesDefeated(next.encounter)) {
     return completeEncounter(next, next.encounter);
   }
 
+  const nextHint = next.encounter ? getIntentHint(next.encounter.currentIntentId) : undefined;
+  const postActionState: GameState = next.encounter && nextHint
+    ? {
+        ...next,
+        gameplay: {
+          ...next.gameplay,
+          currentObjective: {
+            label: nextHint.label,
+            command: nextHint.recommendedCommand,
+            mapPing: next.encounter.name,
+            source: "Combat tutorial hint"
+          }
+        }
+      }
+    : next;
+
   return addFeed(
-    next,
+    postActionState,
     "combat",
     actionLine,
     next.encounter
-      ? `Enemy intent now: ${next.encounter.currentIntentName}. ${next.encounter.currentTelegraph}`
+      ? `After-action: ${state.character.lane} -> ${next.character.lane}, HP ${state.character.hp} -> ${next.character.hp}, Oath ${state.character.oath} -> ${next.character.oath}.\nEnemy intent now: ${next.encounter.currentIntentName}. ${next.encounter.currentTelegraph}${nextHint ? `\nRecommended response: \`${nextHint.recommendedCommand}\` because ${nextHint.reason}` : ""}`
       : "The encounter state changed.",
     next.character.hp <= 12 ? "Low HP" : "Combat"
   );

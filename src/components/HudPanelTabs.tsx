@@ -72,7 +72,7 @@ export function HudPanelTabs({
       <ScrollArea.Root className="hud-scroll-area">
         <ScrollArea.Viewport className="hud-scroll-viewport">
           <Tabs.Content className="hud-tab-content" value="map">
-            <MapPanel state={state} />
+            <MapPanel state={state} onCommand={onCommand} />
           </Tabs.Content>
 
           <Tabs.Content className="hud-tab-content" value="hero">

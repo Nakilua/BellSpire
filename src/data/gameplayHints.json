@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 1,
+  "combatIntentHints": [
+    {
+      "intentId": "unanswered-name",
+      "label": "Seal the shade",
+      "recommendedCommand": "shield oath Vowless Pilgrim Shade",
+      "reason": "The named shade is testing whether the Bulwark will take companion pressure first."
+    },
+    {
+      "intentId": "bone-clatter",
+      "label": "Trim the pack",
+      "recommendedCommand": "attack Ash-bitten Bones",
+      "reason": "Small enemies left alive become healer pressure."
+    },
+    {
+      "intentId": "grave-bell-swing",
+      "label": "Hold Frontline",
+      "recommendedCommand": "guard frontline",
+      "reason": "The heavy hit should stay on the Bulwark."
+    },
+    {
+      "intentId": "vowless-mark",
+      "label": "Take the mark",
+      "recommendedCommand": "shield oath The Bellgrave Warden",
+      "reason": "Shield Oath keeps the mark from biting the companion lane."
+    },
+    {
+      "intentId": "bone-rattle-adds",
+      "label": "Swap to adds",
+      "recommendedCommand": "attack Bone Rattle Add",
+      "reason": "Adds left alive become healer pressure."
+    },
+    {
+      "intentId": "road-seal-pulse",
+      "label": "Use the bell",
+      "recommendedCommand": "use road-seal bell",
+      "reason": "The Road-Seal Bell weakens the next Final Toll."
+    },
+    {
+      "intentId": "final-toll",
+      "label": "Brace for toll",
+      "recommendedCommand": "guard frontline",
+      "reason": "Final Toll rewards defensive timing."
+    },
+    {
+      "intentId": "hook-drag",
+      "label": "Hold the lane",
+      "recommendedCommand": "guard frontline",
+      "reason": "The hook should catch your shield before it reaches the companion lane."
+    },
+    {
+      "intentId": "bone-snare",
+      "label": "Shift safely",
+      "recommendedCommand": "move midline",
+      "reason": "The room is teaching lane movement before the final boss punishes timing."
+    },
+    {
+      "intentId": "ritual-windup",
+      "label": "Stabilize or pressure",
+      "recommendedCommand": "inspect wax seal channel",
+      "reason": "The wax channel softens the wrong-way bell cast."
+    },
+    {
+      "intentId": "wax-channel-pressure",
+      "label": "Read the wax",
+      "recommendedCommand": "inspect wax seal channel",
+      "reason": "The room object matters before the caster punishes the party."
+    }
+  ],
+  "objectLessons": [
+    {
+      "roomId": "broken-bell-niche",
+      "objectName": "Wax Seal Channel",
+      "untouched": "The wax channel has not been stabilized.",
+      "noticed": "The wax channel has been noticed. Use `inspect wax seal channel` to stabilize it.",
+      "stabilized": "The wax channel is stabilized. Bell casts hit softer, and the cache can include a Bell Sliver.",
+      "recommendedCommand": "inspect wax seal channel"
+    },
+    {
+      "roomId": "warden-chamber",
+      "objectName": "Road-Seal Bell",
+      "untouched": "The Road-Seal Bell is waiting for Road-Seal Pulse.",
+      "noticed": "When the Warden shows Road-Seal Pulse, use `use road-seal bell` before Final Toll.",
+      "stabilized": "The Road-Seal Bell has answered this pulse. Guard the next Final Toll.",
+      "recommendedCommand": "use road-seal bell"
+    }
+  ],
+  "sourceNote": "Gameplay hints are local tutorial support derived from First Road room lessons, encounters, and no-ghost-loot law."
+}

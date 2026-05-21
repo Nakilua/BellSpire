@@ -27,6 +27,7 @@ export function PartyPanel({ state }: Props) {
             muted={contact?.availability !== "online"}
             name={contact!.name}
             role={contact!.role}
+            mood={partyMoodLine(state, contact!.id)}
           />
         ))}
       </div>
@@ -54,12 +55,22 @@ function partyStatusLabel(state: GameState, contactId: string, fallback: string)
   return fallback;
 }
 
-function PartyRow({ name, role, hp, active, muted }: { name: string; role: string; hp: string; active?: boolean; muted?: boolean }) {
+function partyMoodLine(state: GameState, contactId: string) {
+  const memory = state.social.memoryEvents.find((event) => event.contactId === contactId);
+  if (memory) {
+    return memory.summary;
+  }
+  const contact = state.social.contacts.find((entry) => entry.id === contactId);
+  return contact?.relationshipTag;
+}
+
+function PartyRow({ name, role, hp, mood, active, muted }: { name: string; role: string; hp: string; mood?: string; active?: boolean; muted?: boolean }) {
   return (
     <div className={`party-row ${active ? "active" : ""} ${muted ? "muted" : ""}`}>
       <div>
         <p>{name}</p>
         <small>{role}</small>
+        {mood ? <em>{mood}</em> : null}
       </div>
       <span>{hp}</span>
     </div>

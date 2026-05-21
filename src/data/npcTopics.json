@@ -1,0 +1,144 @@
+[
+  {
+    "id": "halren-bulwark",
+    "npcId": "master-halren-voss",
+    "topic": "Bulwark",
+    "aliases": ["bulwark", "shield", "class"],
+    "title": "Halren On Bulwarks",
+    "response": "A Bulwark is not brave because he stands still. He is brave because he chooses the line before fear chooses it for him.",
+    "sourceNote": "Source-safe Bulwark class identity."
+  },
+  {
+    "id": "halren-road-duty",
+    "npcId": "master-halren-voss",
+    "topic": "road duty",
+    "aliases": ["road", "duty", "first road"],
+    "title": "Halren On Road Duty",
+    "response": "The road will not ask whether you feel ready. Good. Readiness is overrated. Discipline is more portable.",
+    "sourceNote": "Source-safe First Road duty framing."
+  },
+  {
+    "id": "halren-oath",
+    "npcId": "master-halren-voss",
+    "topic": "oath",
+    "aliases": ["oath", "vow", "hold the line"],
+    "title": "Halren On The Oath",
+    "response": "An oath is not poetry. It is a rule you obey when panic starts making suggestions.",
+    "sourceNote": "Source-safe oath and Bulwark training framing."
+  },
+  {
+    "id": "halren-training",
+    "npcId": "master-halren-voss",
+    "topic": "training",
+    "aliases": ["training", "yard", "guard"],
+    "title": "Halren On Training",
+    "response": "Guard Stance first. Shield Oath second. Fancy heroics never once impressed a healer.",
+    "sourceNote": "Runtime tutorial support for Bulwark basics."
+  },
+  {
+    "id": "renn-shrine",
+    "npcId": "pilgrim-renn",
+    "topic": "shrine",
+    "aliases": ["shrine", "little dawn", "bell"],
+    "title": "Renn On Little Dawn",
+    "response": "I heard the shrine bell last night. It rang inward. I know that sounds impossible. I would very much like it to be impossible.",
+    "sourceNote": "Source-safe Little Dawn shrine tension."
+  },
+  {
+    "id": "renn-fear",
+    "npcId": "pilgrim-renn",
+    "topic": "fear",
+    "aliases": ["fear", "scared", "afraid"],
+    "title": "Renn On Fear",
+    "response": "I am afraid in a very organized way. I made a list. The list did not help, but it made the fear look official.",
+    "sourceNote": "Local party social texture constrained to Renn's starter role."
+  },
+  {
+    "id": "renn-party",
+    "npcId": "pilgrim-renn",
+    "topic": "party",
+    "aliases": ["party", "group", "help"],
+    "title": "Renn On The Party",
+    "response": "If you hold the front, I can call the shrine marks. I cannot promise elegance. I can promise I will not run unless everyone is running.",
+    "sourceNote": "Local party role support for First Road."
+  },
+  {
+    "id": "renn-pilgrimage",
+    "npcId": "pilgrim-renn",
+    "topic": "pilgrimage",
+    "aliases": ["pilgrimage", "trial", "road"],
+    "title": "Renn On The Pilgrimage",
+    "response": "They call it a training route because that sounds kinder than admitting the road is training us back.",
+    "sourceNote": "Source-safe Pilgrimage of the First Bell framing."
+  },
+  {
+    "id": "ila-road-danger",
+    "npcId": "roadwarden-ila",
+    "topic": "road danger",
+    "aliases": ["danger", "road", "safe", "patrol"],
+    "title": "Ila On Road Danger",
+    "response": "The road is Concord-safe on paper. Paper is thin. Keep your shield between the fields and anyone with soft shoes.",
+    "sourceNote": "Source-safe roadwarden route warning."
+  },
+  {
+    "id": "ila-wolves",
+    "npcId": "roadwarden-ila",
+    "topic": "wolves",
+    "aliases": ["wolves", "claw", "claw marks"],
+    "title": "Ila On Wolves",
+    "response": "Wolves do not usually care about shrine bells. That is why I care about the claw marks.",
+    "sourceNote": "Source-safe Hearthmere road danger."
+  },
+  {
+    "id": "ila-concord-paperwork",
+    "npcId": "roadwarden-ila",
+    "topic": "Concord paperwork",
+    "aliases": ["concord", "paperwork", "report"],
+    "title": "Ila On Concord Paperwork",
+    "response": "Paperwork is what makes courage legible to people who were not there. Annoying, yes. Useful, also yes.",
+    "sourceNote": "Source-safe Concord/social reporting texture."
+  },
+  {
+    "id": "olla-bell",
+    "npcId": "shrinekeeper-olla",
+    "topic": "bell",
+    "aliases": ["bell", "inward", "ringing"],
+    "title": "Olla On The Bell",
+    "response": "A bell that rings outward warns the living. A bell that rings inward asks the dead who they remember.",
+    "flagResponses": [
+      {
+        "flag": "wardenDefeated",
+        "value": true,
+        "response": "Now you know the difference. The road heard you answer, and the bell did not have to ask twice."
+      }
+    ],
+    "sourceNote": "Source-safe Little Dawn inward bell motif."
+  },
+  {
+    "id": "olla-cryptlet",
+    "npcId": "shrinekeeper-olla",
+    "topic": "Cryptlet",
+    "aliases": ["cryptlet", "dungeon", "below", "stair"],
+    "title": "Olla On The Cryptlet",
+    "response": "The Cryptlet is not deep. It does not need to be. Some lessons only require one locked door and one honest mistake.",
+    "sourceNote": "Source-safe Pilgrim Trial Cryptlet framing."
+  },
+  {
+    "id": "olla-trial",
+    "npcId": "shrinekeeper-olla",
+    "topic": "trial",
+    "aliases": ["trial", "quest", "permission"],
+    "title": "Olla On The Trial",
+    "response": "Stand between the traveler and the dark. That is the whole trial. The rooms only change the shape of the dark.",
+    "sourceNote": "Source-safe Trial Under Little Dawn framing."
+  },
+  {
+    "id": "olla-reward",
+    "npcId": "shrinekeeper-olla",
+    "topic": "reward",
+    "aliases": ["reward", "cache", "loot"],
+    "title": "Olla On Rewards",
+    "response": "The road pays in proof before it pays in gear. Bring back a clean report, and let the cache worry about what it owes.",
+    "sourceNote": "Source-safe no-ghost-loot reward framing."
+  }
+]

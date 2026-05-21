@@ -24,6 +24,22 @@ const exactGameCommands = new Set([
   "pulse",
   "who",
   "nearby",
+  "explore",
+  "search",
+  "observe",
+  "look deeper",
+  "what do i notice",
+  "what do i notice?",
+  "what should i do",
+  "what should i do?",
+  "ask around",
+  "follow road",
+  "continue road",
+  "walk road",
+  "listen while walking",
+  "move cautiously",
+  "check party",
+  "party check",
   "ready",
   "thanks",
   "thank you",
@@ -32,7 +48,28 @@ const exactGameCommands = new Set([
   "activity"
 ]);
 
-const commandPrefixes = ["channel ", "travel ", "talk", "guard", "shield oath", "attack", "move", "use", "inspect", "gather", "rest", "global ", "zone ", "ai mode "];
+const commandPrefixes = [
+  "channel ",
+  "travel ",
+  "talk",
+  "ask ",
+  "explore ",
+  "search ",
+  "observe ",
+  "look deeper ",
+  "follow road ",
+  "guard",
+  "shield oath",
+  "attack",
+  "move",
+  "use",
+  "inspect",
+  "gather",
+  "rest",
+  "global ",
+  "zone ",
+  "ai mode "
+];
 
 export function handleSocialCommand(state: GameState, rawCommand: string): GameState | null {
   const raw = rawCommand.trim();

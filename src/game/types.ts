@@ -146,6 +146,37 @@ export interface NoticeState {
 export interface TutorialState {
   hintsSeen: string[];
   checklistCompleteIds: string[];
+  dismissedHintIds: string[];
+}
+
+export interface ActiveTravelState {
+  routeId: string;
+  stageIndex: number;
+  destinationPoiId: string;
+  pace: "normal" | "cautious" | "listening";
+}
+
+export interface DiscoveryEntry {
+  id: string;
+  title: string;
+  summary: string;
+  source: string;
+  tick: number;
+}
+
+export interface CurrentObjectiveState {
+  label: string;
+  command: string;
+  mapPing: string;
+  source: string;
+}
+
+export interface GameplayState {
+  activeTravel?: ActiveTravelState;
+  discoveredFocusIds: string[];
+  conversationHistory: Record<string, string[]>;
+  recentDiscoveries: DiscoveryEntry[];
+  currentObjective?: CurrentObjectiveState;
 }
 
 export interface ActivityRecommendationState {
@@ -282,6 +313,7 @@ export interface GameState {
   livingWorld: LivingWorldState;
   narrative: NarrativeState;
   tutorial: TutorialState;
+  gameplay: GameplayState;
   pendingLootRoll?: PendingLootRoll;
   dungeon?: DungeonState;
   encounter?: EncounterState;
@@ -292,6 +324,7 @@ export interface ActionButton {
   label: string;
   command: string;
   tone?: "primary" | "danger" | "quiet";
+  category?: "travel" | "focus" | "conversation" | "combat" | "social" | "loot" | "map" | "system";
 }
 
 export interface CharacterCreationInput {

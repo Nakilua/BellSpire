@@ -3,7 +3,7 @@ import groupListings from "../data/groupListings.json";
 import guildContracts from "../data/guildContracts.json";
 import socialContacts from "../data/socialContacts.json";
 import worldFlags from "../data/worldFlags.json";
-import type { CharacterCreationInput, FeedEntry, FeedType, GameState, NoticeState, SocialState } from "./types";
+import type { CharacterCreationInput, FeedEntry, FeedType, GameState, GameplayState, NoticeState, SocialState } from "./types";
 
 export const STORAGE_KEY = "bellspire.save.v1";
 
@@ -103,6 +103,20 @@ function createInitialSocialState(characterName = defaultCharacter.name): Social
   };
 }
 
+function createInitialGameplayState(): GameplayState {
+  return {
+    discoveredFocusIds: [],
+    conversationHistory: {},
+    recentDiscoveries: [],
+    currentObjective: {
+      label: "Take the Old Pilgrim Road",
+      command: "travel Hearthmere Fields",
+      mapPing: "East Road Gate",
+      source: "First Road onboarding"
+    }
+  };
+}
+
 export function createInitialState(characterInput?: CharacterCreationInput): GameState {
   const flags = Object.fromEntries(worldFlags.map((flag) => [flag.id, flag.value]));
   const firstChannel = channels[0];
@@ -194,8 +208,10 @@ export function createInitialState(characterInput?: CharacterCreationInput): Gam
     },
     tutorial: {
       hintsSeen: characterInput ? ["first-road-start"] : [],
-      checklistCompleteIds: []
+      checklistCompleteIds: [],
+      dismissedHintIds: []
     },
+    gameplay: createInitialGameplayState(),
     sessionRecap: {
       visited: ["Saint Veyra Capital"],
       quests: [],
@@ -289,7 +305,15 @@ export function sanitizeImportedState(value: unknown): GameState | null {
       ...base.tutorial,
       ...maybe.tutorial,
       hintsSeen: maybe.tutorial?.hintsSeen ?? base.tutorial.hintsSeen,
-      checklistCompleteIds: maybe.tutorial?.checklistCompleteIds ?? base.tutorial.checklistCompleteIds
+      checklistCompleteIds: maybe.tutorial?.checklistCompleteIds ?? base.tutorial.checklistCompleteIds,
+      dismissedHintIds: maybe.tutorial?.dismissedHintIds ?? base.tutorial.dismissedHintIds
+    },
+    gameplay: {
+      ...base.gameplay,
+      ...maybe.gameplay,
+      discoveredFocusIds: maybe.gameplay?.discoveredFocusIds ?? base.gameplay.discoveredFocusIds,
+      conversationHistory: maybe.gameplay?.conversationHistory ?? base.gameplay.conversationHistory,
+      recentDiscoveries: maybe.gameplay?.recentDiscoveries ?? base.gameplay.recentDiscoveries
     },
     sessionRecap: {
       ...base.sessionRecap,

@@ -31,6 +31,7 @@ import type { GameState } from "../game/types";
 
 interface Props {
   state: GameState;
+  onCommand: (command: string) => void;
 }
 
 type MapLayer = "routes" | "services" | "danger" | "guild" | "details";
@@ -154,7 +155,7 @@ const dungeonRoomPositions: Record<string, { x: number; y: number }> = {
   "road-seal-exit": { x: 82, y: 73 }
 };
 
-export function MapPanel({ state }: Props) {
+export function MapPanel({ state, onCommand }: Props) {
   const [selectedServiceId, setSelectedServiceId] = useState<string | null>(null);
   const [selectedDungeonRoomId, setSelectedDungeonRoomId] = useState<string | null>(null);
   const [atlasScope, setAtlasScope] = useState<AtlasScope | null>(null);
@@ -229,7 +230,7 @@ export function MapPanel({ state }: Props) {
             onSelectRoom={setSelectedDungeonRoomId}
             showDetails
           />
-          {selectedRoom ? <DungeonRoomDetail dungeon={dungeon} room={selectedRoom} activeRoomId={activeRoomId} /> : null}
+          {selectedRoom ? <DungeonRoomDetail dungeon={dungeon} room={selectedRoom} activeRoomId={activeRoomId} onCommand={onCommand} /> : null}
           <DungeonRouteList dungeon={dungeon} activeRoomId={activeRoomId} selectedRoomId={selectedRoom?.id} onSelectRoom={setSelectedDungeonRoomId} />
           {room ? <p className="panel-note">Current room: {room.lesson}</p> : null}
         </div>
@@ -261,6 +262,16 @@ export function MapPanel({ state }: Props) {
               <span>{currentRegion.name}</span>
             </div>
             <p>{currentRegion.terrain}</p>
+            {state.gameplay.currentObjective ? (
+              <div className="map-objective-card">
+                <span>Current objective</span>
+                <strong>{state.gameplay.currentObjective.label}</strong>
+                <p>{state.gameplay.currentObjective.mapPing}</p>
+                <button type="button" onClick={() => onCommand(state.gameplay.currentObjective!.command)}>
+                  {state.gameplay.currentObjective.command}
+                </button>
+              </div>
+            ) : null}
             {layers.danger ? <MapReadoutList label="Danger" values={[currentRegion.danger]} /> : null}
             <MapReadoutList label="Landmarks" values={currentRegion.landmarks} />
             {layers.services ? <MapReadoutList label="Services" values={currentRegion.services} /> : null}
@@ -277,7 +288,7 @@ export function MapPanel({ state }: Props) {
             showDetails={layers.details}
             onSelectService={setSelectedServiceId}
           />
-          {layers.services ? <ServiceLegend services={zoneServices} selectedService={activeService} onSelect={setSelectedServiceId} /> : null}
+          {layers.services ? <ServiceLegend services={zoneServices} selectedService={activeService} onCommand={onCommand} onSelect={setSelectedServiceId} /> : null}
           <div className="locked-list">
             {lockedRegions.slice(0, 4).map((entry) => (
               <div className="locked-row" key={entry.id}>
@@ -318,7 +329,7 @@ export function MapPanel({ state }: Props) {
               expanded
             />
             <div className="atlas-closeup-stack">
-              {selectedRoom ? <DungeonRoomDetail dungeon={dungeon} room={selectedRoom} activeRoomId={activeRoomId} /> : null}
+              {selectedRoom ? <DungeonRoomDetail dungeon={dungeon} room={selectedRoom} activeRoomId={activeRoomId} onCommand={onCommand} /> : null}
               <AtlasDungeonCloseup dungeon={dungeon} />
             </div>
           </div>
@@ -681,7 +692,17 @@ function DungeonRouteList({
   );
 }
 
-function DungeonRoomDetail({ dungeon, room, activeRoomId }: { dungeon: DungeonDefinition; room: DungeonRoom; activeRoomId?: string }) {
+function DungeonRoomDetail({
+  dungeon,
+  room,
+  activeRoomId,
+  onCommand
+}: {
+  dungeon: DungeonDefinition;
+  room: DungeonRoom;
+  activeRoomId?: string;
+  onCommand: (command: string) => void;
+}) {
   const index = dungeon.rooms.findIndex((entry) => entry.id === room.id);
 
   return (
@@ -694,6 +715,18 @@ function DungeonRoomDetail({ dungeon, room, activeRoomId }: { dungeon: DungeonDe
       <MapReadoutList label="Lesson" values={[room.lesson]} />
       {room.object ? <MapReadoutList label="Object" values={[room.object]} /> : null}
       {room.encounterId ? <MapReadoutList label="Encounter" values={[room.encounterId]} /> : null}
+      <div className="map-action-row">
+        {room.object ? (
+          <button type="button" onClick={() => onCommand(`inspect ${room.object}`)}>
+            Inspect object
+          </button>
+        ) : null}
+        {room.id === activeRoomId ? (
+          <button type="button" onClick={() => onCommand(room.id === "road-seal-exit" ? "loot" : "continue")}>
+            {room.id === "road-seal-exit" ? "Claim cache" : "Step deeper"}
+          </button>
+        ) : null}
+      </div>
     </div>
   );
 }
@@ -701,10 +734,12 @@ function DungeonRoomDetail({ dungeon, room, activeRoomId }: { dungeon: DungeonDe
 function ServiceLegend({
   services,
   selectedService,
+  onCommand,
   onSelect
 }: {
   services: MapService[];
   selectedService?: MapService;
+  onCommand: (command: string) => void;
   onSelect: (id: string) => void;
 }) {
   const grouped = services.reduce<Record<string, MapService[]>>((groups, entry) => {
@@ -744,9 +779,27 @@ function ServiceLegend({
           <strong>{selectedService.label}</strong>
           <p>{selectedService.summary}</p>
           <small>{selectedService.sourceNote}</small>
+          <div className="map-action-row">
+            <button type="button" onClick={() => onCommand(`inspect marker ${selectedService.label}`)}>
+              Inspect marker
+            </button>
+            {selectedService.poiId ? <ServiceTravelButton service={selectedService} onCommand={onCommand} /> : null}
+          </div>
         </div>
       ) : null}
     </div>
+  );
+}
+
+function ServiceTravelButton({ service, onCommand }: { service: MapService; onCommand: (command: string) => void }) {
+  const targetPoi = service.poiId ? pois.find((poi) => poi.id === service.poiId) : undefined;
+  if (!targetPoi) {
+    return null;
+  }
+  return (
+    <button type="button" onClick={() => onCommand(`travel ${targetPoi.name}`)}>
+      Follow route
+    </button>
   );
 }
 

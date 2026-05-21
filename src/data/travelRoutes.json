@@ -1,0 +1,82 @@
+[
+  {
+    "id": "saint-veyra-to-hearthmere",
+    "fromPoiId": "saint-veyra-capital",
+    "toPoiId": "hearthmere-crossing",
+    "label": "Take the Old Pilgrim Road",
+    "aliases": ["hearthmere", "hearthmere fields", "old pilgrim road", "east road", "follow the road east"],
+    "sourceNote": "Source-governed First Road route from Saint Veyra toward Hearthmere Fields.",
+    "stages": [
+      {
+        "id": "east-gate",
+        "title": "The East Gate Opens",
+        "body": "The road out of Saint Veyra begins under black roadstone arches and the dull attention of public bells. Behind you, the capital keeps working. Ahead, Hearthmere fog waits low over the fields.",
+        "meta": "First Road / departure",
+        "objective": "Leave Saint Veyra by the Old Pilgrim Road.",
+        "mapPing": "East Road Gate",
+        "partyLine": "Pilgrim Renn checks the straps on his satchel twice, then pretends he only did it once.",
+        "zoneLine": "A roadwatch runner marks your departure on a wax-smeared slate."
+      },
+      {
+        "id": "low-wall-bend",
+        "title": "Low Walls And Road Charms",
+        "body": "The city stones give way to field walls, charm-posts, and wet ditch grass. The road bends just enough that Saint Veyra disappears before Hearthmere fully appears.",
+        "meta": "First Road / midpoint",
+        "objective": "Read the road before the fields open.",
+        "mapPing": "Low Wall Bend",
+        "partyLine": "Edrin keeps healer distance without being asked. That is either discipline or experience. Possibly both.",
+        "zoneLine": "Zone chatter says the east road is clear on paper, which is never the same thing as safe."
+      },
+      {
+        "id": "field-edge-arrival",
+        "title": "Hearthmere Comes Into View",
+        "body": "Wheat fields lift out of the fog in strips of dull gold. The Old Pilgrim Road runs through them like a rule nobody living remembers writing.",
+        "meta": "First Road / arrival",
+        "objective": "Arrive in Hearthmere Fields.",
+        "mapPing": "Hearthmere Field Edge",
+        "partyLine": "Tallowwick says the fields look peaceful, then immediately distrusts his own sentence.",
+        "zoneLine": "A fieldhand raises two fingers in road greeting and looks past you toward Little Dawn."
+      }
+    ]
+  },
+  {
+    "id": "hearthmere-to-little-dawn",
+    "fromPoiId": "hearthmere-crossing",
+    "toPoiId": "road-shrine-little-dawn",
+    "label": "Follow The Shrine Road",
+    "aliases": ["little dawn", "road shrine", "road shrine of little dawn", "shrine road", "pilgrim road"],
+    "sourceNote": "Source-governed Hearthmere route toward Road Shrine of Little Dawn and Pilgrim Trial Cryptlet.",
+    "stages": [
+      {
+        "id": "field-path",
+        "title": "Hearthmere Narrows",
+        "body": "The field path tightens between low walls. The fog stops behaving like weather and starts behaving like a witness.",
+        "meta": "Little Dawn approach / departure",
+        "objective": "Take the field path toward Little Dawn.",
+        "mapPing": "Hearthmere Field Path",
+        "partyLine": "Renn walks closer now. He does not ask permission. He simply trusts the shield-shaped space beside you.",
+        "zoneLine": "Roadwarden Ila reports the route passable, with the kind of tone that means passable is doing heavy work."
+      },
+      {
+        "id": "wax-bed-turn",
+        "title": "The Wax Beds",
+        "body": "Old candle wax has gathered in pale seams along the road stones. Someone has been tending the shrine path more recently than anyone admits.",
+        "meta": "Little Dawn approach / midpoint",
+        "objective": "Watch the wax beds and shrine signs.",
+        "mapPing": "Wax Beds",
+        "partyLine": "Edrin lowers his voice: \"If the road is teaching, let it finish the sentence before we interrupt.\"",
+        "zoneLine": "A zone message warns travelers not to ring any bell they did not personally hang."
+      },
+      {
+        "id": "shrine-stair",
+        "title": "Little Dawn Waits Below",
+        "body": "The shrine appears smaller than the map made it look. The stair beneath it appears larger than it should be.",
+        "meta": "Little Dawn approach / arrival",
+        "objective": "Arrive at Road Shrine of Little Dawn.",
+        "mapPing": "Little Dawn Shrine Stair",
+        "partyLine": "Tallowwick marks the stair on a scrap of paper, then folds the paper like it might bite.",
+        "zoneLine": "Local chatter thins out around the shrine. Even simulated channels learn when to lower their voices."
+      }
+    ]
+  }
+]

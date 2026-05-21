@@ -1,0 +1,58 @@
+[
+  {
+    "rarity": "Common",
+    "rank": 1,
+    "colorHex": "#e5e7eb",
+    "auditWeight": 1,
+    "designMeaning": "Reliable road supplies, basic materials, and starter-table rewards.",
+    "sourceNote": "Sourced from the BellSpire tank loot workbook Rarity_Config sheet and normalized for runtime display."
+  },
+  {
+    "rarity": "Uncommon",
+    "rank": 2,
+    "colorHex": "#22c55e",
+    "auditWeight": 2,
+    "designMeaning": "First memorable upgrades, dungeon training rewards, and early build identity.",
+    "sourceNote": "Sourced from the BellSpire tank loot workbook Rarity_Config sheet and normalized for runtime display."
+  },
+  {
+    "rarity": "Rare",
+    "rank": 3,
+    "colorHex": "#3b82f6",
+    "auditWeight": 3,
+    "designMeaning": "Special object rewards, notable dungeon finds, and source-pity targets.",
+    "sourceNote": "Sourced from the BellSpire tank loot workbook Rarity_Config sheet and normalized for runtime display."
+  },
+  {
+    "rarity": "Epic",
+    "rank": 4,
+    "colorHex": "#a855f7",
+    "auditWeight": 4,
+    "designMeaning": "High-impact dungeon, event, and endgame-table rewards.",
+    "sourceNote": "Sourced from the BellSpire tank loot workbook Rarity_Config sheet and normalized for runtime display."
+  },
+  {
+    "rarity": "Mythic",
+    "rank": 5,
+    "colorHex": "#f59e0b",
+    "auditWeight": 5,
+    "designMeaning": "Very scarce source-governed rewards with build-defining weight.",
+    "sourceNote": "Sourced from the BellSpire tank loot workbook Rarity_Config sheet and normalized for runtime display."
+  },
+  {
+    "rarity": "Legendary",
+    "rank": 6,
+    "colorHex": "#ef4444",
+    "auditWeight": 6,
+    "designMeaning": "Long-arc rewards that require explicit source approval before runtime use.",
+    "sourceNote": "Sourced from the BellSpire tank loot workbook Rarity_Config sheet and normalized for runtime display."
+  },
+  {
+    "rarity": "Artifact",
+    "rank": 7,
+    "colorHex": "#06b6d4",
+    "auditWeight": 7,
+    "designMeaning": "Story-defining or system-defining rewards; preview-only until fully sourced.",
+    "sourceNote": "Sourced from the BellSpire tank loot workbook Rarity_Config sheet and normalized for runtime display."
+  }
+]

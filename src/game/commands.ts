@@ -7,7 +7,7 @@ import zones from "../data/zones.json";
 import { getBestActivityRecommendation, markActivityUsed } from "./activity";
 import { performCombatAction, startEncounter } from "./combat";
 import { postWorldChat, pulseLivingWorld, showNearbyWorld } from "./livingWorld";
-import { grantCryptletRewards } from "./loot";
+import { grantCryptletRewards, resolveCryptletLootRoll } from "./loot";
 import { pulseNarrative, showNarrativeJournal } from "./narrativeDirector";
 import { addFeed, createNotice } from "./state";
 import { getActiveDungeon, getBulwarkAbilities, getCurrentPoi, getCurrentRoom, getCurrentZone, getQuestDefinition } from "./selectors";
@@ -134,6 +134,10 @@ export function runCommand(state: GameState, rawCommand: string): GameState {
 
   if (command === "loot") {
     return loot(next);
+  }
+
+  if (command === "need" || command === "greed" || command === "pass") {
+    return resolveLootChoice(next, command);
   }
 
   if (command === "recap") {
@@ -691,8 +695,27 @@ function loot(state: GameState): GameState {
     return addFeed(state, "warning", "Reward not ready", "Defeat the Bellgrave Warden and reach the Road-Seal Exit first.", "Source-driven loot");
   }
 
+  const wasComplete = Boolean(state.flags.cryptletComplete);
   let next = grantCryptletRewards(state);
-  next = markTutorialStep(next, "claim-cache");
+  if (!wasComplete && next.flags.cryptletComplete) {
+    next = completeCryptletRoute(next);
+  }
+
+  return pulseNarrative(pulseLivingWorld(next, "loot"), "loot");
+}
+
+function resolveLootChoice(state: GameState, choice: "need" | "greed" | "pass"): GameState {
+  const wasComplete = Boolean(state.flags.cryptletComplete);
+  let next = resolveCryptletLootRoll(state, choice);
+  if (!wasComplete && next.flags.cryptletComplete) {
+    next = completeCryptletRoute(next);
+  }
+
+  return pulseNarrative(pulseLivingWorld(next, "loot"), "loot");
+}
+
+function completeCryptletRoute(state: GameState): GameState {
+  let next = markTutorialStep(state, "claim-cache");
   next = {
     ...next,
     quests: {
@@ -733,7 +756,7 @@ function loot(state: GameState): GameState {
     }
   };
 
-  return pulseNarrative(pulseLivingWorld(next, "loot"), "loot");
+  return next;
 }
 
 function showInventory(state: GameState): GameState {
@@ -778,6 +801,7 @@ function recap(state: GameState): GameState {
     `Quests: ${state.sessionRecap.quests.join("; ") || "None"}`,
     `Narrative: ${state.sessionRecap.narrative.join("; ") || "None"}`,
     `Loot: ${state.sessionRecap.loot.join("; ") || "None"}`,
+    `Loot rolls: ${state.sessionRecap.lootRolls.join("; ") || "None"}`,
     `Wipes: ${state.sessionRecap.wipes.join("; ") || "None"}`,
     `Reputation: ${state.sessionRecap.reputation.join("; ") || "None"}`,
     `Source pity: ${state.sessionRecap.sourcePity.join("; ") || "None"}`,

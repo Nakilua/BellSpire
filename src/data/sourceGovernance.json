@@ -81,6 +81,14 @@
         "note": "First-road reward rules explicitly label guaranteed materials, conditional object bonuses, staged gear, source status, rarity floor, and source notes."
       }
     },
+    "bindingRules.json": {
+      "default": {
+        "sourceTier": 2,
+        "sourceStatus": "classic-style-loot-law",
+        "sourceRefs": ["project_bellspire_tank_loot_workbook_v0_1.xlsx", "Project_Bellspire_Complete_Data_Workbook_v1_1.xlsx"],
+        "note": "Binding labels adapt Classic-style BoP/BoE/quest item concepts into BellSpire source-law language without creating trade or economy canon."
+      }
+    },
     "enemies.json": {
       "default": {
         "sourceTier": 1,
@@ -111,6 +119,22 @@
         "sourceStatus": "loot-worktable-governed",
         "sourceRefs": ["Project_Bellspire_Complete_Data_Workbook_v1_1.xlsx", "project_bellspire_tank_loot_workbook_v0_1.xlsx", "Project_Bellspire_Current_Source_Pack_v0_3_2026-05-18.zip"],
         "note": "Runtime items must also carry inline rarity and sourceStatus because loot is stricter than normal content."
+      }
+    },
+    "lootSources.json": {
+      "default": {
+        "sourceTier": 2,
+        "sourceStatus": "loot-worktable-governed",
+        "sourceRefs": ["Project_Bellspire_Complete_Data_Workbook_v1_1.xlsx", "project_bellspire_tank_loot_workbook_v0_1.xlsx", "Project_Bellspire_Current_Source_Pack_v0_3_2026-05-18.zip"],
+        "note": "Loot sources separate bosses, caches, objects, trash, containers, quest rewards, events, vendors, and preview-locked future sources so playable drops stay source-bound."
+      }
+    },
+    "lootTables.json": {
+      "default": {
+        "sourceTier": 2,
+        "sourceStatus": "loot-worktable-governed",
+        "sourceRefs": ["Project_Bellspire_Complete_Data_Workbook_v1_1.xlsx", "project_bellspire_tank_loot_workbook_v0_1.xlsx", "Project_Bellspire_Current_Source_Pack_v0_3_2026-05-18.zip"],
+        "note": "Loot tables define Classic-style source tables, thresholds, roll behavior, condition flags, and preview locks while keeping First Road as the only playable loop."
       }
     },
     "livingWorld.json": {
@@ -159,6 +183,14 @@
         "sourceStatus": "local-social-simulation",
         "sourceRefs": ["Project_Bellspire_Discord_Map_Playstyle_Prompt_v1_1.md", "Project_Bellspire_Codex_Handoff_Prompt_v1_1.md"],
         "note": "NPC availability schedules are local simulation behavior for source-governed starter contacts and simulated party companions."
+      }
+    },
+    "rarityConfig.json": {
+      "default": {
+        "sourceTier": 2,
+        "sourceStatus": "loot-worktable-governed",
+        "sourceRefs": ["project_bellspire_tank_loot_workbook_v0_1.xlsx"],
+        "note": "Runtime rarity ladder normalizes the workbook rarity config for UI, audits, thresholds, and loot simulations."
       }
     },
     "pois.json": {

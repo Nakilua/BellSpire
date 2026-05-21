@@ -47,6 +47,7 @@ The API key belongs only in `.env.local`. Never paste it into chat, source files
 - Travel to the Road Shrine of Little Dawn.
 - Talk to Shrinekeeper Olla, accept the quest, enter the Cryptlet.
 - Use `guard frontline`, `shield oath`, `inspect`, `continue`, `loot`, and `recap`.
+- When the Road-Seal Cache opens, use `need`, `greed`, or `pass` to resolve the Classic-style loot roll.
 
 ## Project Law
 
@@ -57,11 +58,16 @@ BellSpire follows source law:
 - No monetization.
 - No invented permanent canon.
 - Map art is visual support only; runtime data and source notes own canon truth.
+- Loot is Classic-style in structure, but BellSpire-source-governed in truth.
 
 Start with:
 
 - [Start Here](docs/START_HERE.md)
 - [MMO Rules Bible](docs/MMO_RULES_BIBLE.md)
+- [Classic-Style Loot System v1](docs/CLASSIC_STYLE_LOOT_SYSTEM_V1.md)
+- [125-Step Classic Loot Plan](docs/MASTER_PLAN_125_CLASSIC_LOOT_STEPS.md)
+- [Bible Content Gap Audit](docs/BIBLE_CONTENT_GAP_AUDIT.md)
+- [Compendium/Workbook Update Queue](docs/COMPENDIUM_WORKBOOK_UPDATE_QUEUE.md)
 - [70-Step Master Plan](docs/MASTER_PLAN_70_STEPS.md)
 - [Release Checklist](docs/RELEASE_CHECKLIST.md)
 
@@ -73,6 +79,7 @@ Run these before a serious PR:
 npm.cmd run build
 npm.cmd run canon:audit
 npm.cmd run loot:audit
+npm.cmd run loot:simulate -- 1000 1935
 npm.cmd run fixtures:audit
 npm.cmd run assets:audit
 npm.cmd audit --json

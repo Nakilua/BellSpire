@@ -1,0 +1,143 @@
+[
+  {
+    "id": "cryptlet-bellgrave-warden-first-clear",
+    "sourceId": "bellgrave-warden-boss",
+    "name": "Bellgrave Warden First-Clear Table",
+    "playableStatus": "playable",
+    "lootMode": "Group Loot",
+    "threshold": "Uncommon",
+    "entries": [
+      {
+        "id": "warden-staged-buckler",
+        "itemId": "road-seal-buckler",
+        "quantity": 1,
+        "entryType": "once-per-clear",
+        "distribution": "roll",
+        "weight": 100,
+        "sourcePityEligible": true,
+        "sourceNote": "Tutorial Bulwark shield reward. Staged until final Master_Loot_DB item ownership is approved."
+      }
+    ]
+  },
+  {
+    "id": "cryptlet-road-seal-cache-first-clear",
+    "sourceId": "road-seal-cache",
+    "name": "Road-Seal Cache First-Clear Table",
+    "playableStatus": "playable",
+    "lootMode": "Group Loot",
+    "threshold": "Uncommon",
+    "entries": [
+      {
+        "id": "cache-pilgrim-wax",
+        "itemId": "pilgrim-wax",
+        "quantity": 2,
+        "entryType": "guaranteed",
+        "distribution": "auto",
+        "weight": 100,
+        "sourcePityEligible": false,
+        "sourceNote": "Guaranteed material reward for the First Road cache."
+      },
+      {
+        "id": "cache-bone-fragment",
+        "itemId": "bone-fragment",
+        "quantity": 2,
+        "entryType": "guaranteed",
+        "distribution": "auto",
+        "weight": 100,
+        "sourcePityEligible": false,
+        "sourceNote": "Guaranteed material reward for the First Road cache."
+      }
+    ]
+  },
+  {
+    "id": "cryptlet-broken-bell-niche-bonus",
+    "sourceId": "broken-bell-niche-object-bonus",
+    "name": "Broken Bell Niche Object Bonus",
+    "playableStatus": "playable",
+    "lootMode": "Group Loot",
+    "threshold": "Uncommon",
+    "entries": [
+      {
+        "id": "niche-bell-sliver",
+        "itemId": "bell-sliver",
+        "quantity": 1,
+        "entryType": "conditional",
+        "distribution": "auto",
+        "conditionFlag": "brokenBellStabilized",
+        "weight": 100,
+        "sourcePityEligible": true,
+        "sourceNote": "Only awarded when the player stabilizes the wax channel before the Warden clear."
+      }
+    ]
+  },
+  {
+    "id": "cryptlet-trash-materials-repeat",
+    "sourceId": "cryptlet-trash-materials",
+    "name": "Cryptlet Grave-Scrap Repeat Table",
+    "playableStatus": "playable",
+    "lootMode": "Round Robin",
+    "threshold": "Uncommon",
+    "entries": [
+      {
+        "id": "trash-no-drop",
+        "itemId": "",
+        "quantity": 0,
+        "entryType": "no-drop",
+        "distribution": "none",
+        "weight": 60,
+        "sourcePityEligible": false,
+        "sourceNote": "Most trash clears do not create a permanent reward."
+      },
+      {
+        "id": "trash-bone-fragment",
+        "itemId": "bone-fragment",
+        "quantity": 1,
+        "entryType": "weighted",
+        "distribution": "auto",
+        "weight": 40,
+        "sourcePityEligible": false,
+        "sourceNote": "Repeat-clear material texture. Not used by the first-clear cache path."
+      }
+    ]
+  },
+  {
+    "id": "cryptlet-lost-satchel-preview",
+    "sourceId": "cryptlet-lost-satchel",
+    "name": "Lost Satchel Container Table",
+    "playableStatus": "playable",
+    "lootMode": "Group Loot",
+    "threshold": "Uncommon",
+    "entries": [
+      {
+        "id": "satchel-no-drop",
+        "itemId": "",
+        "quantity": 0,
+        "entryType": "no-drop",
+        "distribution": "none",
+        "weight": 100,
+        "sourcePityEligible": false,
+        "sourceNote": "Container logic exists for Classic-style structure, but no new item is created in v1."
+      }
+    ]
+  },
+  {
+    "id": "pilgrimage-first-bell-completion",
+    "sourceId": "pilgrimage-first-bell-quest",
+    "name": "Pilgrimage First Bell Completion Rewards",
+    "playableStatus": "playable",
+    "lootMode": "Quest-bound",
+    "threshold": "Common",
+    "entries": [
+      {
+        "id": "quest-reputation",
+        "itemId": "",
+        "quantity": 0,
+        "entryType": "quest-required",
+        "distribution": "quest-state",
+        "weight": 100,
+        "sourcePityEligible": true,
+        "sourceNote": "Reputation and source pity are granted by game state rather than item rows."
+      }
+    ]
+  }
+]

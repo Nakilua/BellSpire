@@ -73,6 +73,18 @@ Useful rewards may exist without permanent gear:
 
 No random permanent item silently enters the world. If the reward is unfinished, the app says so plainly.
 
+BellSpire uses Classic-style loot structure, not personal loot. Default group loot is Group Loot with an Uncommon threshold. Need beats Greed, Greed beats Pass, and simulated party members may react to rolls. This creates MMO social texture while keeping the loot engine, not the AI Director, in charge of item grants.
+
+Binding labels are BellSpire-specific:
+
+- Tradable.
+- Oathbound on Pickup.
+- Oathbound on Equip.
+- Quest-bound.
+- Staged-bound.
+
+Future-zone sources may be indexed as locked previews, but they cannot drop in the First Road route.
+
 ## Living World Law
 
 Bellspire should feel proactive, not empty.

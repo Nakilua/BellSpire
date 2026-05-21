@@ -15,6 +15,7 @@ Use this before every serious PR.
 npm.cmd run build
 npm.cmd run canon:audit
 npm.cmd run loot:audit
+npm.cmd run loot:simulate -- 1000 1935
 npm.cmd run fixtures:audit
 npm.cmd run assets:audit
 npm.cmd audit --json

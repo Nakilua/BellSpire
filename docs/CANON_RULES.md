@@ -37,6 +37,10 @@ If a reward does not have its final Master_Loot_DB item ID yet, it must be label
 
 The player can still receive useful materials, reputation, source pity, quest progress, and session recap progress without a permanent gear drop.
 
+The loot engine is the only runtime authority that may grant items. AI dialogue, map art, party chatter, and DM narration may describe a reward moment, but they may not create a permanent item row or bypass source law.
+
+Classic-style mechanics such as Group Loot, Need/Greed/Pass, thresholds, boss tables, containers, and binding labels are system inspiration only. The compendium, complete data workbook, loot worktables, and source audits still decide what Bellspire rewards are allowed to exist.
+
 ## Audit Rule
 
 Run the canon audit when source files or runtime loot data changes:

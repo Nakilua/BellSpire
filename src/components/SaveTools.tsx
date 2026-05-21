@@ -1,7 +1,9 @@
 import { Clipboard, Download, FileCheck, Upload } from "lucide-react";
+import type { ExportReceipt } from "../game/types";
 
 interface Props {
   exportText: string;
+  exportReceipt: ExportReceipt | null;
   importText: string;
   onCopy: () => void;
   onDownload: () => void;
@@ -13,6 +15,7 @@ interface Props {
 
 export function SaveTools({
   exportText,
+  exportReceipt,
   importText,
   onCopy,
   onDownload,
@@ -50,6 +53,27 @@ export function SaveTools({
       <label className="save-label" htmlFor="save-export-preview">
         Export preview
       </label>
+      {exportReceipt ? (
+        <div className="export-receipt" data-testid="export-receipt">
+          <div>
+            <span>File</span>
+            <strong>{exportReceipt.filename}</strong>
+          </div>
+          <div>
+            <span>Bytes</span>
+            <strong>{exportReceipt.byteCount}</strong>
+          </div>
+          <div>
+            <span>Action</span>
+            <strong>{exportReceipt.action}</strong>
+          </div>
+          <div>
+            <span>SHA-256</span>
+            <code>{exportReceipt.checksum}</code>
+          </div>
+          <small>{exportReceipt.generatedAt}</small>
+        </div>
+      ) : null}
       <textarea
         id="save-export-preview"
         className="save-textarea"

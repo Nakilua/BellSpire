@@ -24,10 +24,15 @@
     "description": "The final boss of Pilgrim Trial Cryptlet is defeated."
   },
   {
+    "id": "cryptletCacheOpened",
+    "label": "Cryptlet Cache Opened",
+    "value": false,
+    "description": "The Road-Seal Cache has paid out its non-roll rewards for this clear."
+  },
+  {
     "id": "cryptletComplete",
     "label": "Cryptlet Complete",
     "value": false,
     "description": "The Road-Seal Exit reward has been claimed."
   }
 ]
-

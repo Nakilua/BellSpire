@@ -133,6 +133,8 @@ export function createInitialState(characterInput?: CharacterCreationInput): Gam
         kind: "Supply",
         quantity: 2,
         slot: "Consumable",
+        binding: "Tradable",
+        itemLevel: 1,
         rarity: "Common",
         classTags: ["All"],
         sourceType: "Starter Kit",
@@ -199,6 +201,7 @@ export function createInitialState(characterInput?: CharacterCreationInput): Gam
       quests: [],
       narrative: [],
       loot: [],
+      lootRolls: [],
       wipes: [],
       reputation: [],
       sourcePity: [],
@@ -292,6 +295,7 @@ export function sanitizeImportedState(value: unknown): GameState | null {
       ...base.sessionRecap,
       ...maybe.sessionRecap,
       narrative: maybe.sessionRecap?.narrative ?? base.sessionRecap.narrative,
+      lootRolls: maybe.sessionRecap?.lootRolls ?? base.sessionRecap.lootRolls,
       social: maybe.sessionRecap?.social ?? base.sessionRecap.social
     }
   } as GameState;

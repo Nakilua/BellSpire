@@ -11,6 +11,14 @@ export interface FeedEntry {
   meta?: string;
 }
 
+export interface ExportReceipt {
+  filename: string;
+  byteCount: number;
+  checksum: string;
+  generatedAt: string;
+  action: "validate" | "copy" | "download";
+}
+
 export interface CharacterState {
   name: string;
   className: "Bulwark";
@@ -32,6 +40,8 @@ export interface InventoryItem {
   quantity: number;
   slot?: string;
   armorType?: string;
+  binding?: string;
+  itemLevel?: number;
   rarity?: string;
   classTags?: string[];
   sourceType?: string;
@@ -83,6 +93,7 @@ export interface SessionRecap {
   quests: string[];
   narrative: string[];
   loot: string[];
+  lootRolls: string[];
   wipes: string[];
   reputation: string[];
   sourcePity: string[];
@@ -193,6 +204,33 @@ export interface DirectorState {
   memories: DirectorMemoryState[];
 }
 
+export type LootRollChoice = "need" | "greed" | "pass";
+
+export interface LootRollParticipant {
+  name: string;
+  role: string;
+  choice: LootRollChoice;
+  roll: number;
+  reason: string;
+}
+
+export interface PendingLootRoll {
+  id: string;
+  itemId: string;
+  itemName: string;
+  quantity: number;
+  rarity: string;
+  binding: string;
+  sourceId: string;
+  sourceName: string;
+  tableId: string;
+  threshold: string;
+  canNeed: boolean;
+  reason: string;
+  sourceNote: string;
+  participants: LootRollParticipant[];
+}
+
 export interface SocialState {
   contacts: SocialContactState[];
   guildContracts: GuildContractState[];
@@ -244,6 +282,7 @@ export interface GameState {
   livingWorld: LivingWorldState;
   narrative: NarrativeState;
   tutorial: TutorialState;
+  pendingLootRoll?: PendingLootRoll;
   dungeon?: DungeonState;
   encounter?: EncounterState;
   sessionRecap: SessionRecap;

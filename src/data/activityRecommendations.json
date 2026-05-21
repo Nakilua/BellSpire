@@ -1,0 +1,52 @@
+[
+  {
+    "id": "first-road-start",
+    "lane": "Story",
+    "label": "Good next step",
+    "title": "Walk the First Road",
+    "summary": "Begin the tutorial road from Saint Veyra toward Hearthmere Fields.",
+    "command": "travel Hearthmere Fields",
+    "mapPing": "Saint Veyra Pilgrim Gate",
+    "sourceNote": "First playable route from the Codex handoff and Discord/map playstyle prompt."
+  },
+  {
+    "id": "social-lfg",
+    "lane": "Social",
+    "label": "Optional social step",
+    "title": "Post for a Training Party",
+    "summary": "Use local group finder/party chat so the first dungeon has companion voices.",
+    "command": "lfg",
+    "mapPing": "#party-chat",
+    "sourceNote": "Party finder and social loop are source-supported MMO systems; this remains local simulation."
+  },
+  {
+    "id": "little-dawn-shrine",
+    "lane": "Story",
+    "label": "Good next step",
+    "title": "Ask Olla About The Cryptlet",
+    "summary": "Talk to Shrinekeeper Olla before the stone door opens.",
+    "command": "talk Shrinekeeper Olla",
+    "mapPing": "Road Shrine of Little Dawn",
+    "sourceNote": "Olla and Little Dawn are first-slice source-governed route anchors."
+  },
+  {
+    "id": "cryptlet-entry",
+    "lane": "Dungeon",
+    "label": "Good next step",
+    "title": "Enter Pilgrim Trial Cryptlet",
+    "summary": "Begin the training dungeon after Olla gives permission.",
+    "command": "enter dungeon",
+    "mapPing": "Cryptlet Stair",
+    "sourceNote": "Pilgrim Trial Cryptlet is the first playable dungeon."
+  },
+  {
+    "id": "cryptlet-report",
+    "lane": "Guild",
+    "label": "Turn-in step",
+    "title": "Report The First Road Work",
+    "summary": "Report completed contract work so guild credit and social memory are explicit.",
+    "command": "report contract",
+    "mapPing": "#guild-board",
+    "sourceNote": "Guild contracts are source-supported social objectives with non-permanent rewards."
+  }
+]

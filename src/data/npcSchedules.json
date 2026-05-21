@@ -1,0 +1,42 @@
+[
+  {
+    "contactId": "pilgrim-renn",
+    "defaultAvailability": "online",
+    "routine": "Moves between Hearthmere road signs, party chat, and Cryptlet prayer calls.",
+    "presentWhen": ["hearthmere-fields", "road-shrine-little-dawn", "pilgrim-trial-cryptlet"],
+    "reactionHooks": ["invite", "ready", "dungeon-entered", "wipe", "clear"],
+    "sourceNote": "Renn is a first-road social companion and shrine-route guide."
+  },
+  {
+    "contactId": "shrinekeeper-olla",
+    "defaultAvailability": "busy",
+    "routine": "Keeps the Road Shrine, gives Cryptlet permission, and answers road reports.",
+    "presentWhen": ["road-shrine-little-dawn"],
+    "reactionHooks": ["quest-accepted", "dungeon-entered", "clear", "report"],
+    "sourceNote": "Olla remains anchored to Little Dawn and does not become a fake dungeon party member."
+  },
+  {
+    "contactId": "edrin-bellhand",
+    "defaultAvailability": "online",
+    "routine": "Watches party chat for training routes and healer-ready checks.",
+    "presentWhen": ["party-chat", "pilgrim-trial-cryptlet"],
+    "reactionHooks": ["lfg", "ready", "wipe", "clear"],
+    "sourceNote": "Local simulated-player healer for first-road group finder."
+  },
+  {
+    "contactId": "tallowwick",
+    "defaultAvailability": "online",
+    "routine": "Answers object-duty calls and keeps party chat warm during training pulls.",
+    "presentWhen": ["party-chat", "pilgrim-trial-cryptlet"],
+    "reactionHooks": ["lfg", "ready", "object-duty", "clear"],
+    "sourceNote": "Local simulated-player DPS for first-road group finder."
+  },
+  {
+    "contactId": "ysabet-cord",
+    "defaultAvailability": "online",
+    "routine": "Files contracts, source-law reports, and guild credit at the board.",
+    "presentWhen": ["guild-board", "guild-recruitment"],
+    "reactionHooks": ["contract-accepted", "contract-progress", "report"],
+    "sourceNote": "Guild contract clerk for source-safe local guild simulation."
+  }
+]

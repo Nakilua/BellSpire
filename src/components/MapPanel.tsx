@@ -108,6 +108,9 @@ interface AtlasDeepZoom {
   title: string;
   subtitle: string;
   imageClass: string;
+  assetName?: string;
+  detailIntent?: string;
+  annotationIds?: string[];
   focus: string[];
   verbs: string[];
   sourceNote: string;
@@ -614,12 +617,14 @@ function DeepZoomLedger({ zooms }: { zooms: AtlasDeepZoom[] }) {
         <article className="deep-zoom-card" key={zoom.id}>
           <strong>{zoom.title}</strong>
           <p>{zoom.subtitle}</p>
+          {zoom.detailIntent ? <p>{zoom.detailIntent}</p> : null}
           <div className="deep-zoom-chip-row">
             {zoom.focus.slice(0, 6).map((item) => (
               <i key={item}>{item}</i>
             ))}
           </div>
           <small>Player verbs: {zoom.verbs.join(" / ")}</small>
+          {zoom.assetName ? <small>Asset: {zoom.assetName}</small> : null}
         </article>
       ))}
     </div>

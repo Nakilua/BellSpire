@@ -1,0 +1,32 @@
+[
+  {
+    "id": "cryptlet-cache-guaranteed",
+    "sourceId": "pilgrimage-first-bell",
+    "sourceName": "Road-Seal Cache",
+    "ruleType": "guaranteed",
+    "items": ["pilgrim-wax", "bone-fragment"],
+    "rarityFloor": "Common",
+    "sourceStatus": "source-governed material reward",
+    "sourceNote": "Guaranteed material rewards for the first Cryptlet clear."
+  },
+  {
+    "id": "cryptlet-object-bonus",
+    "sourceId": "broken-bell-niche-object-bonus",
+    "sourceName": "Broken Bell Niche Bonus",
+    "ruleType": "conditional",
+    "items": ["bell-sliver"],
+    "rarityFloor": "Rare",
+    "sourceStatus": "staged source reward",
+    "sourceNote": "Only granted when the player stabilizes the broken bell niche."
+  },
+  {
+    "id": "cryptlet-staged-gear",
+    "sourceId": "pilgrimage-first-bell-staged-reward",
+    "sourceName": "Pilgrimage First Bell Staged Gear",
+    "ruleType": "deterministic-staged",
+    "items": ["road-seal-buckler"],
+    "rarityFloor": "Uncommon",
+    "sourceStatus": "staged source reward - final Master_Loot_DB item ID pending",
+    "sourceNote": "Prototype Bulwark reward remains staged until final loot rows are approved."
+  }
+]

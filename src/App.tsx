@@ -435,6 +435,10 @@ function getLiveDirectorRequest(state: GameState, command: string): LiveDirector
     return null;
   }
 
+  if (isKnownNonChatCommand(lower)) {
+    return null;
+  }
+
   if (lower.startsWith("party ")) {
     return { channelId: "party-chat", message: raw.replace(/^party\s*/i, "") };
   }
@@ -493,6 +497,20 @@ function isKnownNonChatCommand(command: string) {
     "narrate",
     "who",
     "nearby",
+    "ready",
+    "thanks",
+    "thank you",
+    "social ledger",
+    "ledger",
+    "contacts",
+    "activity",
+    "recommendation",
+    "next step",
+    "checklist",
+    "first road",
+    "world pulse",
+    "social pulse",
+    "pulse",
     "lfg",
     "group finder",
     "groups",
@@ -500,6 +518,8 @@ function isKnownNonChatCommand(command: string) {
     "contracts",
     "guild contracts",
     "guild board",
+    "report",
+    "report contract",
     "director memory",
     "social memory",
     "memory"
@@ -519,6 +539,7 @@ function isKnownNonChatCommand(command: string) {
     "join ",
     "invite ",
     "accept contract",
+    "report contract",
     "director ",
     "dm ",
     "ai mode ",

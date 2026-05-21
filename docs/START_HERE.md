@@ -35,6 +35,9 @@ Rebuild the canon registry and loot audit after source files change:
 
 ```powershell
 npm.cmd run canon:audit
+npm.cmd run loot:audit
+npm.cmd run fixtures:audit
+npm.cmd run assets:audit
 ```
 
 Open the local URL printed by Rsbuild.
@@ -73,8 +76,13 @@ The MVP includes:
 
 Start here for project law:
 
+- [Root README](../README.md): fastest plain-English repo entrypoint.
 - [MMO Rules Bible](./MMO_RULES_BIBLE.md): how the solo-local MMO, AI Director, social world, maps, combat, loot, saves, and expansion rules work.
 - [Canon Rules](./CANON_RULES.md): source authority, no ghost loot, audit law, and protected canon names.
+- [70-Step Master Plan](./MASTER_PLAN_70_STEPS.md): the current build roadmap for the living-world first-road pass.
+- [Release Checklist](./RELEASE_CHECKLIST.md): what to verify before merging serious changes.
+- [Save Migration Plan](./SAVE_MIGRATION_PLAN.md): when to move beyond `saveVersion: 1`.
+- [Browser Smoke Fixtures](./BROWSER_SMOKE_FIXTURES.md): repeatable fixture route checks.
 - [MVP Acceptance](./MVP_ACCEPTANCE.md): the checklist for whether the current playable slice works.
 - [Goals](./GOALS.md): the long-term vision, near-term goals, hard boundaries, and success feeling.
 - [Roadmap](./ROADMAP.md): the phased growth path after the first playable road.

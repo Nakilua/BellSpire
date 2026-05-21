@@ -6,6 +6,9 @@
     "title": "Service Ring Close-Up",
     "subtitle": "Cathedral roads, civic services, training, guild work, crafting, markets, and social alleys.",
     "imageClass": "closeup-saint-veyra",
+    "assetName": "saint-veyra-district-closeup.png",
+    "detailIntent": "City-service zoom for inns/rest, training, guild board, crafting, market, cathedral, and social alleys.",
+    "annotationIds": ["saint-veyra-cathedral-roads", "saint-veyra-training-courts", "saint-veyra-guild-hall-quarter", "saint-veyra-market-seven-lanterns"],
     "focus": ["Cathedral", "First Bell Plaza", "Concord Hall", "Training", "Oath-Iron Yard", "Seven Lanterns", "Low Bells"],
     "verbs": ["create character identity", "find training", "read contracts", "inspect services", "start first road"],
     "sourceNote": "Saint Veyra district/service entries from the compendium, workbook, map services, and source-governed annotations."
@@ -17,6 +20,9 @@
     "title": "Little Dawn Route Close-Up",
     "subtitle": "Field rest, road rumors, field supplies, wax beds, Olla, shrine rest, and the Cryptlet stair.",
     "imageClass": "closeup-little-dawn",
+    "assetName": "little-dawn-shrine-closeup.png",
+    "detailIntent": "Route-service zoom for field rest, candle work, shrine care, Olla, and Cryptlet entry.",
+    "annotationIds": ["hearthmere-old-pilgrim-road", "hearthmere-little-dawn-shrine", "hearthmere-cryptlet-stair", "hearthmere-wax-beds"],
     "focus": ["Field Rest", "Rumors", "Field Supplies", "Wax Beds", "Shrine Rest", "Olla", "Dungeon"],
     "verbs": ["listen to road chatter", "talk to Olla", "stage party", "enter dungeon", "track shrine services"],
     "sourceNote": "Hearthmere Fields, Road Shrine of Little Dawn, Olla, and Pilgrim Trial Cryptlet entries from source-governed runtime data."
@@ -28,6 +34,9 @@
     "title": "Training Route Floor",
     "subtitle": "The Cryptlet route reads as a tutorial dungeon: entry oath, name hall, bell object room, lane walk, optional alcove, boss, and exit.",
     "imageClass": "dungeon-overview",
+    "assetName": "pilgrim-cryptlet-map.png",
+    "detailIntent": "Dungeon floor plate for room order, route flow, optional branch, object lesson, boss arena, and exit.",
+    "annotationIds": ["cryptlet-shrine-descent", "cryptlet-threaded-names", "cryptlet-broken-bell-niche", "cryptlet-pilgrim-bone-walk", "cryptlet-candleless-alcove", "cryptlet-warden-chamber", "cryptlet-road-seal-exit"],
     "focus": ["Shrine Descent", "Hall of Threaded Names", "Broken Bell Niche", "Pilgrim Bone Walk", "Candleless Alcove", "Warden Chamber", "Road-Seal Exit"],
     "verbs": ["inspect objects", "read lane pressure", "advance rooms", "start encounters", "earn source-governed rewards"],
     "sourceNote": "Pilgrim Trial Cryptlet runtime room order, room lessons, and source-governed dungeon map art."
@@ -39,6 +48,9 @@
     "title": "Warden Chamber Close-Up",
     "subtitle": "Boss-room plate for lane pressure, Road-Seal Bell reads, adds, pulse timing, and Final Toll staging.",
     "imageClass": "closeup-warden-chamber",
+    "assetName": "warden-chamber-closeup.png",
+    "detailIntent": "Boss-arena zoom for lane pressure, add staging, Road-Seal Bell timing, and final defensive check.",
+    "annotationIds": ["cryptlet-warden-chamber", "cryptlet-road-seal-exit"],
     "focus": ["Road-Seal Bell", "Lane Pressure", "Adds", "Pulse Timing", "Final Toll"],
     "verbs": ["guard frontline", "shield oath", "move lanes", "use road-seal bell", "read telegraphs"],
     "sourceNote": "Pilgrim Trial Cryptlet runtime room and Bellgrave Warden encounter data. Art is visual support, not independent canon authority."

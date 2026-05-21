@@ -22,7 +22,7 @@ export function PartyPanel({ state }: Props) {
         <PartyRow name={state.character.name} role="Bulwark" hp={`${state.character.hp}/${state.character.maxHp}`} active />
         {rememberedParty.map((contact) => (
           <PartyRow
-            hp={contact?.name === "Pilgrim Renn" ? `${companionHp}/30` : contact?.availability === "busy" ? "Support" : "Ready"}
+            hp={partyStatusLabel(state, contact!.id, contact?.name === "Pilgrim Renn" ? `${companionHp}/30` : contact?.availability === "busy" ? "Support" : "Ready")}
             key={contact!.id}
             muted={contact?.availability !== "online"}
             name={contact!.name}
@@ -32,6 +32,26 @@ export function PartyPanel({ state }: Props) {
       </div>
     </section>
   );
+}
+
+function partyStatusLabel(state: GameState, contactId: string, fallback: string) {
+  const readiness = state.social.partyReadiness.find((entry) => entry.contactId === contactId);
+  if (!readiness) {
+    return fallback;
+  }
+  if (readiness.status === "ready") {
+    return "Ready";
+  }
+  if (readiness.status === "worried") {
+    return "Worried";
+  }
+  if (readiness.status === "post-wipe") {
+    return "Recovering";
+  }
+  if (readiness.status === "post-clear") {
+    return "Clear";
+  }
+  return fallback;
 }
 
 function PartyRow({ name, role, hp, active, muted }: { name: string; role: string; hp: string; active?: boolean; muted?: boolean }) {

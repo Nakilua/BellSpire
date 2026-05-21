@@ -91,6 +91,9 @@ export interface SessionRecap {
   social: string[];
 }
 
+export type ContactMemoryKind = "helped" | "ignored" | "wiped" | "cleared" | "thanked" | "protected" | "abandoned" | "contract" | "ready" | "reported";
+export type PartyReadinessStatus = "not-invited" | "invited" | "joined" | "ready" | "worried" | "post-wipe" | "post-clear";
+
 export interface SocialContactState {
   id: string;
   name: string;
@@ -104,10 +107,45 @@ export interface SocialContactState {
   voice?: string;
 }
 
+export interface SocialMemoryEvent {
+  id: string;
+  contactId: string;
+  contactName: string;
+  kind: ContactMemoryKind;
+  summary: string;
+  source: string;
+  tick: number;
+}
+
+export interface PartyReadinessEntry {
+  contactId: string;
+  status: PartyReadinessStatus;
+  updatedAtTick: number;
+}
+
+export interface NoticeState {
+  id: string;
+  title: string;
+  body: string;
+  source: string;
+  createdAtTick: number;
+  read: boolean;
+}
+
+export interface TutorialState {
+  hintsSeen: string[];
+  checklistCompleteIds: string[];
+}
+
+export interface ActivityRecommendationState {
+  lastAcceptedId?: string;
+  cooldowns: Record<string, number>;
+}
+
 export interface GuildContractState {
   id: string;
   name: string;
-  status: "available" | "accepted" | "complete";
+  status: "available" | "accepted" | "complete" | "reported";
   progress: number;
   requirement: string;
   reward: string;
@@ -161,12 +199,19 @@ export interface SocialState {
   groupListings: GroupListingState[];
   socialReputation: Record<string, number>;
   recentParty: string[];
+  memoryEvents: SocialMemoryEvent[];
+  partyReadiness: PartyReadinessEntry[];
+  notices: NoticeState[];
+  activityRecommendations: ActivityRecommendationState;
   director: DirectorState;
 }
 
 export interface LivingWorldState {
   tick: number;
   ambientCursor: Record<string, number>;
+  schedulerCursor: Record<string, number>;
+  rhythmCooldowns: Record<string, number>;
+  lastProactiveTick?: number;
   lastPulseReason?: string;
 }
 
@@ -198,6 +243,7 @@ export interface GameState {
   social: SocialState;
   livingWorld: LivingWorldState;
   narrative: NarrativeState;
+  tutorial: TutorialState;
   dungeon?: DungeonState;
   encounter?: EncounterState;
   sessionRecap: SessionRecap;

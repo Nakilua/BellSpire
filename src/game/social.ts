@@ -1,6 +1,6 @@
-import { addFeed } from "./state";
+import { addFeed, createId, createNotice } from "./state";
 import { runDirectorChat, runDirectorPrompt, showDirectorMemory } from "./director";
-import type { GameState, GuildContractState, GroupListingState, SocialContactState } from "./types";
+import type { ContactMemoryKind, GameState, GuildContractState, GroupListingState, PartyReadinessStatus, SocialContactState } from "./types";
 
 const exactGameCommands = new Set([
   "look",
@@ -20,7 +20,13 @@ const exactGameCommands = new Set([
   "social pulse",
   "pulse",
   "who",
-  "nearby"
+  "nearby",
+  "ready",
+  "thanks",
+  "thank you",
+  "social ledger",
+  "ledger",
+  "activity"
 ]);
 
 const commandPrefixes = ["channel ", "travel ", "talk", "guard", "shield oath", "attack", "move", "use", "inspect", "gather", "rest", "global ", "zone ", "ai mode "];
@@ -35,6 +41,18 @@ export function handleSocialCommand(state: GameState, rawCommand: string): GameS
 
   if (command === "director memory" || command === "social memory" || command === "memory") {
     return showDirectorMemory(state);
+  }
+
+  if (command === "social ledger" || command === "ledger" || command === "contacts") {
+    return showSocialLedger(state);
+  }
+
+  if (command === "ready" || command === "ready check" || command === "party ready") {
+    return markPartyReady(state);
+  }
+
+  if (command === "thanks" || command === "thank you" || command.startsWith("thanks ")) {
+    return thankParty(state);
   }
 
   if (command.startsWith("ai mode ")) {
@@ -67,6 +85,10 @@ export function handleSocialCommand(state: GameState, rawCommand: string): GameS
 
   if (command.startsWith("accept contract")) {
     return acceptGuildContract(state, raw.replace(/^accept contract\s*/i, ""));
+  }
+
+  if (command === "report" || command === "report contract" || command.startsWith("report contract")) {
+    return reportGuildContract(state, raw.replace(/^report contract\s*/i, ""));
   }
 
   if (command.startsWith("party ")) {
@@ -182,10 +204,18 @@ function joinGroupListing(state: GameState, listingText: string): GameState {
   for (const name of partyNames) {
     const contact = findContactByName(next, name);
     if (contact) {
-      next = touchContact(next, contact.id, 5, `Joined ${listing.name} with ${state.character.name}.`, "#party-chat");
+      next = recordContactMemory(next, contact.id, "helped", `Joined ${listing.name} with ${state.character.name}.`, "#party-chat", 5);
     }
   }
 
+  next = setPartyReadiness(next, partyNames.map((name) => findContactByName(next, name)?.id).filter(Boolean) as string[], "joined");
+  next = {
+    ...next,
+    tutorial: {
+      ...next.tutorial,
+      checklistCompleteIds: unique([...next.tutorial.checklistCompleteIds, "find-party"])
+    }
+  };
   next = bumpSocialReputation(next, "Party Reliability", 5);
   next = rememberSocial(next, `Joined group finder listing: ${listing.name}`);
 
@@ -214,7 +244,8 @@ function inviteContact(state: GameState, contactText: string): GameState {
 
   next = addFeed(next, "social", `Invite sent: ${contact.name}`, `${contact.name} has been added to your local party memory.`, contact.relationshipTag);
   next = addFeed(next, "social", contact.name, inviteReply(contact), contact.role);
-  next = touchContact(next, contact.id, 4, `Accepted a party invite from ${state.character.name}.`, "#party-chat");
+  next = setPartyReadiness(next, [contact.id], "invited");
+  next = recordContactMemory(next, contact.id, "helped", `Accepted a party invite from ${state.character.name}.`, "#party-chat", 4);
   next = bumpSocialReputation(next, "Party Reliability", 2);
   return rememberSocial(next, `Invited ${contact.name}`);
 }
@@ -234,6 +265,14 @@ function acceptGuildContract(state: GameState, contractText: string): GameState 
     return addFeed(state, "social", "Contract already accepted", `${contract.name} is already pinned to your local guild board.`, "#guild-board");
   }
 
+  if (contract.status === "complete") {
+    return addFeed(state, "social", "Contract ready to report", `${contract.name} is complete. Use \`report contract ${contract.name}\` to file it.`, "#guild-board");
+  }
+
+  if (contract.status === "reported") {
+    return addFeed(state, "social", "Contract already reported", `${contract.name} is already filed with the guild board.`, "#guild-board");
+  }
+
   let next: GameState = {
     ...withActiveSocialChannel(state, "guild-board"),
     social: {
@@ -242,7 +281,7 @@ function acceptGuildContract(state: GameState, contractText: string): GameState 
         entry.id === contract.id
           ? {
               ...entry,
-              status: "accepted"
+              status: entry.progress >= 100 ? "complete" : "accepted"
             }
           : entry
       )
@@ -264,6 +303,208 @@ function acceptGuildContract(state: GameState, contractText: string): GameState 
     `${contract.requirement}\nReward: ${contract.reward}`,
     "Guild board"
   );
+}
+
+function reportGuildContract(state: GameState, contractText: string): GameState {
+  const hasSpecificContract = contractText.trim().length > 0;
+  const contract = (hasSpecificContract ? findContract(state, contractText) : undefined) ?? state.social.guildContracts.find((entry) => entry.status === "complete");
+  if (!contract) {
+    return addFeed(state, "warning", "No report-ready contract", "Complete a guild contract first, then use `report contract`.", "Guild board");
+  }
+
+  if (contract.status === "reported") {
+    return addFeed(state, "social", "Contract already reported", `${contract.name} is already filed with the guild board.`, "#guild-board");
+  }
+
+  if (contract.status !== "complete") {
+    return addFeed(state, "warning", "Contract not complete", `${contract.name} still needs progress before it can be reported.`, "#guild-board");
+  }
+
+  let next: GameState = {
+    ...withActiveSocialChannel(state, "guild-board"),
+    social: {
+      ...state.social,
+      guildContracts: state.social.guildContracts.map((entry) =>
+        entry.id === contract.id
+          ? {
+              ...entry,
+              status: "reported",
+              progress: 100
+            }
+          : entry
+      ),
+      notices: [
+        createNotice(
+          `Guild report filed: ${contract.name}`,
+          "Guild credit and social memory were recorded. No permanent item was created by this report.",
+          "#guild-board",
+          state.livingWorld.tick
+        ),
+        ...state.social.notices
+      ].slice(0, 12)
+    },
+    sessionRecap: {
+      ...state.sessionRecap,
+      social: unique([...state.sessionRecap.social, `Reported guild contract: ${contract.name}`]).slice(-12)
+    }
+  };
+
+  next = bumpSocialReputation(next, "Guild Credit", 8);
+  next = recordContactMemory(next, "ysabet-cord", "reported", `Reported ${contract.name}; reward stayed source-safe.`, "#guild-board", 5);
+  return addFeed(next, "social", `Contract reported: ${contract.name}`, "Ysabet files the route report, credits the board, and underlines the reward row twice.", "Guild board");
+}
+
+function markPartyReady(state: GameState): GameState {
+  const partyContacts = state.social.recentParty
+    .map((name) => findContactByName(state, name))
+    .filter(Boolean) as SocialContactState[];
+  const readyContacts = partyContacts.filter((contact) => contact.kind !== "guild").slice(0, 4);
+
+  let next = setPartyReadiness(state, readyContacts.map((contact) => contact.id), "ready");
+  for (const contact of readyContacts) {
+    next = recordContactMemory(next, contact.id, "ready", "Confirmed ready for the first-road training route.", "#party-chat", 2);
+  }
+
+  next = bumpSocialReputation(next, "Party Reliability", 3);
+  return addFeed(
+    withActiveSocialChannel(next, "party-chat"),
+    "social",
+    "Party ready check",
+    readyContacts.length
+      ? `${readyContacts.map((contact) => contact.name).join(", ")} mark ready. The Cryptlet route now has a clearer party rhythm.`
+      : "No recent party contacts are ready yet. Try `lfg` or `invite Renn` first.",
+    "#party-chat"
+  );
+}
+
+function thankParty(state: GameState): GameState {
+  const contacts = state.social.recentParty
+    .map((name) => findContactByName(state, name))
+    .filter(Boolean)
+    .slice(0, 4) as SocialContactState[];
+  let next = state;
+
+  for (const contact of contacts) {
+    next = recordContactMemory(next, contact.id, "thanked", `${state.character.name} thanked them for the route.`, "#party-chat", 2);
+  }
+
+  next = bumpSocialReputation(next, "Road Courtesy", 2);
+  return addFeed(withActiveSocialChannel(next, "party-chat"), "social", "Thanks sent", "The party remembers the courtesy. Small social things matter in BellSpire.", "#party-chat");
+}
+
+function showSocialLedger(state: GameState): GameState {
+  const contactLines = state.social.contacts
+    .slice()
+    .sort(sortContactsForLedger)
+    .map((contact) => `${contact.name} / ${contact.role} / ${relationshipLabel(contact.trust)}\n${latestMemoryFor(state, contact.id) ?? contact.notes[0] ?? "No memory yet."}`);
+  const readinessLines = state.social.partyReadiness.map((entry) => `${contactName(state, entry.contactId)}: ${entry.status}`).join("; ");
+  const body = [
+    "Contacts:",
+    contactLines.join("\n\n"),
+    "",
+    `Recent party: ${state.social.recentParty.join(", ") || "none"}`,
+    `Party readiness: ${readinessLines || "none"}`,
+    "",
+    "Social reputation:",
+    Object.entries(state.social.socialReputation)
+      .map(([name, value]) => `${name}: ${value}`)
+      .join("; ")
+  ].join("\n");
+
+  return addFeed(state, "social", "Social Ledger", body, "Contacts / memory / reputation");
+}
+
+export function progressGuildContract(state: GameState, contractId: string, progress: number, source: string): GameState {
+  const contract = state.social.guildContracts.find((entry) => entry.id === contractId);
+  if (!contract || contract.status === "reported") {
+    return state;
+  }
+
+  const nextProgress = Math.max(contract.progress, Math.min(100, progress));
+  const nextStatus = nextProgress >= 100 && contract.status === "accepted" ? "complete" : contract.status;
+  const updated = {
+    ...state,
+    social: {
+      ...state.social,
+      guildContracts: state.social.guildContracts.map((entry) =>
+        entry.id === contractId
+          ? {
+              ...entry,
+              progress: nextProgress,
+              status: nextStatus
+            }
+          : entry
+      )
+    }
+  };
+
+  if (nextStatus === "complete" && contract.status !== "complete") {
+    return addFeed(
+      recordContactMemory(updated, "ysabet-cord", "contract", `${contract.name} is ready to report.`, source, 3),
+      "social",
+      `Contract ready to report: ${contract.name}`,
+      "Use `report contract` at the guild board to file it. The reward is social/guild credit, not ghost loot.",
+      "#guild-board"
+    );
+  }
+
+  return updated;
+}
+
+export function recordContactMemory(
+  state: GameState,
+  contactId: string,
+  kind: ContactMemoryKind,
+  summary: string,
+  source: string,
+  trustDelta = 0
+): GameState {
+  const contact = findContact(state, contactId);
+  if (!contact) {
+    return state;
+  }
+
+  const event = {
+    id: createId("social-memory"),
+    contactId: contact.id,
+    contactName: contact.name,
+    kind,
+    summary,
+    source,
+    tick: state.livingWorld.tick
+  };
+  const touched = trustDelta ? touchContact(state, contactId, trustDelta, summary, source) : state;
+
+  return {
+    ...touched,
+    social: {
+      ...touched.social,
+      memoryEvents: [event, ...touched.social.memoryEvents].slice(0, 40)
+    },
+    sessionRecap: {
+      ...touched.sessionRecap,
+      social: unique([...touched.sessionRecap.social, `${contact.name}: ${summary}`]).slice(-12)
+    }
+  };
+}
+
+export function setPartyReadiness(state: GameState, contactIds: string[], status: PartyReadinessStatus): GameState {
+  const existing = new globalThis.Map(state.social.partyReadiness.map((entry) => [entry.contactId, entry]));
+  for (const contactId of contactIds) {
+    existing.set(contactId, {
+      contactId,
+      status,
+      updatedAtTick: state.livingWorld.tick
+    });
+  }
+
+  return {
+    ...state,
+    social: {
+      ...state.social,
+      partyReadiness: [...existing.values()]
+    }
+  };
 }
 
 function choosePartyResponders(state: GameState, message: string): SocialContactState[] {
@@ -374,16 +615,50 @@ function touchContact(state: GameState, contactId: string, trustDelta: number, n
       ...state.social,
       contacts: state.social.contacts.map((contact) =>
         contact.id === contactId
-          ? {
-              ...contact,
-              trust: clamp(contact.trust + trustDelta, 0, 100),
-              lastSeen,
-              notes: unique([note, ...contact.notes]).slice(0, 5)
-            }
+          ? withContactTrust(contact, trustDelta, note, lastSeen)
           : contact
       )
     }
   };
+}
+
+function withContactTrust(contact: SocialContactState, trustDelta: number, note: string, lastSeen: string): SocialContactState {
+  const trust = clamp(contact.trust + trustDelta, 0, 100);
+  return {
+    ...contact,
+    trust,
+    relationshipTag: relationshipLabel(trust),
+    lastSeen,
+    notes: unique([note, ...contact.notes]).slice(0, 5)
+  };
+}
+
+function sortContactsForLedger(left: SocialContactState, right: SocialContactState) {
+  return right.trust - left.trust || left.name.localeCompare(right.name);
+}
+
+function relationshipLabel(trust: number) {
+  if (trust >= 65) {
+    return "trusted ally";
+  }
+  if (trust >= 40) {
+    return "reliable contact";
+  }
+  if (trust >= 22) {
+    return "known ally";
+  }
+  if (trust >= 10) {
+    return "recent ally";
+  }
+  return "new contact";
+}
+
+function latestMemoryFor(state: GameState, contactId: string) {
+  return state.social.memoryEvents.find((event) => event.contactId === contactId)?.summary;
+}
+
+function contactName(state: GameState, contactId: string) {
+  return findContact(state, contactId)?.name ?? contactId;
 }
 
 function bumpSocialReputation(state: GameState, key: string, amount: number): GameState {

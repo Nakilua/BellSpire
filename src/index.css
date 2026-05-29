@@ -2531,8 +2531,20 @@ button {
   gap: 10px;
 }
 
+@keyframes feedEntryIn {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .feed-entry {
   border-left-width: 4px;
+  animation: feedEntryIn 240ms ease-out both;
 }
 
 .feed-loot {
@@ -2544,8 +2556,47 @@ button {
   border-color: rgba(182, 58, 84, 0.42);
 }
 
+.feed-combat .feed-header h2 {
+  font-size: 1.02rem;
+  letter-spacing: 0.01em;
+}
+
 .feed-social {
   border-color: rgba(78, 163, 163, 0.34);
+}
+
+.feed-scene {
+  border-color: rgba(215, 167, 86, 0.3);
+  background: linear-gradient(135deg, rgba(215, 167, 86, 0.07), rgba(23, 18, 28, 0.88));
+}
+
+.feed-scene .feed-type {
+  display: none;
+}
+
+.feed-scene .feed-body {
+  color: var(--bell-bone);
+  font-size: 0.96rem;
+  line-height: 1.75;
+}
+
+.feed-dialogue .feed-type {
+  display: none;
+}
+
+.feed-dialogue .feed-body {
+  font-style: italic;
+  line-height: 1.72;
+}
+
+.feed-command {
+  border-left-color: rgba(131, 121, 140, 0.25);
+  background: rgba(12, 10, 17, 0.5);
+}
+
+.feed-command .feed-body {
+  color: var(--bell-fog);
+  font-size: 0.8rem;
 }
 
 .command-footer {
@@ -3148,6 +3199,84 @@ body::after {
 
 .login-realm-chip {
   margin-bottom: auto;
+}
+
+.login-lore {
+  margin: 0 0 10px;
+  color: var(--bell-bone);
+  font-family: Cinzel, Georgia, serif;
+  font-size: 1.02rem;
+  line-height: 1.65;
+  text-shadow: 0 0 24px rgba(215, 167, 86, 0.18);
+}
+
+.login-sub {
+  margin: 0 0 20px;
+  color: var(--bell-ash);
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+
+.login-route {
+  display: grid;
+  gap: 8px;
+  border-top: 1px solid rgba(215, 167, 86, 0.18);
+  padding-top: 16px;
+}
+
+.login-route-label {
+  color: var(--bell-wax);
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.login-route ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: route-step;
+}
+
+.login-route li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--bell-bone);
+  font-size: 0.78rem;
+  font-weight: 700;
+  counter-increment: route-step;
+  white-space: nowrap;
+}
+
+.login-route li::before {
+  content: counter(route-step);
+  display: inline-flex;
+  width: 18px;
+  height: 18px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 1px solid rgba(215, 167, 86, 0.4);
+  border-radius: 50%;
+  color: var(--bell-wax);
+  font-size: 0.64rem;
+  font-weight: 900;
+}
+
+.login-route li::after {
+  content: "→";
+  padding: 0 6px;
+  color: rgba(215, 167, 86, 0.35);
+  font-weight: 400;
+}
+
+.login-route li:last-child::after {
+  display: none;
 }
 
 .login-scene-tags {

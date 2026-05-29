@@ -75,14 +75,20 @@ export function LoginView({ hasProfile, savedCharacter, onContinue, onCreate }: 
             <Shield size={28} />
           </div>
           <h1>Bellspire</h1>
-          <p>
-            Make your first traveler and step onto the Saint Veyra road. Your save stays local until you export it.
+          <p className="login-lore">
+            The road from Saint Veyra has been quiet for forty years. The bell shrines still stand. The pilgrim routes are open again — barely.
           </p>
-          <div className="login-scene-tags" aria-label="First playable route">
-            <span>Saint Veyra</span>
-            <span>Hearthmere Fields</span>
-            <span>Little Dawn</span>
-            <span>Cryptlet</span>
+          <p className="login-sub">
+            A single-player world that runs local. No server. No account. The world remembers what you do.
+          </p>
+          <div className="login-route" aria-label="First playable route">
+            <span className="login-route-label">First road</span>
+            <ol>
+              <li>Saint Veyra Capital</li>
+              <li>Hearthmere Fields</li>
+              <li>Road Shrine of Little Dawn</li>
+              <li>Pilgrim Trial Cryptlet</li>
+            </ol>
           </div>
         </div>
 

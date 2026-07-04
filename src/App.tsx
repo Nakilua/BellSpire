@@ -12,9 +12,11 @@ import { fetchAiStatus, requestLiveDirector } from "./game/aiBridge";
 import { shouldUseLocalDirector } from "./game/budget";
 import { runCommand } from "./game/commands";
 import { applyExternalDirectorChat, markDirectorFallback, runDirectorChat, runDirectorPrompt } from "./game/director";
+import { applyRealmChat, applyRealmRoster, applyRealmStatus } from "./game/realm";
+import { realmBridge } from "./game/realmBridge";
 import { postGuildChat, postPartyChat } from "./game/social";
 import { addFeed, createInitialState, sanitizeImportedState, STORAGE_KEY } from "./game/state";
-import { getAvailableActions, getCurrentPoi } from "./game/selectors";
+import { getAvailableActions, getCurrentPoi, getCurrentZone } from "./game/selectors";
 import type { CharacterCreationInput, ExportReceipt, GameState } from "./game/types";
 
 type AppRoute = "game" | "login";
@@ -137,12 +139,44 @@ export default function App() {
       });
   }, []);
 
+  const characterName = state.character.name;
+  const currentZoneId = getCurrentZone(state).id;
+
+  useEffect(() => {
+    if (!state.profileCreated) {
+      return;
+    }
+
+    realmBridge.connect(
+      { name: characterName, className: state.character.className, zoneId: currentZoneId },
+      {
+        onStatus: (status, realmName, selfSessionId) => setState((current) => applyRealmStatus(current, status, realmName, selfSessionId)),
+        onRoster: (players) => setState((current) => applyRealmRoster(current, players)),
+        onChat: (message) => setState((current) => applyRealmChat(current, message))
+      }
+    );
+
+    return () => realmBridge.disconnect();
+    // Reconnect only when the profile or character identity changes, not on
+    // every state tick; zone changes are streamed via sendMove below.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.profileCreated, characterName]);
+
+  useEffect(() => {
+    realmBridge.sendMove(currentZoneId);
+  }, [currentZoneId]);
+
   const actions = useMemo(() => getAvailableActions(state), [state]);
   const currentPoi = getCurrentPoi(state);
   const currentSaveJson = useMemo(() => JSON.stringify(state, null, 2), [state]);
   const sceneKey = getSceneKey(state);
 
   function dispatchCommand(command: string) {
+    const worldChat = getWorldChatMessage(state, command);
+    if (worldChat && realmBridge.isConnected) {
+      realmBridge.sendChat(worldChat.channelId, worldChat.body);
+    }
+
     const liveRequest = getLiveDirectorRequest(state, command);
     if (!liveRequest) {
       setState((current) => runCommand(current, command));
@@ -339,7 +373,11 @@ export default function App() {
         <Tooltip.Provider delayDuration={220}>
           <header className="app-header">
             <div className="brand-block">
-              <span className="realm-badge">Local Realm / Save v{state.saveVersion}</span>
+              <span className="realm-badge">
+                {state.realm.status === "connected"
+                  ? `${state.realm.realmName ?? "Live Realm"} / ${state.realm.players.length + 1} online / Save v${state.saveVersion}`
+                  : `Local Realm / Save v${state.saveVersion}`}
+              </span>
               <h1 className="app-title">BellSpire</h1>
               <p className="app-subtitle">
                 {currentPoi.name} / {state.character.className} level {state.character.level}
@@ -453,6 +491,25 @@ function getSceneKey(state: GameState) {
     return "fields";
   }
   return "saint";
+}
+
+function getWorldChatMessage(state: GameState, command: string): { channelId: "global-chat" | "zone-chat"; body: string } | null {
+  const raw = command.trim();
+  const lower = raw.toLowerCase();
+
+  if (lower.startsWith("global ")) {
+    return { channelId: "global-chat", body: raw.slice("global ".length).trim() };
+  }
+
+  if (lower.startsWith("zone ")) {
+    return { channelId: "zone-chat", body: raw.slice("zone ".length).trim() };
+  }
+
+  if (!isKnownNonChatCommand(lower) && (state.activeChannelId === "global-chat" || state.activeChannelId === "zone-chat")) {
+    return { channelId: state.activeChannelId, body: raw };
+  }
+
+  return null;
 }
 
 function getLiveDirectorRequest(state: GameState, command: string): LiveDirectorRequest | null {

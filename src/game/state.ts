@@ -8,10 +8,19 @@ import type { CharacterCreationInput, FeedEntry, FeedType, GameState, NoticeStat
 export const STORAGE_KEY = "bellspire.save.v1";
 
 let idCounter = 0;
+let idStamp: () => string = () => Date.now().toString(36);
+
+// Headless/server runs swap the wall-clock stamp for a fixed one so a replayed
+// session produces byte-identical ids. The browser keeps wall-clock stamps so
+// ids stay unique across reloads of the same save.
+export function configureDeterministicIds(stamp = "replay") {
+  idCounter = 0;
+  idStamp = () => stamp;
+}
 
 export function createId(prefix = "entry") {
   idCounter += 1;
-  return `${prefix}-${Date.now().toString(36)}-${idCounter}`;
+  return `${prefix}-${idStamp()}-${idCounter}`;
 }
 
 export function createFeedEntry(type: FeedType, title: string, body: string, meta?: string): FeedEntry {
@@ -196,6 +205,10 @@ export function createInitialState(characterInput?: CharacterCreationInput): Gam
       hintsSeen: characterInput ? ["first-road-start"] : [],
       checklistCompleteIds: []
     },
+    realm: {
+      status: "offline",
+      players: []
+    },
     sessionRecap: {
       visited: ["Saint Veyra Capital"],
       quests: [],
@@ -242,6 +255,9 @@ export function sanitizeImportedState(value: unknown): GameState | null {
     ...base,
     ...maybe,
     saveVersion: 1,
+    // Realm state is per-connection, never per-save. Imported saves always
+    // start offline until the realm bridge re-handshakes.
+    realm: base.realm,
     profileCreated: typeof maybe.profileCreated === "boolean" ? maybe.profileCreated : true,
     character: {
       ...base.character,

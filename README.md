@@ -39,6 +39,32 @@ npm.cmd run ai
 
 The API key belongs only in `.env.local`. Never paste it into chat, source files, screenshots, or save exports.
 
+## Live Realm (experimental multiplayer)
+
+BellSpire can now share presence and world chat between real players — the first honest step from "MMO simulation" to MMO. Start the realm server:
+
+```powershell
+npm.cmd run realm
+```
+
+Open the game in two browsers (or two machines pointed at the same realm host). Each client auto-connects, the header badge flips from `Local Realm` to the live realm name with an online count, real players appear in `who` labeled `(live player)`, and `global <message>` / `zone <message>` reach everyone on the realm. Zone chat only reaches players in the same zone.
+
+Live players are always labeled; the local simulation keeps running around you and never pretends anyone is real when they are not. Combat, loot, and quests remain local for now — the realm server never grants rewards. If the realm server is not running, the game stays fully playable as a local realm.
+
+Verify the realm contract headlessly:
+
+```powershell
+npm.cmd run realm:smoke
+```
+
+## Headless Replay (determinism gate)
+
+The whole First Road tutorial can be played by a scripted bot in Node, with no browser. It asserts the route completes, that no ghost loot appears, and that two identical runs produce byte-identical state:
+
+```powershell
+npm.cmd run replay
+```
+
 ## What To Try First
 
 - Create or continue a Bulwark at `/login`.

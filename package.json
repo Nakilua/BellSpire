@@ -6,6 +6,9 @@
   "scripts": {
     "dev": "rsbuild dev --host 127.0.0.1",
     "ai": "node server/bellspire-ai-server.mjs",
+    "realm": "node server/bellspire-realm-server.mjs",
+    "realm:smoke": "node scripts/realm-smoke.mjs",
+    "replay": "node scripts/replay-first-road.mjs",
     "canon:build": "node scripts/build-canon-registry.mjs",
     "canon:audit": "node scripts/build-canon-registry.mjs --audit",
     "loot:audit": "node scripts/audit-loot-rules.mjs",
@@ -21,10 +24,12 @@
     "@radix-ui/react-select": "^2.2.6",
     "@radix-ui/react-tabs": "^1.1.13",
     "@radix-ui/react-tooltip": "^1.2.8",
+    "@types/ws": "^8.18.1",
     "lucide-react": "^0.468.0",
     "motion": "^12.39.0",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "ws": "^8.21.0"
   },
   "devDependencies": {
     "@rsbuild/core": "^1.5.15",

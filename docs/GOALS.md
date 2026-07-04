@@ -26,7 +26,7 @@ BellSpire is a deeply personal, source-governed gothic text MMO project. The tar
 - No ghost loot.
 - No fake live multiplayer claims.
 - No monetization.
-- No account system or backend until explicitly planned later.
+- No account system yet. The live realm server (presence and world chat only, per `docs/MMO_EVOLUTION_PLAN.md`) is the first sanctioned backend step; it never owns rewards, combat, or saves.
 - No full MMO scope leap before the first playable loop feels good.
 - No unsourced canon rename, reward, class change, boss change, or faction change.
 - No AI-generated permanent lore without source governance.

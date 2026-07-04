@@ -105,15 +105,20 @@ export function postWorldChat(state: GameState, channelId: "global-chat" | "zone
 export function showNearbyWorld(state: GameState): GameState {
   const zone = getCurrentZone(state);
   const rhythm = getLivingWorldRhythm(state);
+  const livePlayers = state.realm.players.map(
+    (player) => `${player.name} - ${player.className} (live player${player.zoneId === zone.id ? ", this zone" : ""})`
+  );
   const contacts = state.social.contacts
     .filter((contact) => contact.availability === "online" || state.social.recentParty.includes(contact.name))
     .map((contact) => `${contact.name} - ${contact.role} (${contact.relationshipTag}, ${contact.availability})`);
   const body = [
     `Location: ${zone.name}`,
     `World tick: ${state.livingWorld.tick}`,
+    `Realm: ${state.realm.status === "connected" ? `${state.realm.realmName ?? "live realm"} (${livePlayers.length} other live player${livePlayers.length === 1 ? "" : "s"})` : "local simulation only"}`,
     `Current rhythm: ${rhythm.label}`,
     rhythm.cadence,
     "",
+    ...(livePlayers.length ? ["Live players:", livePlayers.join("\n"), ""] : []),
     "Visible contacts:",
     contacts.join("\n") || "No visible contacts.",
     "",

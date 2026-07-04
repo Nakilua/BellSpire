@@ -265,6 +265,25 @@ export interface NarrativeState {
   lastTrigger?: string;
 }
 
+export type RealmConnectionStatus = "offline" | "connecting" | "connected";
+
+export interface RealmPlayerPresence {
+  sessionId: string;
+  name: string;
+  className: string;
+  zoneId: string;
+}
+
+// Live-realm state is transient: it reflects the current socket connection and
+// is never trusted from an imported save. Real players are always labeled so
+// the simulated population and the live population stay honestly separate.
+export interface RealmState {
+  status: RealmConnectionStatus;
+  realmName?: string;
+  selfSessionId?: string;
+  players: RealmPlayerPresence[];
+}
+
 export interface GameState {
   saveVersion: 1;
   profileCreated: boolean;
@@ -282,6 +301,7 @@ export interface GameState {
   livingWorld: LivingWorldState;
   narrative: NarrativeState;
   tutorial: TutorialState;
+  realm: RealmState;
   pendingLootRoll?: PendingLootRoll;
   dungeon?: DungeonState;
   encounter?: EncounterState;

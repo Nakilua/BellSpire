@@ -1,11 +1,11 @@
 import pois from "../../data/pois.json";
 import regionTopography from "../../data/regionTopography.json";
 
-// Hand-authored SVG map art for the three living map plates. Everything here
-// is vector ink over dark parchment so the maps can render live state (player
-// position, live realm travelers, cleared rooms) that painted plates cannot.
+// Hand-authored SVG cartography for the living map plates. Drawn in a
+// 160x100 coordinate space matching the plate's 16:10 aspect so shapes stay
+// undistorted; data coordinates (0-100 percent) are mapped through X()/Y().
 // Region and POI placement comes from the same source-governed JSON the rest
-// of the game reads; only the terrain drawing is hand-authored.
+// of the game reads; only the ink is hand-authored.
 
 interface RegionRow {
   id: string;
@@ -20,146 +20,282 @@ interface RegionRow {
 
 const regions = regionTopography as RegionRow[];
 
-export function MapArtDefs() {
+const X = (x: number) => x * 1.6;
+const Y = (y: number) => y;
+
+const INK = "rgba(240, 228, 208, 0.66)";
+const INK_DIM = "rgba(240, 228, 208, 0.34)";
+const INK_FAINT = "rgba(240, 228, 208, 0.16)";
+const WAX = "#d7a756";
+const BLOOD = "rgba(182, 58, 84, 0.7)";
+
+export function MapArtDefs({ idSuffix = "" }: { idSuffix?: string }) {
   return (
     <defs>
-      <radialGradient id="bell-parchment" cx="42%" cy="30%" r="95%">
-        <stop offset="0%" stopColor="#2b2018" />
-        <stop offset="55%" stopColor="#211710" />
-        <stop offset="100%" stopColor="#140e0b" />
+      <radialGradient id={`vellum${idSuffix}`} cx="40%" cy="32%" r="100%">
+        <stop offset="0%" stopColor="#2e2118" />
+        <stop offset="52%" stopColor="#241811" />
+        <stop offset="100%" stopColor="#150e0a" />
       </radialGradient>
-      <radialGradient id="bell-candle" cx="50%" cy="50%" r="50%">
-        <stop offset="0%" stopColor="rgba(233, 188, 106, 0.85)" />
-        <stop offset="45%" stopColor="rgba(215, 167, 86, 0.28)" />
+      <radialGradient id={`candlepool${idSuffix}`} cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stopColor="rgba(233, 188, 106, 0.6)" />
+        <stop offset="50%" stopColor="rgba(215, 167, 86, 0.18)" />
         <stop offset="100%" stopColor="rgba(215, 167, 86, 0)" />
       </radialGradient>
-      <radialGradient id="bell-dread" cx="50%" cy="50%" r="50%">
-        <stop offset="0%" stopColor="rgba(126, 31, 57, 0.5)" />
-        <stop offset="100%" stopColor="rgba(126, 31, 57, 0)" />
+      <radialGradient id={`dreadpool${idSuffix}`} cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stopColor="rgba(110, 26, 48, 0.42)" />
+        <stop offset="100%" stopColor="rgba(110, 26, 48, 0)" />
       </radialGradient>
-      <filter id="bell-grain" x="-5%" y="-5%" width="110%" height="110%">
-        <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="7" result="noise" />
-        <feColorMatrix in="noise" type="matrix" values="0 0 0 0 0.9  0 0 0 0 0.8  0 0 0 0 0.6  0 0 0 0.05 0" result="tint" />
-        <feComposite in="tint" in2="SourceGraphic" operator="over" />
+      <linearGradient id={`seaink${idSuffix}`} x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stopColor="#151a26" />
+        <stop offset="100%" stopColor="#1a1622" />
+      </linearGradient>
+      <filter id={`vellumgrain${idSuffix}`} x="-2%" y="-2%" width="104%" height="104%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.55" numOctaves="2" seed="4" result="n" />
+        <feColorMatrix in="n" type="matrix" values="0 0 0 0 0.85  0 0 0 0 0.74  0 0 0 0 0.55  0 0 0 0.045 0" result="t" />
+        <feComposite in="t" in2="SourceGraphic" operator="over" />
       </filter>
-      <filter id="bell-rough">
-        <feTurbulence type="fractalNoise" baseFrequency="0.06" numOctaves="3" seed="11" result="w" />
-        <feDisplacementMap in="SourceGraphic" in2="w" scale="1.6" />
+      <filter id={`roughink${idSuffix}`}>
+        <feTurbulence type="fractalNoise" baseFrequency="0.11" numOctaves="4" seed="19" result="w" />
+        <feDisplacementMap in="SourceGraphic" in2="w" scale="1.1" />
       </filter>
-      <filter id="bell-soft-glow" x="-80%" y="-80%" width="260%" height="260%">
-        <feGaussianBlur stdDeviation="1.4" result="blur" />
-        <feMerge>
-          <feMergeNode in="blur" />
-          <feMergeNode in="SourceGraphic" />
-        </feMerge>
+      <filter id={`roughland${idSuffix}`}>
+        <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="4" seed="8" result="w" />
+        <feDisplacementMap in="SourceGraphic" in2="w" scale="3.4" />
       </filter>
     </defs>
   );
 }
 
-const INK = "rgba(243, 233, 219, 0.62)";
-const INK_DIM = "rgba(243, 233, 219, 0.3)";
-const WAX = "#d7a756";
-const BLOOD = "rgba(182, 58, 84, 0.75)";
-
-function TerrainGlyph({ type, x, y, locked }: { type: string; x: number; y: number; locked: boolean }) {
-  const stroke = locked ? INK_DIM : INK;
-  const glyphs: Record<string, JSX.Element> = {
-    capital: (
-      <g>
-        <path d={`M${x - 2.4} ${y + 1.6} L${x - 2.4} ${y - 1.4} L${x - 1} ${y - 2.4} L${x - 1} ${y + 1.6} M${x - 1} ${y - 0.6} L${x + 1} ${y - 0.6} L${x + 1} ${y + 1.6} M${x + 1} ${y - 0.6} L${x + 1} ${y - 3.2} L${x + 1.9} ${y - 4.6} L${x + 2.8} ${y - 3.2} L${x + 2.8} ${y + 1.6}`} />
-        <path d={`M${x + 1.9} ${y - 4.6} L${x + 1.9} ${y - 5.6}`} stroke={WAX} />
-      </g>
-    ),
-    fields: (
-      <g>
-        <path d={`M${x - 3} ${y + 0.6} q1.5 -1 3 0 q1.5 1 3 0`} />
-        <path d={`M${x - 2.4} ${y + 1.8} q1.2 -0.8 2.4 0 q1.2 0.8 2.4 0`} />
-        <path d={`M${x - 0.6} ${y - 0.6} l0.4 -1.8 m0.4 1.8 l0.2 -1.4 m-1.6 1.4 l-0.2 -1.2`} />
-      </g>
-    ),
-    woods: (
-      <g>
-        <path d={`M${x - 1.8} ${y + 1.4} L${x - 1.8} ${y} M${x - 1.8} ${y} L${x - 2.8} ${y} L${x - 1.8} ${y - 2.4} L${x - 0.8} ${y} Z`} />
-        <path d={`M${x + 1} ${y + 1.6} L${x + 1} ${y + 0.2} M${x + 1} ${y + 0.2} L${x} ${y + 0.2} L${x + 1} ${y - 2} L${x + 2} ${y + 0.2} Z`} />
-      </g>
-    ),
-    coast: (
-      <g>
-        <path d={`M${x - 3} ${y} q1 -1.2 2 0 q1 1.2 2 0 q1 -1.2 2 0`} />
-        <path d={`M${x - 2} ${y + 1.6} q1 -1 2 0 q1 1 2 0`} />
-      </g>
-    ),
-    industrial: (
-      <g>
-        <path d={`M${x - 2} ${y + 1.4} L${x - 2} ${y - 1} L${x - 0.4} ${y - 1} L${x - 0.4} ${y + 1.4} Z`} />
-        <path d={`M${x + 0.6} ${y + 1.4} L${x + 0.6} ${y - 2.6} L${x + 1.6} ${y - 2.6} L${x + 1.6} ${y + 1.4}`} />
-        <path d={`M${x + 1.1} ${y - 3.4} q0.8 -0.6 0.4 -1.4`} strokeDasharray="0.6 0.5" />
-      </g>
-    ),
-    "cathedral-wood": (
-      <g>
-        <path d={`M${x - 2.6} ${y + 1.4} L${x - 2.6} ${y} L${x - 3.4} ${y} L${x - 2.6} ${y - 2} L${x - 1.8} ${y} Z`} />
-        <path d={`M${x} ${y + 1.4} L${x} ${y - 2} L${x + 0.9} ${y - 3.6} L${x + 1.8} ${y - 2} L${x + 1.8} ${y + 1.4}`} />
-        <path d={`M${x + 0.9} ${y - 3.6} L${x + 0.9} ${y - 4.6} M${x + 0.4} ${y - 4.1} L${x + 1.4} ${y - 4.1}`} stroke={WAX} />
-      </g>
-    ),
-    fen: (
-      <g>
-        <path d={`M${x - 2.6} ${y + 0.4} h1.6 M${x - 0.4} ${y + 0.4} h2 M${x - 1.6} ${y + 1.4} h1.8 M${x + 0.8} ${y + 1.4} h1.4`} />
-        <path d={`M${x - 0.2} ${y - 0.4} l0 -1.6 m-0.7 1.6 l-0.2 -1.2 m1.6 1.2 l0.2 -1.2`} />
-      </g>
-    ),
-    abbey: (
-      <g>
-        <path d={`M${x - 2} ${y + 1.4} L${x - 2} ${y - 0.8} L${x} ${y - 2.4} L${x + 2} ${y - 0.8} L${x + 2} ${y + 1.4} Z`} />
-        <path d={`M${x} ${y - 2.4} L${x} ${y - 3.4} M${x - 0.6} ${y - 2.9} L${x + 0.6} ${y - 2.9}`} stroke={WAX} />
-      </g>
-    ),
-    vale: (
-      <g>
-        <path d={`M${x - 3} ${y + 1} q1.4 -2.6 3 0 q1.6 2.4 3 0`} />
-        <path d={`M${x - 0.4} ${y - 1.4} a0.9 0.9 0 1 1 0.9 1.2`} stroke={BLOOD} />
-      </g>
-    ),
-    spires: (
-      <g>
-        <path d={`M${x - 2.2} ${y + 1.4} L${x - 1.2} ${y - 3} L${x - 0.4} ${y + 1.4}`} />
-        <path d={`M${x + 0.4} ${y + 1.4} L${x + 1.4} ${y - 4.2} L${x + 2.2} ${y + 1.4}`} stroke={BLOOD} />
-      </g>
-    ),
-    castle: (
-      <g>
-        <path d={`M${x - 2.2} ${y + 1.4} L${x - 2.2} ${y - 1.8} L${x - 1.4} ${y - 1.8} L${x - 1.4} ${y - 1} L${x - 0.6} ${y - 1} L${x - 0.6} ${y - 1.8} L${x + 0.6} ${y - 1.8} L${x + 0.6} ${y - 1} L${x + 1.4} ${y - 1} L${x + 1.4} ${y - 1.8} L${x + 2.2} ${y - 1.8} L${x + 2.2} ${y + 1.4} Z`} />
-      </g>
-    ),
-    mooncrypt: (
-      <g>
-        <path d={`M${x + 1.8} ${y - 1.2} a2 2 0 1 0 -2.4 2.6 a1.5 1.5 0 1 1 2.4 -2.6`} />
-        <path d={`M${x - 2.2} ${y + 1.6} h4.4`} strokeDasharray="0.7 0.6" />
-      </g>
-    ),
-    cathedral: (
-      <g>
-        <path d={`M${x - 1.6} ${y + 1.6} L${x - 1.6} ${y - 1.6} L${x} ${y - 3.6} L${x + 1.6} ${y - 1.6} L${x + 1.6} ${y + 1.6} Z`} />
-        <path d={`M${x} ${y - 3.6} L${x} ${y - 5} M${x - 0.7} ${y - 4.3} L${x + 0.7} ${y - 4.3}`} stroke={WAX} />
-      </g>
-    ),
-    underground: (
-      <g>
-        <path d={`M${x - 2} ${y + 1.4} L${x - 2} ${y - 0.4} A2 2 0 0 1 ${x + 2} ${y - 0.4} L${x + 2} ${y + 1.4}`} />
-        <path d={`M${x - 0.9} ${y + 1.4} L${x - 0.9} ${y} A0.9 0.9 0 0 1 ${x + 0.9} ${y} L${x + 0.9} ${y + 1.4}`} stroke={INK_DIM} />
-      </g>
-    )
-  };
-
+function OrnateFrame() {
   return (
-    <g fill="none" stroke={stroke} strokeWidth="0.35" strokeLinecap="round" strokeLinejoin="round" filter="url(#bell-rough)">
-      {glyphs[type] ?? <circle cx={x} cy={y} r="1.2" />}
-      {locked ? <path d={`M${x + 2.6} ${y - 2.6} l1.6 1.6 m0 -1.6 l-1.6 1.6`} stroke={BLOOD} strokeWidth="0.3" /> : null}
+    <g fill="none">
+      <rect x="1.6" y="1.2" width="156.8" height="97.6" stroke="rgba(215, 167, 86, 0.34)" strokeWidth="0.5" />
+      <rect x="3.4" y="2.6" width="153.2" height="94.8" stroke="rgba(215, 167, 86, 0.16)" strokeWidth="0.3" />
+      {/* corner quatrefoils */}
+      {[
+        [3.4, 2.6],
+        [156.6, 2.6],
+        [3.4, 97.4],
+        [156.6, 97.4]
+      ].map(([cx, cy]) => (
+        <g key={`${cx}-${cy}`} stroke="rgba(215, 167, 86, 0.4)" strokeWidth="0.3">
+          <circle cx={cx} cy={cy} r="1.5" fill="#150e0a" />
+          <path d={`M${cx} ${cy - 1.5} A0.75 0.75 0 0 1 ${cx} ${cy} A0.75 0.75 0 0 1 ${cx + 1.5} ${cy} M${cx} ${cy + 1.5} A0.75 0.75 0 0 1 ${cx} ${cy} A0.75 0.75 0 0 1 ${cx - 1.5} ${cy}`} />
+        </g>
+      ))}
     </g>
   );
 }
+
+function Cartouche({ x, y, w, title, sub }: { x: number; y: number; w: number; title: string; sub?: string }) {
+  return (
+    <g>
+      <path
+        d={`M${x} ${y} h${w} l2.2 2.6 l-2.2 ${sub ? 6.2 : 4.2} h-${w} l-2.2 -${sub ? 6.2 : 4.2} Z`}
+        fill="rgba(14, 9, 7, 0.78)"
+        stroke="rgba(215, 167, 86, 0.45)"
+        strokeWidth="0.35"
+      />
+      <text
+        x={x + w / 2}
+        y={y + 3.4}
+        textAnchor="middle"
+        fill="rgba(233, 219, 200, 0.9)"
+        fontSize="2.7"
+        fontFamily="Cinzel, Georgia, serif"
+        letterSpacing="0.4"
+      >
+        {title}
+      </text>
+      {sub ? (
+        <text x={x + w / 2} y={y + 6.7} textAnchor="middle" fill="rgba(215, 167, 86, 0.75)" fontSize="1.9" fontFamily="EB Garamond, Georgia, serif" fontStyle="italic">
+          {sub}
+        </text>
+      ) : null}
+    </g>
+  );
+}
+
+/* --- cartographic vocabulary ---------------------------------- */
+
+function Mountains({ cx, cy, scale = 1, tone = INK }: { cx: number; cy: number; scale?: number; tone?: string }) {
+  // hachured twin peaks
+  const s = scale;
+  return (
+    <g stroke={tone} strokeWidth="0.32" fill="none" strokeLinecap="round">
+      <path d={`M${cx - 4 * s} ${cy + 1.6 * s} L${cx - 1.6 * s} ${cy - 3 * s} L${cx + 0.6 * s} ${cy + 1.6 * s}`} />
+      <path d={`M${cx - 0.2 * s} ${cy + 1.6 * s} L${cx + 2.4 * s} ${cy - 4.4 * s} L${cx + 5 * s} ${cy + 1.6 * s}`} />
+      {/* shading hachures on the east faces */}
+      <path d={`M${cx - 1.6 * s} ${cy - 3 * s} l0.7 1.4 m-0.3 -0.4 l0.7 1.5 m-0.3 -0.4 l0.7 1.5`} strokeWidth="0.2" opacity="0.7" />
+      <path d={`M${cx + 2.4 * s} ${cy - 4.4 * s} l0.8 1.7 m-0.35 -0.5 l0.8 1.8 m-0.35 -0.5 l0.8 1.8 m-0.35 -0.5 l0.7 1.6`} strokeWidth="0.2" opacity="0.7" />
+    </g>
+  );
+}
+
+function Trees({ cx, cy, spread = 1, count = 5, tone = INK_DIM }: { cx: number; cy: number; spread?: number; count?: number; tone?: string }) {
+  // round-cap forest cluster, medieval style
+  const offsets = [
+    [0, 0], [-3.2, 1.4], [3, 1.2], [-1.6, -1.8], [1.8, -1.6], [-4.6, -0.4], [4.4, -0.2], [0.2, 2.6]
+  ].slice(0, count);
+  return (
+    <g stroke={tone} strokeWidth="0.3" fill="none">
+      {offsets.map(([dx, dy], index) => (
+        <g key={index}>
+          <path d={`M${cx + dx * spread} ${cy + dy * spread} m-1.1 0 a1.1 1.15 0 1 1 2.2 0`} />
+          <path d={`M${cx + dx * spread} ${cy + dy * spread} v1.5`} />
+        </g>
+      ))}
+    </g>
+  );
+}
+
+function Waves({ cx, cy, w = 6, tone = "rgba(126, 138, 162, 0.4)" }: { cx: number; cy: number; w?: number; tone?: string }) {
+  return (
+    <g stroke={tone} strokeWidth="0.28" fill="none" strokeLinecap="round">
+      <path d={`M${cx - w / 2} ${cy} q${w / 4} -1.1 ${w / 2} 0 q${w / 4} 1.1 ${w / 2} 0`} />
+      <path d={`M${cx - w / 3} ${cy + 1.6} q${w / 5} -0.9 ${w / 2.5} 0`} />
+    </g>
+  );
+}
+
+function Steeple({ cx, cy, scale = 1, tone = INK, crossTone = WAX }: { cx: number; cy: number; scale?: number; tone?: string; crossTone?: string }) {
+  const s = scale;
+  return (
+    <g stroke={tone} strokeWidth="0.34" fill="none" strokeLinecap="round" strokeLinejoin="round">
+      <path d={`M${cx - 1.5 * s} ${cy + 1.8 * s} L${cx - 1.5 * s} ${cy - 1.4 * s} L${cx} ${cy - 3.4 * s} L${cx + 1.5 * s} ${cy - 1.4 * s} L${cx + 1.5 * s} ${cy + 1.8 * s} Z`} />
+      <path d={`M${cx} ${cy - 3.4 * s} L${cx} ${cy - 4.7 * s} M${cx - 0.65 * s} ${cy - 4.1 * s} L${cx + 0.65 * s} ${cy - 4.1 * s}`} stroke={crossTone} />
+      <path d={`M${cx} ${cy + 1.8 * s} L${cx} ${cy + 0.6 * s}`} strokeWidth="0.24" opacity="0.7" />
+    </g>
+  );
+}
+
+function Keep({ cx, cy, scale = 1, tone = INK }: { cx: number; cy: number; scale?: number; tone?: string }) {
+  const s = scale;
+  return (
+    <g stroke={tone} strokeWidth="0.34" fill="none" strokeLinejoin="round">
+      <path
+        d={`M${cx - 2.4 * s} ${cy + 1.6 * s} L${cx - 2.4 * s} ${cy - 1.8 * s} L${cx - 1.7 * s} ${cy - 1.8 * s} L${cx - 1.7 * s} ${cy - 1.1 * s} L${cx - 0.7 * s} ${cy - 1.1 * s} L${cx - 0.7 * s} ${cy - 1.8 * s} L${cx + 0.7 * s} ${cy - 1.8 * s} L${cx + 0.7 * s} ${cy - 1.1 * s} L${cx + 1.7 * s} ${cy - 1.1 * s} L${cx + 1.7 * s} ${cy - 1.8 * s} L${cx + 2.4 * s} ${cy - 1.8 * s} L${cx + 2.4 * s} ${cy + 1.6 * s} Z`}
+      />
+      <path d={`M${cx - 0.5 * s} ${cy + 1.6 * s} L${cx - 0.5 * s} ${cy + 0.2 * s} A0.5 0.55 0 0 1 ${cx + 0.5 * s} ${cy + 0.2 * s} L${cx + 0.5 * s} ${cy + 1.6 * s}`} strokeWidth="0.26" />
+    </g>
+  );
+}
+
+function CryptArch({ cx, cy, scale = 1, tone = INK }: { cx: number; cy: number; scale?: number; tone?: string }) {
+  const s = scale;
+  return (
+    <g stroke={tone} strokeWidth="0.34" fill="none">
+      <path d={`M${cx - 1.9 * s} ${cy + 1.4 * s} L${cx - 1.9 * s} ${cy - 0.4 * s} A1.9 2 0 0 1 ${cx + 1.9 * s} ${cy - 0.4 * s} L${cx + 1.9 * s} ${cy + 1.4 * s}`} />
+      <path d={`M${cx - 0.8 * s} ${cy + 1.4 * s} L${cx - 0.8 * s} ${cy + 0.2 * s} A0.8 0.9 0 0 1 ${cx + 0.8 * s} ${cy + 0.2 * s} L${cx + 0.8 * s} ${cy + 1.4 * s}`} strokeWidth="0.24" opacity="0.8" />
+      <path d={`M${cx - 2.6 * s} ${cy + 1.4 * s} h${5.2 * s}`} strokeWidth="0.26" />
+    </g>
+  );
+}
+
+function Marsh({ cx, cy, tone = INK_DIM }: { cx: number; cy: number; tone?: string }) {
+  return (
+    <g stroke={tone} strokeWidth="0.28" fill="none" strokeLinecap="round">
+      <path d={`M${cx - 3.4} ${cy} h2.2 M${cx - 0.4} ${cy} h2.6 M${cx - 2.2} ${cy + 1.4} h2.4 M${cx + 1} ${cy + 1.4} h1.8 M${cx - 1} ${cy + 2.8} h2`} />
+      <path d={`M${cx} ${cy - 0.8} v-1.8 m-0.8 1.8 l-0.3 -1.3 m1.9 1.3 l0.3 -1.3`} />
+    </g>
+  );
+}
+
+function Moon({ cx, cy, scale = 1, tone = INK }: { cx: number; cy: number; scale?: number; tone?: string }) {
+  const s = scale;
+  return (
+    <path
+      d={`M${cx + 1.6 * s} ${cy - 1.2 * s} a2 2 0 1 0 -2.2 3 a1.55 1.55 0 1 1 2.2 -3`}
+      stroke={tone}
+      strokeWidth="0.32"
+      fill="none"
+    />
+  );
+}
+
+function terrainMark(region: RegionRow) {
+  const cx = X(region.x);
+  const cy = Y(region.y);
+  const tone = region.locked ? INK_DIM : INK;
+  switch (region.terrainType) {
+    case "capital":
+      return (
+        <g key={region.id}>
+          <Steeple cx={cx} cy={cy - 0.6} scale={1.15} tone={INK} />
+          <Keep cx={cx - 4.6} cy={cy + 0.8} scale={0.7} tone={INK_DIM} />
+          <Keep cx={cx + 4.6} cy={cy + 0.8} scale={0.7} tone={INK_DIM} />
+        </g>
+      );
+    case "fields":
+      return (
+        <g key={region.id} stroke={tone} strokeWidth="0.26" fill="none" strokeLinecap="round">
+          <path d={`M${cx - 4.4} ${cy + 0.4} h3 M${cx - 4.4} ${cy + 1.5} h3 M${cx + 1.4} ${cy + 0.4} h3 M${cx + 1.4} ${cy + 1.5} h3`} />
+          <path d={`M${cx - 0.3} ${cy + 0.8} v-2.2 m-0.9 2.2 l-0.35 -1.7 m2.15 1.7 l0.35 -1.7`} />
+        </g>
+      );
+    case "woods":
+      return <Trees key={region.id} cx={cx} cy={cy} tone={tone} />;
+    case "coast":
+      return <Waves key={region.id} cx={cx} cy={cy} tone={region.locked ? "rgba(126, 138, 162, 0.3)" : "rgba(126, 138, 162, 0.5)"} />;
+    case "industrial":
+      return (
+        <g key={region.id} stroke={tone} strokeWidth="0.32" fill="none">
+          <path d={`M${cx - 2.4} ${cy + 1.4} v-2.6 h1.7 v2.6 M${cx + 0.6} ${cy + 1.4} v-4.4 h1.3 v4.4`} />
+          <path d={`M${cx + 1.25} ${cy - 4.9} q0.9 -0.7 0.5 -1.6`} strokeWidth="0.24" strokeDasharray="0.5 0.55" />
+          <path d={`M${cx - 3} ${cy + 1.4} h6.4`} strokeWidth="0.26" />
+        </g>
+      );
+    case "cathedral-wood":
+      return (
+        <g key={region.id}>
+          <Trees cx={cx - 3.4} cy={cy + 0.4} count={3} spread={0.8} tone={INK_DIM} />
+          <Steeple cx={cx + 2.4} cy={cy} scale={0.95} tone={tone} />
+        </g>
+      );
+    case "fen":
+      return <Marsh key={region.id} cx={cx} cy={cy} tone={tone} />;
+    case "abbey":
+      return (
+        <g key={region.id}>
+          <Steeple cx={cx} cy={cy} scale={0.9} tone={tone} />
+          <path d={`M${cx - 3} ${cy + 1.8} h6`} stroke={tone} strokeWidth="0.26" fill="none" />
+        </g>
+      );
+    case "vale":
+      return (
+        <g key={region.id}>
+          <path d={`M${cx - 4.4} ${cy + 0.6} q2 -3.4 4.4 0 q2.4 3.2 4.4 0`} stroke={tone} strokeWidth="0.32" fill="none" />
+          <Moon cx={cx + 0.2} cy={cy - 2.6} scale={0.65} tone={BLOOD} />
+        </g>
+      );
+    case "spires":
+      return (
+        <g key={region.id} stroke={tone} strokeWidth="0.32" fill="none">
+          <path d={`M${cx - 3} ${cy + 1.6} L${cx - 1.7} ${cy - 3.2} L${cx - 0.5} ${cy + 1.6}`} />
+          <path d={`M${cx + 0.5} ${cy + 1.6} L${cx + 1.8} ${cy - 4.6} L${cx + 3} ${cy + 1.6}`} stroke={BLOOD} />
+          <path d={`M${cx - 1.7} ${cy - 3.2} l0.5 1.2 m-0.2 -0.3 l0.5 1.2`} strokeWidth="0.2" opacity="0.7" />
+        </g>
+      );
+    case "castle":
+      return <Keep key={region.id} cx={cx} cy={cy} scale={1.25} tone={tone} />;
+    case "mooncrypt":
+      return (
+        <g key={region.id}>
+          <CryptArch cx={cx} cy={cy + 0.6} scale={0.85} tone={tone} />
+          <Moon cx={cx + 2.8} cy={cy - 2.4} scale={0.55} tone={tone} />
+        </g>
+      );
+    case "cathedral":
+      return <Steeple key={region.id} cx={cx} cy={cy} scale={1.2} tone={tone} />;
+    case "underground":
+      return <CryptArch key={region.id} cx={cx} cy={cy} scale={1.05} tone={tone} />;
+    default:
+      return <circle key={region.id} cx={cx} cy={cy} r="1.1" stroke={tone} fill="none" strokeWidth="0.3" />;
+  }
+}
+
+/* --- world ------------------------------------------------------ */
 
 export function WorldMapArt() {
   const byId = new Map(regions.map((entry) => [entry.id, entry]));
@@ -176,189 +312,327 @@ export function WorldMapArt() {
   );
 
   return (
-    <svg className="living-map-art" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-      <MapArtDefs />
-      <rect x="0" y="0" width="100" height="100" fill="url(#bell-parchment)" />
+    <svg className="living-map-art" viewBox="0 0 160 100" preserveAspectRatio="none" aria-hidden="true">
+      <MapArtDefs idSuffix="-w" />
+      <rect width="160" height="100" fill="url(#seaink-w)" />
 
-      {/* northern sea and coastline */}
-      <path
-        d="M0 14 Q10 10 20 13 Q30 17 40 12 Q50 8 60 11 Q72 14 82 9 Q92 5 100 8 L100 0 L0 0 Z"
-        fill="rgba(24, 26, 36, 0.85)"
-        filter="url(#bell-rough)"
-      />
-      <g stroke="rgba(131, 121, 140, 0.35)" strokeWidth="0.25" fill="none" filter="url(#bell-rough)">
-        <path d="M6 8 q2 -1.4 4 0 q2 1.4 4 0" />
-        <path d="M46 5 q2 -1.4 4 0 q2 1.4 4 0" />
-        <path d="M78 4 q2 -1.4 4 0" />
-        <path d="M0 14 Q10 10 20 13 Q30 17 40 12 Q50 8 60 11 Q72 14 82 9 Q92 5 100 8" stroke={INK_DIM} strokeWidth="0.4" />
+      {/* landmass with rough vellum edge */}
+      <g filter="url(#roughland-w)">
+        <path
+          d="M-4 22 Q14 15 30 17 Q44 21 58 14 Q72 8 88 12 Q104 16 118 10 Q136 4 152 9 Q158 11 164 10 L164 104 L-4 104 Z"
+          fill="url(#vellum-w)"
+        />
+      </g>
+      {/* triple coastline strokes */}
+      <g fill="none" filter="url(#roughink-w)">
+        <path d="M-4 22 Q14 15 30 17 Q44 21 58 14 Q72 8 88 12 Q104 16 118 10 Q136 4 152 9 Q158 11 164 10" stroke={INK} strokeWidth="0.5" />
+        <path d="M-4 19.4 Q14 12.4 30 14.4 Q44 18.4 58 11.4 Q72 5.4 88 9.4 Q104 13.4 118 7.4 Q136 1.4 152 6.4" stroke={INK_FAINT} strokeWidth="0.35" />
+        <path d="M-4 17 Q14 10 30 12 Q44 16 58 9 Q72 3 88 7 Q104 11 118 5" stroke="rgba(126, 138, 162, 0.28)" strokeWidth="0.3" />
+      </g>
+      {/* coastal stipple shading on the land side */}
+      <g fill={INK_FAINT}>
+        {[8, 20, 34, 47, 62, 76, 92, 108, 124, 140].map((sx, index) => (
+          <g key={sx}>
+            <circle cx={sx} cy={23 - (index % 3)} r="0.22" />
+            <circle cx={sx + 4} cy={24.6 - (index % 2)} r="0.18" />
+            <circle cx={sx + 8} cy={23.8} r="0.15" />
+          </g>
+        ))}
+      </g>
+      <Waves cx={22} cy={7} />
+      <Waves cx={78} cy={4.6} w={8} />
+      <Waves cx={130} cy={6.4} />
+
+      {/* the Veyra river */}
+      <g fill="none" filter="url(#roughink-w)">
+        <path d="M47 16 Q42 26 36 32 Q28 41 39 50 Q48 57 44 68 Q41 76 48 86 Q52 93 49 100" stroke="rgba(89, 128, 138, 0.5)" strokeWidth="1.2" />
+        <path d="M47 16 Q42 26 36 32 Q28 41 39 50 Q48 57 44 68 Q41 76 48 86 Q52 93 49 100" stroke="rgba(126, 168, 175, 0.35)" strokeWidth="0.35" />
       </g>
 
-      {/* the Veyra river, running from the coast down past the capital */}
-      <path
-        d="M30 15 Q26 26 22 32 Q17 41 24 50 Q30 57 27 68 Q25 76 30 86 Q33 93 30 100"
-        fill="none"
-        stroke="rgba(78, 163, 163, 0.28)"
-        strokeWidth="1.1"
-        filter="url(#bell-rough)"
-      />
+      {/* dread pools over the far gothic lands */}
+      <ellipse cx="106" cy="86" rx="42" ry="15" fill="url(#dreadpool-w)" />
+      <ellipse cx="138" cy="25" rx="26" ry="14" fill="url(#dreadpool-w)" opacity="0.8" />
 
-      {/* southern dread fog over the deep cathedral lands */}
-      <ellipse cx="66" cy="86" rx="26" ry="13" fill="url(#bell-dread)" />
-      <ellipse cx="86" cy="24" rx="16" ry="12" fill="url(#bell-dread)" opacity="0.7" />
+      {/* ridge line near the Bloodglass Spires */}
+      <Mountains cx={128} cy={13} scale={0.9} tone={INK_DIM} />
+      <Mountains cx={148} cy={24} scale={0.75} tone={INK_DIM} />
 
-      {/* pilgrim roads between known regions */}
-      <g fill="none" strokeLinecap="round" filter="url(#bell-rough)">
+      {/* pilgrim roads */}
+      <g fill="none" strokeLinecap="round" filter="url(#roughink-w)">
         {routes.map((route) => {
           const open = !route.from.locked && !route.to.locked;
-          const midX = (route.from.x + route.to.x) / 2 + (route.from.y < route.to.y ? 2.4 : -2.4);
-          const midY = (route.from.y + route.to.y) / 2;
+          const x1 = X(route.from.x);
+          const y1 = Y(route.from.y);
+          const x2 = X(route.to.x);
+          const y2 = Y(route.to.y);
+          const mx = (x1 + x2) / 2 + (y1 < y2 ? 3 : -3);
+          const my = (y1 + y2) / 2;
           return (
             <path
-              d={`M${route.from.x} ${route.from.y} Q${midX} ${midY} ${route.to.x} ${route.to.y}`}
-              stroke={open ? "rgba(215, 167, 86, 0.55)" : "rgba(131, 121, 140, 0.22)"}
-              strokeWidth={open ? 0.5 : 0.35}
-              strokeDasharray={open ? "1.6 1.1" : "0.7 1.3"}
+              d={`M${x1} ${y1} Q${mx} ${my} ${x2} ${y2}`}
+              stroke={open ? "rgba(215, 167, 86, 0.6)" : "rgba(150, 140, 158, 0.2)"}
+              strokeWidth={open ? 0.55 : 0.35}
+              strokeDasharray={open ? "2 1.3" : "0.8 1.6"}
               key={`${route.from.id}-${route.to.id}`}
             />
           );
         })}
       </g>
 
-      {/* terrain glyphs per region */}
-      {regions.map((region) => (
-        <TerrainGlyph type={region.terrainType} x={region.x} y={region.y} locked={region.locked} key={region.id} />
-      ))}
+      {/* terrain marks per region */}
+      <g filter="url(#roughink-w)">{regions.map((region) => terrainMark(region))}</g>
 
       {/* candlelight over the playable first road */}
-      <ellipse cx="27" cy="41" rx="17" ry="12" fill="url(#bell-candle)" opacity="0.5" />
+      <ellipse cx={X(27)} cy={Y(41)} rx="26" ry="13" fill="url(#candlepool-w)" opacity="0.55" />
 
-      {/* compass bell rose */}
-      <g transform="translate(9, 84)" stroke={INK_DIM} strokeWidth="0.35" fill="none" filter="url(#bell-rough)">
-        <circle r="4.4" />
-        <path d="M0 -4.4 L1 -1 L4.4 0 L1 1 L0 4.4 L-1 1 L-4.4 0 L-1 -1 Z" fill="rgba(215, 167, 86, 0.2)" stroke={WAX} strokeWidth="0.28" />
-        <path d="M-1.1 1.6 A1.4 1.4 0 0 1 1.1 1.6 L1.4 2.2 L-1.4 2.2 Z" stroke={WAX} strokeWidth="0.25" />
+      {/* compass rose */}
+      <g transform="translate(14, 82)" stroke={INK_DIM} strokeWidth="0.32" fill="none" filter="url(#roughink-w)">
+        <circle r="6" />
+        <circle r="4.6" strokeWidth="0.2" />
+        <path d="M0 -6 L1.3 -1.3 L6 0 L1.3 1.3 L0 6 L-1.3 1.3 L-6 0 L-1.3 -1.3 Z" fill="rgba(215, 167, 86, 0.16)" stroke={WAX} strokeWidth="0.3" />
+        <path d="M-1.3 2 A1.7 1.7 0 0 1 1.3 2 L1.7 2.9 L-1.7 2.9 Z" stroke={WAX} strokeWidth="0.26" />
+        <text x="0" y="-7.6" textAnchor="middle" fill="rgba(233, 219, 200, 0.75)" fontSize="2.4" fontFamily="Cinzel, Georgia, serif" stroke="none">
+          N
+        </text>
       </g>
 
-      <rect x="0.8" y="0.8" width="98.4" height="98.4" fill="none" stroke="rgba(215, 167, 86, 0.28)" strokeWidth="0.35" />
-      <rect x="2.2" y="2.2" width="95.6" height="95.6" fill="none" stroke="rgba(215, 167, 86, 0.14)" strokeWidth="0.25" />
+      <Cartouche x={106} y={7} w={46} title="THE CONCORD LANDS" sub="as kept by the Roadwardens" />
+      <OrnateFrame />
+      <rect width="160" height="100" fill="transparent" filter="url(#vellumgrain-w)" opacity="0.9" />
     </svg>
   );
 }
 
+/* --- zones ------------------------------------------------------ */
+
 export function ZoneMapArt({ zoneId }: { zoneId: string }) {
   return (
-    <svg className="living-map-art" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-      <MapArtDefs />
-      <rect x="0" y="0" width="100" height="100" fill="url(#bell-parchment)" />
+    <svg className="living-map-art" viewBox="0 0 160 100" preserveAspectRatio="none" aria-hidden="true">
+      <MapArtDefs idSuffix="-z" />
+      <rect width="160" height="100" fill="url(#vellum-z)" />
       {zoneId === "saint-veyra" ? <SaintVeyraArt /> : <HearthmereArt />}
-      <rect x="0.8" y="0.8" width="98.4" height="98.4" fill="none" stroke="rgba(215, 167, 86, 0.28)" strokeWidth="0.35" />
+      <OrnateFrame />
+      <rect width="160" height="100" fill="transparent" filter="url(#vellumgrain-z)" opacity="0.9" />
     </svg>
+  );
+}
+
+function CityBlock({ x, y, w, h, tilt = 0 }: { x: number; y: number; w: number; h: number; tilt?: number }) {
+  return (
+    <g transform={`rotate(${tilt} ${x + w / 2} ${y + h / 2})`}>
+      <rect x={x} y={y} width={w} height={h} stroke={INK_DIM} strokeWidth="0.3" fill="rgba(240, 228, 208, 0.045)" />
+      {/* roof hatching */}
+      <path d={`M${x + 0.5} ${y + h - 0.4} L${x + w - 0.4} ${y + 0.5}`} stroke={INK_FAINT} strokeWidth="0.2" />
+    </g>
   );
 }
 
 function SaintVeyraArt() {
-  // The capital: ring walls, the cathedral close, radial streets, the Veyra
-  // river cutting the eastern districts, gate to the Hearthmere road.
+  // The cathedral city: a walled oval on the west bank of the Veyra, the
+  // cathedral close at heart, districts hatched between radial streets,
+  // the east gate opening onto the Old Pilgrim Road. POI anchor: (12,28).
+  const cx = X(24);
+  const cy = Y(46);
   return (
     <g fill="none" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M78 0 Q72 22 76 44 Q80 66 72 100" stroke="rgba(78, 163, 163, 0.3)" strokeWidth="2" filter="url(#bell-rough)" />
-      <g stroke={INK_DIM} strokeWidth="0.4" filter="url(#bell-rough)">
-        <circle cx="38" cy="46" r="34" />
-        <circle cx="38" cy="46" r="24" strokeDasharray="2.4 1.4" />
-        <circle cx="38" cy="46" r="13" />
+      {/* the Veyra river with banks */}
+      <g filter="url(#roughink-z)">
+        <path d="M118 -4 Q112 26 116 48 Q120 72 112 104" stroke="rgba(89, 128, 138, 0.5)" strokeWidth="3.4" />
+        <path d="M118 -4 Q112 26 116 48 Q120 72 112 104" stroke="rgba(126, 168, 175, 0.4)" strokeWidth="0.4" />
+        <path d="M114 -4 Q108 26 112 48 Q116 72 108 104" stroke={INK_FAINT} strokeWidth="0.3" />
+        <path d="M122 -4 Q116 26 120 48 Q124 72 116 104" stroke={INK_FAINT} strokeWidth="0.3" />
       </g>
-      <g stroke="rgba(243, 233, 219, 0.2)" strokeWidth="0.35" filter="url(#bell-rough)">
-        <path d="M38 12 L38 33" />
-        <path d="M38 59 L38 80" />
-        <path d="M8 46 L25 46" />
-        <path d="M51 46 L72 46" />
-        <path d="M17 24 L29 37" />
-        <path d="M59 68 L47 55" />
-        <path d="M59 24 L47 37" />
-        <path d="M17 68 L29 55" />
+      <Waves cx={116} cy={20} w={4} tone="rgba(126, 168, 175, 0.3)" />
+      <Waves cx={114} cy={64} w={4} tone="rgba(126, 168, 175, 0.3)" />
+
+      {/* city wall: irregular oval with towers */}
+      <g filter="url(#roughink-z)">
+        <path
+          d={`M${cx} ${cy - 34} Q${cx + 30} ${cy - 30} ${cx + 36} ${cy - 6} Q${cx + 39} ${cy + 14} ${cx + 22} ${cy + 27} Q${cx + 2} ${cy + 37} ${cx - 20} ${cy + 26} Q${cx - 36} ${cy + 14} ${cx - 33} ${cy - 10} Q${cx - 29} ${cy - 30} ${cx} ${cy - 34} Z`}
+          stroke={INK}
+          strokeWidth="0.55"
+          fill="rgba(240, 228, 208, 0.02)"
+        />
+        {/* wall towers */}
+        {[
+          [cx, cy - 34], [cx + 36, cy - 6], [cx + 22, cy + 27], [cx - 20, cy + 26], [cx - 33, cy - 10]
+        ].map(([tx, ty]) => (
+          <rect key={`${tx}${ty}`} x={tx - 1.3} y={ty - 1.3} width="2.6" height="2.6" stroke={INK} strokeWidth="0.4" fill="#1a120d" />
+        ))}
+        {/* east gate */}
+        <path d={`M${cx + 35.4} ${cy + 3} l4.4 0.6`} stroke={WAX} strokeWidth="0.5" />
+        <path d={`M${cx + 34.6} ${cy + 1} h2.4 v4.4 h-2.4`} stroke={INK} strokeWidth="0.45" fill="#1a120d" />
       </g>
-      {/* cathedral close */}
-      <g stroke={INK} strokeWidth="0.45" filter="url(#bell-rough)">
-        <path d="M32 52 L32 42 L38 35 L44 42 L44 52 Z" fill="rgba(215, 167, 86, 0.08)" />
-        <path d="M38 35 L38 28" stroke={WAX} />
-        <path d="M35.8 30.8 L40.2 30.8" stroke={WAX} />
-        <circle cx="38" cy="46" r="1.1" stroke={WAX} />
+
+      {/* radial streets */}
+      <g stroke={INK_FAINT} strokeWidth="0.32" filter="url(#roughink-z)">
+        <path d={`M${cx} ${cy - 33} L${cx} ${cy - 9}`} />
+        <path d={`M${cx} ${cy + 9} L${cx} ${cy + 35}`} />
+        <path d={`M${cx - 32} ${cy - 2} L${cx - 9} ${cy - 1}`} />
+        <path d={`M${cx + 9} ${cy + 1} L${cx + 36} ${cy + 3}`} stroke="rgba(215, 167, 86, 0.4)" strokeDasharray="1.4 1" />
+        <path d={`M${cx - 24} ${cy - 22} L${cx - 7} ${cy - 7}`} />
+        <path d={`M${cx + 24} ${cy - 22} L${cx + 7} ${cy - 7}`} />
+        <path d={`M${cx - 22} ${cy + 21} L${cx - 7} ${cy + 7}`} />
+        <path d={`M${cx + 20} ${cy + 22} L${cx + 7} ${cy + 7}`} />
       </g>
+
       {/* district blocks */}
-      <g stroke="rgba(243, 233, 219, 0.28)" strokeWidth="0.3" filter="url(#bell-rough)">
-        <path d="M22 38 h5 v4 h-5 Z M24 55 h6 v4 h-6 Z M48 38 h5 v5 h-5 Z M47 55 h6 v4 h-6 Z M33 62 h4 v4 h-4 Z M34 25 h4 v4 h-4 Z M14 44 h4 v5 h-4 Z M55 44 h4 v5 h-4 Z" />
+      <g filter="url(#roughink-z)">
+        <CityBlock x={cx - 20} y={cy - 20} w={6} h={4.4} tilt={-8} />
+        <CityBlock x={cx + 12} y={cy - 21} w={5.4} h={4.6} tilt={7} />
+        <CityBlock x={cx - 26} y={cy + 4} w={6.4} h={4.2} tilt={4} />
+        <CityBlock x={cx + 16} y={cy + 8} w={6} h={4.6} tilt={-5} />
+        <CityBlock x={cx - 10} y={cy + 16} w={5.2} h={4} tilt={-10} />
+        <CityBlock x={cx + 4} y={cy + 17} w={5.6} h={4.2} tilt={6} />
+        <CityBlock x={cx - 6} y={cy - 26} w={5} h={4} tilt={3} />
       </g>
-      {/* east gate and the Old Pilgrim Road leaving toward Hearthmere */}
-      <g filter="url(#bell-rough)">
-        <path d="M70 44 L74 44 L74 49 L70 49" stroke={INK} strokeWidth="0.45" />
-        <path d="M74 46.5 Q86 48 100 52" stroke="rgba(215, 167, 86, 0.55)" strokeWidth="0.55" strokeDasharray="1.8 1.2" />
+
+      {/* the cathedral close */}
+      <g filter="url(#roughink-z)">
+        <circle cx={cx} cy={cy} r="8.6" stroke="rgba(215, 167, 86, 0.4)" strokeWidth="0.35" strokeDasharray="0.7 1" />
+        <Steeple cx={cx} cy={cy} scale={1.7} tone={INK} />
+        <path d={`M${cx - 5.4} ${cy + 3.4} h10.8`} stroke={INK_DIM} strokeWidth="0.3" />
       </g>
-      <ellipse cx="38" cy="44" rx="22" ry="18" fill="url(#bell-candle)" opacity="0.4" />
+
+      {/* the Old Pilgrim Road heading east over the bridge */}
+      <g filter="url(#roughink-z)">
+        <path d={`M${cx + 40} ${cy + 3.6} Q128 ${cy + 6} 160 ${cy + 10}`} stroke="rgba(215, 167, 86, 0.55)" strokeWidth="0.55" strokeDasharray="2 1.3" />
+        {/* bridge over the Veyra */}
+        <path d={`M112 ${cy + 6.4} q4 -1.8 8 -0.4`} stroke={INK} strokeWidth="0.55" />
+        <path d={`M113.5 ${cy + 7.6} v-1.4 M117.5 ${cy + 7} v-1.4`} stroke={INK_DIM} strokeWidth="0.3" />
+      </g>
+
+      {/* fields outside the walls */}
+      <g stroke={INK_FAINT} strokeWidth="0.24" filter="url(#roughink-z)">
+        <path d="M132 24 h12 M132 27 h12 M132 30 h12" />
+        <path d="M134 74 h13 M134 77 h13 M134 80 h13" />
+      </g>
+      <Trees cx={146} cy={52} count={4} spread={0.9} tone={INK_FAINT} />
+
+      <ellipse cx={cx} cy={cy - 4} rx="30" ry="20" fill="url(#candlepool-z)" opacity="0.4" />
+      <Cartouche x={6} y={88} w={52} title="SAINT VEYRA" sub="cathedral seat of the Concord" />
     </g>
   );
 }
 
 function HearthmereArt() {
-  // Wheat fields, low stone walls, the Old Pilgrim Road running east from the
-  // capital gate through the crossing (42,48), the shrine (70,52), and down
-  // to the cryptlet stair (78,70).
+  // Field country between the capital gate and Little Dawn. POI anchors:
+  // crossing (42,48) -> shrine (70,52) -> cryptlet stair (78,70).
+  const crossX = X(42);
+  const crossY = Y(48);
+  const shrineX = X(70);
+  const shrineY = Y(52);
+  const cryptX = X(78);
+  const cryptY = Y(70);
   return (
     <g fill="none" strokeLinecap="round" strokeLinejoin="round">
-      {/* dawn fog band */}
-      <rect x="0" y="0" width="100" height="26" fill="rgba(131, 121, 140, 0.12)" filter="url(#bell-rough)" />
-      {/* field hatching */}
-      <g stroke="rgba(215, 167, 86, 0.16)" strokeWidth="0.3" filter="url(#bell-rough)">
-        <path d="M8 30 h14 M8 33 h14 M8 36 h14 M8 39 h14" />
-        <path d="M20 62 h16 M20 65 h16 M20 68 h16 M20 71 h16" />
-        <path d="M52 26 h14 M52 29 h14 M52 32 h14" />
-        <path d="M56 70 h13 M56 73 h13 M56 76 h13" />
+      {/* dawn fog on the horizon */}
+      <g stroke="rgba(150, 140, 158, 0.22)" strokeWidth="1.4" filter="url(#roughink-z)">
+        <path d="M4 12 q22 -3 44 0 q22 3 44 0 q22 -3 44 0 q10 1.4 20 0.6" />
+        <path d="M14 18 q20 -2.6 40 0 q20 2.6 40 0 q20 -2.6 40 0" strokeWidth="1" opacity="0.7" />
       </g>
-      {/* low stone walls */}
-      <g stroke={INK_DIM} strokeWidth="0.35" strokeDasharray="1.2 0.8" filter="url(#bell-rough)">
-        <path d="M6 44 Q20 42 30 44" />
-        <path d="M50 60 Q60 58 68 61" />
-        <path d="M48 22 Q58 20 68 23" />
+
+      {/* field plots: irregular hatched parcels along the road */}
+      <g filter="url(#roughink-z)">
+        {[
+          { x: 10, y: 28, w: 22, h: 13, tilt: -3 },
+          { x: 38, y: 22, w: 19, h: 11, tilt: 2 },
+          { x: 14, y: 60, w: 24, h: 14, tilt: 2.5 },
+          { x: 48, y: 64, w: 20, h: 12, tilt: -2 },
+          { x: 86, y: 24, w: 22, h: 12, tilt: 3 },
+          { x: 96, y: 70, w: 20, h: 12, tilt: -3 },
+          { x: 126, y: 30, w: 20, h: 12, tilt: -2 }
+        ].map((plot, index) => (
+          <g key={index} transform={`rotate(${plot.tilt} ${plot.x + plot.w / 2} ${plot.y + plot.h / 2})`}>
+            <rect x={plot.x} y={plot.y} width={plot.w} height={plot.h} stroke={INK_FAINT} strokeWidth="0.3" />
+            {Array.from({ length: 4 }, (_, row) => (
+              <path
+                d={`M${plot.x + 1.2} ${plot.y + 2 + row * (plot.h - 3.4) / 3} h${plot.w - 2.4}`}
+                stroke="rgba(215, 167, 86, 0.18)"
+                strokeWidth="0.24"
+                key={row}
+              />
+            ))}
+          </g>
+        ))}
       </g>
-      {/* wheat tufts */}
-      <g stroke="rgba(215, 167, 86, 0.4)" strokeWidth="0.28" filter="url(#bell-rough)">
-        <path d="M14 33 l0.5 -2 m0.7 2 l0.3 -1.5 m-2.2 1.5 l-0.3 -1.4" />
-        <path d="M28 66 l0.5 -2 m0.7 2 l0.3 -1.5 m-2.2 1.5 l-0.3 -1.4" />
-        <path d="M60 29 l0.5 -2 m0.7 2 l0.3 -1.5 m-2.2 1.5 l-0.3 -1.4" />
-        <path d="M62 73 l0.5 -2 m0.7 2 l0.3 -1.5" />
+
+      {/* low stone walls between parcels */}
+      <g stroke={INK_DIM} strokeWidth="0.34" strokeDasharray="1.3 0.9" filter="url(#roughink-z)">
+        <path d="M8 46 Q30 43 40 45" />
+        <path d="M84 40 Q98 37 112 40" />
+        <path d="M70 78 Q88 74 104 78" />
       </g>
-      {/* the Old Pilgrim Road */}
-      <path
-        d="M0 46 Q20 47 42 48 Q56 49.5 70 52 Q75 58 78 70"
-        stroke="rgba(215, 167, 86, 0.6)"
-        strokeWidth="0.6"
-        strokeDasharray="2 1.2"
-        filter="url(#bell-rough)"
-      />
-      {/* clawed signpost near the crossing */}
-      <g stroke={INK} strokeWidth="0.35" filter="url(#bell-rough)">
-        <path d="M46 43 L46 39 M44.5 39.8 L47.8 39 M44.8 41.2 L47.5 40.6" />
-        <path d="M47.2 42 l1.4 1.6 m-0.9 -1.9 l1.4 1.6" stroke={BLOOD} strokeWidth="0.28" />
+
+      {/* the Old Pilgrim Road: double-inked with milestones */}
+      <g filter="url(#roughink-z)">
+        <path
+          d={`M0 ${Y(45)} Q${X(20)} ${Y(46)} ${crossX} ${crossY} Q${X(56)} ${Y(50)} ${shrineX} ${shrineY} Q${X(74)} ${Y(58)} ${cryptX} ${cryptY}`}
+          stroke="rgba(215, 167, 86, 0.55)"
+          strokeWidth="0.6"
+          strokeDasharray="2.2 1.4"
+        />
+        <path
+          d={`M0 ${Y(45) + 1.4} Q${X(20)} ${Y(46) + 1.4} ${crossX} ${crossY + 1.4}`}
+          stroke={INK_FAINT}
+          strokeWidth="0.3"
+        />
+        {/* milestones */}
+        {[[X(14), Y(45.4)], [X(30), Y(46.6)], [X(56), Y(50.4)]].map(([mx, my]) => (
+          <path d={`M${mx} ${my - 1.2} v1.6`} stroke={INK} strokeWidth="0.45" key={`${mx}`} />
+        ))}
       </g>
-      {/* shrine hill with candle rail */}
-      <g filter="url(#bell-rough)">
-        <path d="M62 56 Q70 48 78 56" stroke={INK_DIM} strokeWidth="0.4" />
-        <circle cx="70" cy="50.5" r="3.4" fill="none" stroke="rgba(215, 167, 86, 0.5)" strokeWidth="0.3" strokeDasharray="0.5 0.9" />
-        <path d="M68.6 52 L68.6 49.4 L70 47.8 L71.4 49.4 L71.4 52 Z" stroke={INK} strokeWidth="0.4" fill="rgba(215, 167, 86, 0.1)" />
+
+      {/* the clawed signpost at the crossing */}
+      <g stroke={INK} strokeWidth="0.4" filter="url(#roughink-z)">
+        <path d={`M${crossX + 4} ${crossY - 3} v-5.4 M${crossX + 2.2} ${crossY - 7.2} l3.8 -0.9 M${crossX + 2.5} ${crossY - 5.6} l3.2 -0.7`} />
+        <path d={`M${crossX + 5.4} ${crossY - 4.6} l1.8 2 m-1.2 -2.4 l1.8 2 m-1.2 -2.4 l1.8 2`} stroke={BLOOD} strokeWidth="0.3" />
       </g>
-      {/* the cryptlet stair, descending */}
-      <g stroke={INK} strokeWidth="0.38" filter="url(#bell-rough)">
-        <path d="M75.4 68 L80.6 68 M76 69.6 L80 69.6 M76.6 71.2 L79.4 71.2 M77.2 72.8 L78.8 72.8" />
-        <path d="M78 66.4 a1 1 0 0 1 0 -0.1" stroke={WAX} />
-        <circle cx="78" cy="65.8" r="0.7" stroke={WAX} fill="none" />
+
+      {/* shrine hill: contour lines climbing to the candle rail */}
+      <g filter="url(#roughink-z)">
+        <ellipse cx={shrineX} cy={shrineY - 1} rx="15" ry="8.4" stroke={INK_FAINT} strokeWidth="0.28" />
+        <ellipse cx={shrineX} cy={shrineY - 1.6} rx="10.4" ry="5.6" stroke={INK_FAINT} strokeWidth="0.28" />
+        <ellipse cx={shrineX} cy={shrineY - 2.2} rx="6" ry="3.2" stroke={INK_DIM} strokeWidth="0.3" />
+        {/* candle rail: dotted ring of flames */}
+        {Array.from({ length: 10 }, (_, index) => {
+          const angle = (index / 10) * Math.PI * 2;
+          const fx = shrineX + Math.cos(angle) * 4.6;
+          const fy = shrineY - 2.2 + Math.sin(angle) * 2.4;
+          return <circle cx={fx} cy={fy} r="0.28" fill="rgba(233, 188, 106, 0.8)" stroke="none" key={index} />;
+        })}
+        <Steeple cx={shrineX} cy={shrineY - 3.2} scale={0.85} tone={INK} />
       </g>
-      {/* ash-gray wolf trail in the north fields */}
-      <g fill="rgba(131, 121, 140, 0.5)" stroke="none">
-        <circle cx="36" cy="24" r="0.4" /><circle cx="38.5" cy="23" r="0.4" /><circle cx="41" cy="23.8" r="0.4" /><circle cx="43.5" cy="22.6" r="0.4" />
+
+      {/* the cryptlet stair descending from the shrine */}
+      <g stroke={INK} strokeWidth="0.4" filter="url(#roughink-z)">
+        <path d={`M${cryptX - 3.4} ${cryptY - 2.4} h6.8 M${cryptX - 2.7} ${cryptY - 0.9} h5.4 M${cryptX - 2} ${cryptY + 0.6} h4 M${cryptX - 1.3} ${cryptY + 2.1} h2.6`} />
+        <circle cx={cryptX} cy={cryptY - 4.2} r="0.8" stroke={WAX} strokeWidth="0.35" />
+        <path d={`M${cryptX - 0.5} ${cryptY - 3.6} q0.5 0.5 1 0`} stroke={WAX} strokeWidth="0.3" />
       </g>
-      <ellipse cx="70" cy="52" rx="12" ry="9" fill="url(#bell-candle)" opacity="0.45" />
+
+      {/* wolf trail pawprints north of the road */}
+      <g fill="rgba(150, 140, 158, 0.55)" stroke="none">
+        {[[52, 30], [57, 28.4], [62, 29.6], [67, 27.8], [72, 29]].map(([px, py]) => (
+          <g key={px}>
+            <circle cx={px} cy={py} r="0.45" />
+            <circle cx={px - 0.7} cy={py - 0.8} r="0.2" />
+            <circle cx={px} cy={py - 1} r="0.2" />
+            <circle cx={px + 0.7} cy={py - 0.8} r="0.2" />
+          </g>
+        ))}
+      </g>
+
+      {/* copse near the glen border */}
+      <Trees cx={140} cy={62} count={6} spread={1.1} tone={INK_FAINT} />
+
+      <ellipse cx={shrineX} cy={shrineY} rx="20" ry="11" fill="url(#candlepool-z)" opacity="0.5" />
+      <Cartouche x={6} y={88} w={58} title="HEARTHMERE FIELDS" sub="the Old Pilgrim Road to Little Dawn" />
     </g>
   );
 }
+
+/* --- dungeon ----------------------------------------------------- */
 
 const dungeonRoomArt: Record<string, { x: number; y: number; w: number; h: number }> = {
   "shrine-descent": { x: 13, y: 34, w: 11, h: 12 },
@@ -370,73 +644,111 @@ const dungeonRoomArt: Record<string, { x: number; y: number; w: number; h: numbe
   "road-seal-exit": { x: 82, y: 73, w: 10, h: 9 }
 };
 
-export function DungeonMapArt({ activeRoomId, clearedEncounterIds }: { activeRoomId?: string; clearedEncounterIds?: string[] }) {
+export function DungeonMapArt({ activeRoomId }: { activeRoomId?: string; clearedEncounterIds?: string[] }) {
   return (
-    <svg className="living-map-art" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-      <MapArtDefs />
-      <rect x="0" y="0" width="100" height="100" fill="url(#bell-parchment)" />
-      <rect x="0" y="0" width="100" height="100" fill="rgba(9, 8, 15, 0.45)" />
+    <svg className="living-map-art" viewBox="0 0 160 100" preserveAspectRatio="none" aria-hidden="true">
+      <MapArtDefs idSuffix="-d" />
+      <rect width="160" height="100" fill="url(#vellum-d)" />
+      <rect width="160" height="100" fill="rgba(9, 8, 15, 0.5)" />
 
-      {/* corridors */}
-      <g stroke="rgba(243, 233, 219, 0.22)" strokeWidth="2.6" fill="none" strokeLinecap="round" filter="url(#bell-rough)">
-        <path d="M13 34 C22 38, 28 40, 35 40" />
-        <path d="M35 40 C42 39, 46 37, 50 37" />
-        <path d="M50 37 C55 42, 57 48, 57 53" />
-        <path d="M57 53 C54 60, 52 65, 49 69" />
-        <path d="M57 53 C64 49, 72 45, 79 42" />
-        <path d="M79 42 C80 53, 81 64, 82 73" />
+      {/* corridors: double-walled passages */}
+      <g fill="none" strokeLinecap="round" filter="url(#roughink-d)">
+        {[
+          "M20.8 34 C35.2 38, 44.8 40, 56 40",
+          "M56 40 C67.2 39, 73.6 37, 80 37",
+          "M80 37 C88 42, 91.2 48, 91.2 53",
+          "M91.2 53 C86.4 60, 83.2 65, 78.4 69",
+          "M91.2 53 C102.4 49, 115.2 45, 126.4 42",
+          "M126.4 42 C128 53, 129.6 64, 131.2 73"
+        ].map((d) => (
+          <g key={d}>
+            <path d={d} stroke="rgba(14, 9, 7, 0.9)" strokeWidth="4.6" />
+            <path d={d} stroke={INK_FAINT} strokeWidth="4.6" strokeDasharray="0.001 0" opacity="0" />
+            <path d={d} stroke={INK_DIM} strokeWidth="0.34" transform="translate(0 -2.6)" />
+            <path d={d} stroke={INK_DIM} strokeWidth="0.34" transform="translate(0 2.6)" />
+          </g>
+        ))}
       </g>
 
-      {/* chambers */}
+      {/* chambers: rough double-stroked stone rooms */}
       {Object.entries(dungeonRoomArt).map(([roomId, room]) => {
         const isBoss = roomId === "warden-chamber";
         const isExit = roomId === "road-seal-exit";
         const active = roomId === activeRoomId;
+        const rx = room.x * 1.6;
+        const rw = room.w * 1.6;
         return (
-          <g key={roomId} filter="url(#bell-rough)">
+          <g key={roomId} filter="url(#roughink-d)">
             <rect
-              x={room.x - room.w / 2}
+              x={rx - rw / 2}
               y={room.y - room.h / 2}
-              width={room.w}
+              width={rw}
               height={room.h}
-              rx="2"
-              fill={active ? "rgba(215, 167, 86, 0.14)" : "rgba(18, 12, 9, 0.85)"}
+              rx="1.6"
+              fill={active ? "rgba(215, 167, 86, 0.13)" : "rgba(16, 10, 8, 0.92)"}
               stroke={isBoss ? BLOOD : active ? WAX : INK_DIM}
-              strokeWidth={isBoss || active ? 0.55 : 0.4}
+              strokeWidth={isBoss || active ? 0.55 : 0.42}
             />
+            <rect
+              x={rx - rw / 2 + 1.1}
+              y={room.y - room.h / 2 + 1.1}
+              width={rw - 2.2}
+              height={room.h - 2.2}
+              rx="1"
+              fill="none"
+              stroke={INK_FAINT}
+              strokeWidth="0.24"
+            />
+            {/* rubble in the corners */}
+            <circle cx={rx - rw / 2 + 2} cy={room.y + room.h / 2 - 2} r="0.3" fill={INK_FAINT} stroke="none" />
+            <circle cx={rx + rw / 2 - 2.4} cy={room.y - room.h / 2 + 2.2} r="0.26" fill={INK_FAINT} stroke="none" />
+            {roomId === "shrine-descent" ? (
+              <path d={`M${rx - 2.8} ${room.y - 2} h5.6 M${rx - 2.2} ${room.y - 0.5} h4.4 M${rx - 1.6} ${room.y + 1} h3.2 M${rx - 1} ${room.y + 2.5} h2`} stroke={INK_DIM} strokeWidth="0.32" fill="none" />
+            ) : null}
+            {roomId === "pilgrim-bone-walk" ? (
+              <g fill={INK_FAINT} stroke="none">
+                <circle cx={rx - 2} cy={room.y - 1} r="0.34" /><circle cx={rx + 1.6} cy={room.y + 2} r="0.3" /><circle cx={rx + 0.4} cy={room.y - 3} r="0.26" />
+                <path d={`M${rx - 1} ${room.y + 3.4} h1.8`} stroke={INK_DIM} strokeWidth="0.26" />
+              </g>
+            ) : null}
+            {roomId === "broken-bell-niche" ? (
+              <path d={`M${rx - 1.1} ${room.y - 0.8} a1.1 1.2 0 0 1 2.2 0 l0.3 1.6 h-2.8 Z M${rx} ${room.y + 1.6} v0.7`} stroke={WAX} strokeWidth="0.3" fill="none" opacity="0.8" />
+            ) : null}
             {isBoss ? (
-              <path
-                d={`M${room.x - 1.6} ${room.y + 1.6} L${room.x - 1.6} ${room.y - 0.6} A1.6 1.6 0 0 1 ${room.x + 1.6} ${room.y - 0.6} L${room.x + 1.6} ${room.y + 1.6} M${room.x} ${room.y + 1.6} L${room.x} ${room.y + 2.6}`}
-                stroke={BLOOD}
-                strokeWidth="0.4"
-                fill="none"
-              />
+              <g stroke={BLOOD} strokeWidth="0.4" fill="none">
+                <path d={`M${rx - 1.8} ${room.y + 1.8} L${rx - 1.8} ${room.y - 0.6} A1.8 1.8 0 0 1 ${rx + 1.8} ${room.y - 0.6} L${rx + 1.8} ${room.y + 1.8}`} />
+                <path d={`M${rx} ${room.y + 1.8} L${rx} ${room.y + 3}`} />
+                <circle cx={rx} cy={room.y - 0.4} r="0.5" strokeWidth="0.3" />
+              </g>
             ) : null}
-            {isExit ? (
-              <circle cx={room.x} cy={room.y} r="1.4" stroke={WAX} strokeWidth="0.4" fill="rgba(215, 167, 86, 0.15)" />
-            ) : null}
+            {isExit ? <circle cx={rx} cy={room.y} r="1.5" stroke={WAX} strokeWidth="0.42" fill="rgba(215, 167, 86, 0.14)" /> : null}
           </g>
         );
       })}
 
-      {/* candle points along the walk */}
-      <g fill="rgba(233, 188, 106, 0.8)" stroke="none">
-        <circle cx="24" cy="37.6" r="0.5" /><circle cx="43" cy="38.4" r="0.5" /><circle cx="54" cy="45" r="0.5" /><circle cx="68" cy="47.6" r="0.5" />
+      {/* candles along the walk */}
+      <g fill="rgba(233, 188, 106, 0.85)" stroke="none">
+        <circle cx="38.4" cy="37.6" r="0.55" /><circle cx="68.8" cy="38.4" r="0.55" /><circle cx="86.4" cy="45" r="0.55" /><circle cx="108.8" cy="47.6" r="0.55" />
       </g>
       {activeRoomId && dungeonRoomArt[activeRoomId] ? (
         <ellipse
-          cx={dungeonRoomArt[activeRoomId].x}
+          cx={dungeonRoomArt[activeRoomId].x * 1.6}
           cy={dungeonRoomArt[activeRoomId].y}
-          rx="10"
-          ry="8"
-          fill="url(#bell-candle)"
+          rx="15"
+          ry="9.4"
+          fill="url(#candlepool-d)"
           opacity="0.6"
         />
       ) : null}
-      <rect x="0.8" y="0.8" width="98.4" height="98.4" fill="none" stroke="rgba(215, 167, 86, 0.28)" strokeWidth="0.35" />
+
+      <Cartouche x={6} y={6} w={58} title="PILGRIM TRIAL CRYPTLET" sub="beneath the Road Shrine of Little Dawn" />
+      <OrnateFrame />
+      <rect width="160" height="100" fill="transparent" filter="url(#vellumgrain-d)" opacity="0.85" />
     </svg>
   );
 }
+
+/* --- overlays ----------------------------------------------------- */
 
 export function PlayerMarker({ poiId }: { poiId: string }) {
   const poi = pois.find((entry) => entry.id === poiId);
@@ -444,9 +756,9 @@ export function PlayerMarker({ poiId }: { poiId: string }) {
     return null;
   }
   return (
-    <svg className="living-map-art living-map-overlay" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-      <circle cx={poi.x} cy={poi.y} r="1.5" fill="#e9bc6a" className="player-marker-core" />
-      <circle cx={poi.x} cy={poi.y} r="3" fill="none" stroke="rgba(233, 188, 106, 0.7)" strokeWidth="0.35" className="player-marker-pulse" />
+    <svg className="living-map-art living-map-overlay" viewBox="0 0 160 100" preserveAspectRatio="none" aria-hidden="true">
+      <circle cx={X(poi.x)} cy={Y(poi.y)} r="1.7" fill="#e9bc6a" className="player-marker-core" />
+      <circle cx={X(poi.x)} cy={Y(poi.y)} r="3.4" fill="none" stroke="rgba(233, 188, 106, 0.7)" strokeWidth="0.4" className="player-marker-pulse" />
     </svg>
   );
 }

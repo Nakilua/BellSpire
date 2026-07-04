@@ -5250,3 +5250,426 @@ button.icon-button,
   text-overflow: clip;
   white-space: normal;
 }
+
+/* ============================================================
+   Waxlight II — the full-surface revamp.
+   Every remaining surface gets the treatment: encounter stage,
+   command hotbar, login chrome, dialogs, all HUD panels, the
+   rarity ramp, and a unified wax-channel meter system.
+   ============================================================ */
+
+::selection {
+  background: rgba(215, 167, 86, 0.3);
+  color: var(--bell-bone);
+}
+
+:focus-visible {
+  outline: 1px solid var(--edge-live);
+  outline-offset: 1px;
+}
+
+/* --- encounter stage ------------------------------------------ */
+
+.encounter-idle {
+  background: rgba(13, 11, 18, 0.6);
+  border-bottom: 1px solid var(--edge-hair);
+}
+
+.encounter-active {
+  border-bottom: 1px solid rgba(182, 58, 84, 0.5);
+  background:
+    radial-gradient(ellipse at 8% 50%, rgba(126, 31, 57, 0.35), transparent 55%),
+    rgba(13, 11, 18, 0.85);
+}
+
+.encounter-topline h2 {
+  font-family: var(--font-display);
+  letter-spacing: 0.04em;
+}
+
+.encounter-stats {
+  border: 0;
+  border-left: 2px solid rgba(215, 167, 86, 0.4);
+  clip-path: var(--chamfer-sm);
+  background: rgba(6, 5, 10, 0.75);
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+}
+
+.intent-card {
+  position: relative;
+  border: 1px solid rgba(182, 58, 84, 0.45);
+  border-radius: 0;
+  clip-path: var(--chamfer-sm);
+  background: linear-gradient(180deg, rgba(126, 31, 57, 0.22), rgba(13, 11, 18, 0.9));
+}
+
+.intent-card p,
+.intent-card em {
+  font-family: var(--font-story);
+  font-size: 0.98rem;
+  font-style: italic;
+}
+
+.lane-box {
+  border: 1px solid rgba(240, 228, 208, 0.1);
+  border-radius: 0;
+  clip-path: var(--chamfer-sm);
+  background: rgba(16, 13, 20, 0.85);
+}
+
+.lane-box.player {
+  border-color: rgba(215, 167, 86, 0.5);
+  background: linear-gradient(180deg, rgba(215, 167, 86, 0.08), rgba(16, 13, 20, 0.9));
+  box-shadow: 0 0 12px rgba(215, 167, 86, 0.12);
+}
+
+.lane-header {
+  font-family: var(--font-display);
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.enemy-chip {
+  border-radius: 0;
+  clip-path: var(--chamfer-sm);
+  background: rgba(6, 5, 10, 0.8);
+  border: 1px solid rgba(182, 58, 84, 0.35);
+}
+
+/* --- command footer: stone keys --------------------------------- */
+
+.hotbar-button {
+  border: 1px solid rgba(240, 228, 208, 0.1);
+  border-radius: 0;
+  clip-path: var(--chamfer-sm);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(10, 8, 14, 0.9));
+  transition: border-color 140ms ease, box-shadow 140ms ease, transform 140ms ease;
+}
+
+.hotbar-button:hover,
+.hotbar-button:focus-visible {
+  border-color: rgba(215, 167, 86, 0.55);
+  box-shadow: var(--glow-wax);
+  transform: translateY(-1px);
+}
+
+.hotbar-button small {
+  border-radius: 0;
+  clip-path: var(--chamfer-sm);
+  border: 1px solid rgba(215, 167, 86, 0.35);
+  background: rgba(6, 5, 10, 0.9);
+  color: var(--bell-wax);
+  font-family: var(--font-display);
+  font-weight: 600;
+}
+
+.hotbar-button span {
+  font-family: var(--font-display);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+.hotbar-button.primary {
+  border-color: rgba(215, 167, 86, 0.55);
+  background: linear-gradient(180deg, rgba(215, 167, 86, 0.14), rgba(10, 8, 14, 0.92));
+}
+
+.command-form {
+  position: relative;
+}
+
+.command-input {
+  border: 1px solid rgba(240, 228, 208, 0.14);
+  background: rgba(6, 5, 10, 0.9);
+  transition: border-color 140ms ease, box-shadow 140ms ease;
+}
+
+.command-input:focus {
+  border-color: var(--edge-live);
+  box-shadow: 0 0 0 1px rgba(215, 167, 86, 0.25), var(--glow-wax);
+  outline: none;
+}
+
+.send-button {
+  border-radius: 0;
+  clip-path: var(--chamfer-sm);
+  border: 1px solid rgba(215, 167, 86, 0.45);
+  background: linear-gradient(180deg, rgba(215, 167, 86, 0.16), rgba(10, 8, 14, 0.9));
+  color: var(--bell-wax);
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+.send-button:hover {
+  box-shadow: var(--glow-wax);
+}
+
+/* --- unified wax-channel meters ----------------------------------- */
+
+.meter-track,
+.trust-track,
+.contract-progress,
+.budget-meter,
+.director-pressure {
+  border-radius: 0;
+  clip-path: var(--chamfer-sm);
+  background: rgba(5, 4, 9, 0.92);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.85);
+  border: 0;
+}
+
+.meter-fill,
+.trust-track span,
+.trust-track > i,
+.contract-progress span,
+.budget-meter span,
+.director-pressure span {
+  border-radius: 0;
+  transition: width 380ms ease;
+}
+
+.meter-fill.hp {
+  background: linear-gradient(90deg, #7e1f39, #b63a54);
+  box-shadow: 0 0 8px rgba(182, 58, 84, 0.55);
+}
+
+.meter-fill.oath {
+  background: linear-gradient(90deg, #2f8084, #4ea3a3);
+  box-shadow: 0 0 8px rgba(78, 163, 163, 0.5);
+}
+
+.contract-progress span,
+.trust-track span,
+.trust-track > i {
+  background: linear-gradient(90deg, rgba(215, 167, 86, 0.55), #d7a756);
+}
+
+/* --- status pills and presence dots -------------------------------- */
+
+.status-pill {
+  border-radius: 0;
+  clip-path: var(--chamfer-sm);
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: 0.12em;
+}
+
+.contact-dot {
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.6);
+}
+
+.contact-dot.online {
+  background: var(--bell-wax);
+  box-shadow: var(--glow-ember);
+}
+
+.contact-dot.away {
+  background: rgba(150, 140, 158, 0.7);
+  box-shadow: none;
+}
+
+.contact-dot.busy {
+  background: var(--bell-crimson);
+  box-shadow: 0 0 6px rgba(182, 58, 84, 0.6);
+}
+
+/* --- the gothic rarity ramp ------------------------------------------ */
+/* Stock RPG neon (green/blue/purple) replaced with reliquary tones.
+   Identity is kept (each rarity still distinct) but every hue belongs
+   to the cathedral: bone, oath-teal, wax, violet, blood, bright wax. */
+
+.inventory-row::before {
+  width: 3px;
+  background: rgba(183, 174, 189, 0.5);
+}
+
+.inventory-row.rarity-common::before {
+  background: rgba(243, 233, 219, 0.55);
+}
+
+.inventory-row.rarity-uncommon::before {
+  background: #4ea3a3;
+}
+
+.inventory-row.rarity-rare::before {
+  background: #d7a756;
+}
+
+.inventory-row.rarity-epic::before {
+  background: #8d6ad9;
+}
+
+.inventory-row.rarity-mythic::before {
+  background: #b63a54;
+}
+
+.inventory-row.rarity-legendary::before {
+  background: #e9bc6a;
+  box-shadow: 0 0 8px rgba(233, 188, 106, 0.8);
+}
+
+.inventory-row.rarity-artifact::before {
+  background: linear-gradient(180deg, #e9bc6a, #8d6ad9);
+}
+
+.inventory-row {
+  border-radius: 0;
+  clip-path: var(--chamfer-sm);
+}
+
+/* --- panel internals across the seven tabs ---------------------------- */
+
+.stat-box,
+.quest-card,
+.guild-contract-card,
+.notice-row,
+.schedule-row,
+.memory-row,
+.contact-ledger-card,
+.social-card,
+.canon-stat,
+.activity-card,
+.recommendation-row,
+.locked-activity,
+.checklist-row,
+.party-row,
+.flag-row,
+.contact-row,
+.world-rhythm-card,
+.director-card,
+.continue-card,
+.class-lock,
+.export-receipt {
+  border-radius: 0;
+  clip-path: var(--chamfer-sm);
+}
+
+.quest-step.active {
+  border-left: 2px solid var(--edge-live);
+  background: rgba(215, 167, 86, 0.06);
+}
+
+.quest-step.done,
+.checklist-row.done {
+  opacity: 0.72;
+}
+
+.checklist-row.done svg,
+.quest-step.done svg {
+  color: var(--bell-wax);
+}
+
+.schedule-row.present,
+.party-row.active {
+  border-color: rgba(215, 167, 86, 0.4);
+  background: linear-gradient(90deg, rgba(215, 167, 86, 0.08), rgba(16, 13, 20, 0.88));
+}
+
+.mode-button {
+  border-radius: 0;
+  clip-path: var(--chamfer-sm);
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+.mode-button.active {
+  border-color: var(--edge-live);
+  background: rgba(215, 167, 86, 0.1);
+  color: var(--bell-wax);
+}
+
+.save-textarea,
+.text-field {
+  border-radius: 0;
+  clip-path: var(--chamfer-sm);
+  border: 1px solid rgba(240, 228, 208, 0.14);
+  background: rgba(6, 5, 10, 0.9);
+}
+
+.save-textarea:focus,
+.text-field:focus {
+  border-color: var(--edge-live);
+  outline: none;
+  box-shadow: 0 0 0 1px rgba(215, 167, 86, 0.25);
+}
+
+/* --- login chrome -------------------------------------------------- */
+
+.login-card,
+.creator-panel {
+  border-radius: 0;
+}
+
+.login-card {
+  clip-path: var(--chamfer-lg);
+}
+
+.login-realm-chip {
+  border-radius: 0;
+  clip-path: var(--chamfer-sm);
+  border: 1px solid rgba(215, 167, 86, 0.4);
+  background: rgba(9, 8, 15, 0.75);
+  color: var(--bell-wax);
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+}
+
+.login-scene-tags span,
+.login-scene-tags strong {
+  border-radius: 0;
+  clip-path: var(--chamfer-sm);
+}
+
+.select-trigger,
+.select-content,
+.select-item {
+  border-radius: 0;
+}
+
+.select-trigger {
+  clip-path: var(--chamfer-sm);
+  border: 1px solid rgba(240, 228, 208, 0.14);
+  background: rgba(6, 5, 10, 0.9);
+}
+
+.select-trigger:focus {
+  border-color: var(--edge-live);
+}
+
+.select-content {
+  clip-path: var(--chamfer-sm);
+  border: 1px solid rgba(215, 167, 86, 0.3);
+  background: rgba(10, 8, 14, 0.98);
+}
+
+.select-item[data-highlighted] {
+  background: rgba(215, 167, 86, 0.12);
+  color: var(--bell-wax);
+}
+
+/* --- dialogs -------------------------------------------------------- */
+
+.dialog-content {
+  border-radius: 0;
+  clip-path: var(--chamfer-lg);
+  border: 1px solid rgba(215, 167, 86, 0.35);
+  background: rgba(13, 11, 18, 0.98);
+}
+
+.dialog-title {
+  font-family: var(--font-display);
+  letter-spacing: 0.04em;
+}
+
+.dialog-overlay {
+  background: rgba(4, 3, 8, 0.7);
+  backdrop-filter: blur(3px);
+}

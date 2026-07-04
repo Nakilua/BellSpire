@@ -9,7 +9,8 @@ export default defineConfig({
     }
   },
   html: {
-    title: "Bellspire"
+    title: "Bellspire",
+    favicon: "./src/assets/bell-favicon.svg"
   },
   server: {
     host: "127.0.0.1",

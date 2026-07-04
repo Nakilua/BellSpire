@@ -21,6 +21,7 @@ import {
   X,
   type LucideIcon
 } from "lucide-react";
+import { DungeonMapArt, PlayerMarker, WorldMapArt, ZoneMapArt } from "./atlas/MapArt";
 import atlasDeepZooms from "../data/atlasDeepZooms.json";
 import mapAnnotations from "../data/mapAnnotations.json";
 import mapServices from "../data/mapServices.json";
@@ -175,6 +176,7 @@ export function MapPanel({ state }: Props) {
   const selectedRoom = dungeon?.rooms.find((entry) => entry.id === (selectedDungeonRoomId ?? activeRoomId)) ?? room;
   const lockedRegions = regions.filter((entry) => entry.locked);
   const currentRegion = regions.find((entry) => entry.zoneId === zone.id) ?? regions[0];
+  const liveTravelers = state.realm.players.filter((player) => player.zoneId === zone.id).map((player) => player.name);
   const routePairs = useMemo(() => {
     const byId = new globalThis.Map(regions.map((entry) => [entry.id, entry]));
     const seen = new Set<string>();
@@ -276,6 +278,7 @@ export function MapPanel({ state }: Props) {
             showServices={layers.services}
             showDetails={layers.details}
             onSelectService={setSelectedServiceId}
+            liveTravelers={liveTravelers}
           />
           {layers.services ? <ServiceLegend services={zoneServices} selectedService={activeService} onSelect={setSelectedServiceId} /> : null}
           <div className="locked-list">
@@ -302,6 +305,7 @@ export function MapPanel({ state }: Props) {
               showServices={layers.services}
               showDetails={layers.details}
               onSelectService={setSelectedServiceId}
+              liveTravelers={liveTravelers}
               expanded
             />
             <AtlasCloseupPanel zoneId={zone.id} services={zoneServices} />
@@ -344,7 +348,8 @@ function WorldMapPlate({
   const zone = getCurrentZone(state);
 
   return (
-    <div className={`world-map custom-map-plate ${expanded ? "expanded" : ""}`} aria-label="Bellspire world topology">
+    <div className={`world-map custom-map-plate living-map ${expanded ? "expanded" : ""}`} aria-label="Bellspire world topology">
+      <WorldMapArt />
       {layers.routes ? (
         <svg className="topography-routes" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
           {routePairs.map((pair) => (
@@ -405,6 +410,7 @@ function ZoneMapPlate({
   showServices,
   showDetails,
   onSelectService,
+  liveTravelers = [],
   expanded = false
 }: {
   zoneId: string;
@@ -415,13 +421,22 @@ function ZoneMapPlate({
   showServices: boolean;
   showDetails: boolean;
   onSelectService: (id: string) => void;
+  liveTravelers?: string[];
   expanded?: boolean;
 }) {
   return (
-    <div className={`node-map topographic-node-map custom-map-plate zone-${zoneId} ${expanded ? "expanded" : ""}`} aria-label={`${zoneId} detailed atlas map`}>
+    <div className={`node-map topographic-node-map custom-map-plate living-map zone-${zoneId} ${expanded ? "expanded" : ""}`} aria-label={`${zoneId} detailed atlas map`}>
+      <ZoneMapArt zoneId={zoneId} />
+      <PlayerMarker poiId={currentPoiId} />
+      {liveTravelers.length > 0 ? (
+        <div className="live-travelers-cartouche" title="Real players in this zone right now">
+          <span className="live-dot" />
+          <span>{liveTravelers.join(", ")} on this road</span>
+        </div>
+      ) : null}
       {zonePois.map((poi) => (
         <div
-          className={`map-node ${poi.id === currentPoiId ? "active" : ""}`}
+          className={`map-node ${poi.id === currentPoiId ? "active" : ""} ${poi.x < 18 ? "edge-left" : ""} ${poi.x > 82 ? "edge-right" : ""}`}
           key={poi.id}
           style={{ left: `${poi.x}%`, top: `${poi.y}%` }}
           title={`${poi.name}: ${poi.type}`}
@@ -469,10 +484,8 @@ function DungeonMapPlate({
   expanded?: boolean;
 }) {
   return (
-    <div className={`dungeon-ink-map custom-map-plate ${expanded ? "expanded" : ""}`} aria-label={`${dungeon.name} detailed dungeon route`}>
-      <svg className="dungeon-route-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-        <path d="M13 34 C22 38, 28 40, 35 40 C42 39, 46 37, 50 37 C55 42, 57 48, 57 53 C54 60, 52 65, 49 69 M57 53 C64 49, 72 45, 79 42 C80 53, 81 64, 82 73" />
-      </svg>
+    <div className={`dungeon-ink-map custom-map-plate living-map ${expanded ? "expanded" : ""}`} aria-label={`${dungeon.name} detailed dungeon route`}>
+      <DungeonMapArt activeRoomId={activeRoomId} />
       {dungeon.rooms.map((entry, index) => {
         const position = dungeonRoomPositions[entry.id] ?? { x: 50, y: 50 };
         const isActive = entry.id === activeRoomId;

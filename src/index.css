@@ -4468,3 +4468,502 @@ body::after {
     display: none;
   }
 }
+
+/* ============================================================
+   Charm layer: gothic MMO identity pass.
+   Real Cinzel/EB Garamond (bundled via @fontsource), living SVG
+   maps, feed voice per entry type, candlelight and wax accents.
+   Kept as an override layer so the structural CSS above stays
+   the single source of layout truth.
+   ============================================================ */
+
+:root {
+  --font-display: "Cinzel", Georgia, serif;
+  --font-story: "EB Garamond", "Palatino Linotype", Georgia, serif;
+  --glow-wax: 0 0 14px rgba(215, 167, 86, 0.35);
+  --glow-ember: 0 0 10px rgba(233, 188, 106, 0.5);
+}
+
+/* --- typography ------------------------------------------- */
+
+.app-title,
+.panel-title,
+.login-title,
+.feed-header h2,
+.encounter-label,
+.rail-section-title,
+.available-title {
+  font-family: var(--font-display);
+}
+
+.app-title {
+  text-shadow: 0 0 18px rgba(215, 167, 86, 0.25);
+}
+
+.feed-body,
+.panel-copy,
+.feed-entry p {
+  font-family: var(--font-story);
+  font-size: 1rem;
+  line-height: 1.55;
+}
+
+/* --- candlelight and vignette ------------------------------ */
+
+.app-background::after {
+  position: absolute;
+  inset: 0;
+  content: "";
+  background: radial-gradient(ellipse at 50% 42%, transparent 55%, rgba(4, 3, 8, 0.55) 100%);
+  pointer-events: none;
+}
+
+@keyframes candle-flicker {
+  0%, 100% { opacity: 1; }
+  46% { opacity: 0.86; }
+  52% { opacity: 0.97; }
+  61% { opacity: 0.82; }
+  70% { opacity: 0.95; }
+}
+
+.realm-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid rgba(215, 167, 86, 0.35);
+  border-radius: 3px;
+  background: linear-gradient(180deg, rgba(215, 167, 86, 0.12), rgba(215, 167, 86, 0.04));
+  padding: 3px 9px;
+  color: var(--bell-wax);
+  font-family: var(--font-display);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.realm-badge::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--bell-wax);
+  box-shadow: var(--glow-ember);
+  animation: candle-flicker 4.2s infinite;
+}
+
+/* --- panels ------------------------------------------------- */
+
+.panel,
+.profile-card,
+.law-card,
+.available-actions {
+  position: relative;
+  background-image: linear-gradient(180deg, rgba(243, 233, 219, 0.025), transparent 34%);
+}
+
+.panel::before {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 10px;
+  height: 10px;
+  content: "";
+  border-top: 1px solid rgba(215, 167, 86, 0.5);
+  border-left: 1px solid rgba(215, 167, 86, 0.5);
+  pointer-events: none;
+}
+
+.panel::after {
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+  width: 10px;
+  height: 10px;
+  content: "";
+  border-right: 1px solid rgba(215, 167, 86, 0.5);
+  border-bottom: 1px solid rgba(215, 167, 86, 0.5);
+  pointer-events: none;
+}
+
+/* --- narrative feed voice ----------------------------------- */
+
+.feed-entry {
+  border-left-width: 3px;
+  transition: border-color 160ms ease, background-color 160ms ease;
+}
+
+.feed-scene {
+  border-left-color: rgba(215, 167, 86, 0.65);
+  background: linear-gradient(180deg, rgba(215, 167, 86, 0.05), rgba(24, 20, 32, 0.7));
+}
+
+.feed-scene .feed-body::first-letter {
+  float: left;
+  margin: 2px 8px 0 0;
+  color: var(--bell-wax);
+  font-family: var(--font-display);
+  font-size: 2.4em;
+  line-height: 0.82;
+}
+
+.feed-dialogue {
+  border-left-color: rgba(78, 163, 163, 0.7);
+}
+
+.feed-dialogue .feed-body {
+  font-style: italic;
+  font-size: 1.05rem;
+}
+
+.feed-combat {
+  border-left-color: rgba(182, 58, 84, 0.75);
+}
+
+.feed-loot {
+  border-left-color: var(--bell-wax);
+  box-shadow: var(--inset-bell), var(--glow-wax);
+}
+
+.feed-warning {
+  border-left-color: var(--bell-crimson);
+  background: linear-gradient(180deg, rgba(126, 31, 57, 0.12), rgba(24, 20, 32, 0.7));
+}
+
+.feed-social {
+  border-left-color: rgba(141, 106, 217, 0.6);
+}
+
+.feed-recap {
+  border-left-color: rgba(243, 233, 219, 0.5);
+}
+
+.feed-command {
+  border-left-color: rgba(131, 121, 140, 0.4);
+  opacity: 0.75;
+}
+
+.feed-command .feed-body {
+  font-family: ui-monospace, "Cascadia Mono", Consolas, monospace;
+  font-size: 0.85rem;
+}
+
+.feed-type {
+  font-family: var(--font-display);
+  letter-spacing: 0.18em;
+}
+
+/* --- action buttons ----------------------------------------- */
+
+.action-button {
+  transition: border-color 140ms ease, box-shadow 140ms ease, transform 140ms ease;
+}
+
+.action-button:hover {
+  border-color: rgba(215, 167, 86, 0.6);
+  box-shadow: var(--glow-wax);
+  transform: translateY(-1px);
+}
+
+.action-button.primary {
+  border-color: rgba(215, 167, 86, 0.5);
+}
+
+/* --- HUD meters --------------------------------------------- */
+
+.hud-meter-track span {
+  transition: width 380ms ease;
+}
+
+.hud-meter.hp .hud-meter-track span {
+  box-shadow: 0 0 8px rgba(182, 58, 84, 0.6);
+}
+
+.hud-meter.oath .hud-meter-track span {
+  box-shadow: 0 0 8px rgba(78, 163, 163, 0.55);
+}
+
+/* --- living maps --------------------------------------------- */
+
+.custom-map-plate.living-map {
+  background-image: none;
+  background-color: #17100c;
+}
+
+.living-map-art {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.living-map-overlay {
+  z-index: 3;
+  pointer-events: none;
+}
+
+.custom-map-plate.living-map .topography-region,
+.custom-map-plate.living-map .map-node,
+.custom-map-plate.living-map .service-pin {
+  z-index: 2;
+}
+
+@keyframes marker-pulse {
+  0% { transform: scale(0.55); opacity: 0.9; }
+  80% { transform: scale(1.25); opacity: 0; }
+  100% { transform: scale(1.25); opacity: 0; }
+}
+
+.player-marker-pulse {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: marker-pulse 2.6s ease-out infinite;
+}
+
+.player-marker-core {
+  filter: drop-shadow(0 0 3px rgba(233, 188, 106, 0.9));
+}
+
+.live-travelers-cartouche {
+  position: absolute;
+  bottom: 6px;
+  left: 6px;
+  z-index: 4;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: calc(100% - 12px);
+  overflow: hidden;
+  border: 1px solid rgba(215, 167, 86, 0.4);
+  border-radius: 3px;
+  background: rgba(9, 8, 15, 0.82);
+  padding: 3px 8px;
+  color: var(--bell-bone);
+  font-family: var(--font-display);
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.live-travelers-cartouche .live-dot {
+  width: 6px;
+  height: 6px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: #7fc78f;
+  box-shadow: 0 0 8px rgba(127, 199, 143, 0.8);
+  animation: candle-flicker 3.2s infinite;
+}
+
+/* --- scrollbars ---------------------------------------------- */
+
+::-webkit-scrollbar {
+  width: 9px;
+  height: 9px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(9, 8, 15, 0.6);
+}
+
+::-webkit-scrollbar-thumb {
+  border: 2px solid rgba(9, 8, 15, 0.6);
+  border-radius: 6px;
+  background: rgba(215, 167, 86, 0.28);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(215, 167, 86, 0.45);
+}
+
+/* --- living map pin restyle ---------------------------------- */
+/* The old pins were bright badges designed to read on top of painted
+   plates. On the ink maps they become quiet cartography: small rings,
+   engraved labels, wax for the open road, shadow for the locked one. */
+
+.custom-map-plate.living-map .topography-region .region-pin {
+  height: 7px;
+  width: 7px;
+  border: 1px solid rgba(215, 167, 86, 0.85) !important;
+  background: rgba(23, 16, 12, 0.9) !important;
+  box-shadow: 0 0 6px rgba(215, 167, 86, 0.35) !important;
+}
+
+.custom-map-plate.living-map .topography-region.locked .region-pin {
+  border-color: rgba(131, 121, 140, 0.5) !important;
+  box-shadow: none !important;
+}
+
+.custom-map-plate.living-map .topography-region strong {
+  color: var(--bell-bone);
+  font-family: var(--font-display);
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-shadow: 0 1px 3px rgba(9, 8, 15, 0.95), 0 0 8px rgba(9, 8, 15, 0.9);
+}
+
+.custom-map-plate.living-map .topography-region small {
+  color: rgba(215, 167, 86, 0.75);
+  font-size: 0.52rem;
+  text-shadow: 0 1px 3px rgba(9, 8, 15, 0.95);
+}
+
+.custom-map-plate.living-map:not(.expanded) .topography-region.locked strong,
+.custom-map-plate.living-map:not(.expanded) .topography-region.locked small {
+  display: none;
+}
+
+.custom-map-plate.living-map .topography-region.locked strong {
+  color: rgba(183, 174, 189, 0.55);
+}
+
+.custom-map-plate.living-map .topography-region.active .region-pin {
+  border-color: #e9bc6a !important;
+  background: rgba(233, 188, 106, 0.85) !important;
+  box-shadow: 0 0 10px rgba(233, 188, 106, 0.8) !important;
+}
+
+.custom-map-plate.living-map .map-node span {
+  height: 8px;
+  width: 8px;
+  border: 1px solid rgba(215, 167, 86, 0.7);
+  background: rgba(23, 16, 12, 0.9);
+}
+
+.custom-map-plate.living-map .map-node.active span {
+  border-color: #e9bc6a;
+  background: rgba(233, 188, 106, 0.4);
+  box-shadow: 0 0 8px rgba(233, 188, 106, 0.7);
+}
+
+.custom-map-plate.living-map .map-node small {
+  color: var(--bell-bone);
+  font-family: var(--font-display);
+  font-size: 0.56rem;
+  letter-spacing: 0.05em;
+  text-shadow: 0 1px 3px rgba(9, 8, 15, 0.95), 0 0 8px rgba(9, 8, 15, 0.9);
+}
+
+.custom-map-plate.living-map .service-pin-icon,
+.custom-map-plate.living-map .service-pin .service-pin-icon {
+  min-width: 12px;
+  height: 12px;
+  border: 1px solid rgba(243, 233, 219, 0.4);
+  background: rgba(23, 16, 12, 0.85);
+  box-shadow: none;
+}
+
+.custom-map-plate.living-map .service-pin small {
+  display: none;
+  color: rgba(243, 233, 219, 0.85);
+  font-size: 0.5rem;
+  font-weight: 600;
+  text-shadow: 0 1px 3px rgba(9, 8, 15, 0.95);
+}
+
+.custom-map-plate.living-map.expanded .service-pin small,
+.custom-map-plate.living-map .service-pin:hover small,
+.custom-map-plate.living-map .service-pin.active small {
+  display: inline;
+}
+
+.custom-map-plate.living-map .service-pin.active .service-pin-icon {
+  border-color: var(--bell-wax);
+  box-shadow: 0 0 8px rgba(215, 167, 86, 0.6);
+}
+
+.custom-map-plate.living-map .service-pin .service-pin-mark {
+  height: 3px;
+  width: 3px;
+  border-radius: 999px;
+  background: rgba(215, 167, 86, 0.9);
+}
+
+.custom-map-plate.living-map .atlas-annotation {
+  text-shadow: 0 1px 3px rgba(9, 8, 15, 0.95);
+}
+
+/* --- living dungeon map pins --------------------------------- */
+
+.custom-map-plate.living-map .dungeon-room-pin > span {
+  min-width: 15px;
+  height: 15px;
+  border: 1px solid rgba(215, 167, 86, 0.6) !important;
+  background: rgba(18, 12, 9, 0.92) !important;
+  box-shadow: none !important;
+  color: var(--bell-wax);
+  font-family: var(--font-display);
+  font-size: 0.58rem;
+}
+
+.custom-map-plate.living-map .dungeon-room-pin.active > span,
+.custom-map-plate.living-map .dungeon-room-pin.selected > span {
+  border-color: #e9bc6a !important;
+  background: rgba(233, 188, 106, 0.3) !important;
+  box-shadow: 0 0 8px rgba(233, 188, 106, 0.6) !important;
+  color: var(--bell-bone);
+}
+
+/* expanded atlas: locked region names become readable engravings */
+.custom-map-plate.living-map.expanded .topography-region.locked strong {
+  color: rgba(220, 210, 226, 0.8);
+}
+
+.custom-map-plate.living-map.expanded .topography-region.locked small {
+  color: rgba(183, 174, 189, 0.7);
+}
+
+/* annotations were dark ink for the light painted plates; on the dark
+   living maps they become pale engravings instead */
+.custom-map-plate.living-map .atlas-annotation {
+  color: rgba(233, 219, 200, 0.72);
+  text-shadow: 0 1px 3px rgba(9, 8, 15, 0.95);
+}
+
+.custom-map-plate.living-map .atlas-annotation span {
+  background: none;
+  font-weight: 600;
+}
+
+.custom-map-plate.living-map .atlas-annotation small {
+  color: rgba(183, 174, 189, 0.85);
+}
+
+.custom-map-plate.living-map .atlas-annotation.danger {
+  color: rgba(226, 141, 160, 0.85);
+}
+
+/* nodes hugging the plate edge anchor their labels inward */
+.custom-map-plate.living-map .map-node.edge-left {
+  transform: translate(-6px, -50%);
+  text-align: left;
+}
+
+.custom-map-plate.living-map .map-node.edge-left span {
+  margin: 0 0 4px 2px;
+}
+
+.custom-map-plate.living-map .map-node.edge-right {
+  transform: translate(calc(-100% + 6px), -50%);
+  text-align: right;
+}
+
+.custom-map-plate.living-map .map-node.edge-right span {
+  margin: 0 2px 4px auto;
+}
+
+/* align the node dot to the exact poi coordinate (the player marker svg
+   pulses at the same point), with the label hanging below */
+.custom-map-plate.living-map .map-node {
+  transform: translate(-50%, -8px);
+}
+
+.custom-map-plate.living-map .map-node.edge-left {
+  transform: translate(-6px, -8px);
+}
+
+.custom-map-plate.living-map .map-node.edge-right {
+  transform: translate(calc(-100% + 6px), -8px);
+}

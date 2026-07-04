@@ -61,9 +61,9 @@ export function HudPanelTabs({
         {tabs.map((tab) => {
           const Icon = tab.icon;
           return (
-            <Tabs.Trigger className="hud-tab-trigger" value={tab.id} key={tab.id}>
-              <Icon size={15} />
-              <span>{tab.label}</span>
+            <Tabs.Trigger className="hud-tab-trigger" value={tab.id} key={tab.id} title={tab.label} aria-label={tab.label}>
+              <Icon size={16} />
+              <span className="hud-tab-label">{tab.label}</span>
             </Tabs.Trigger>
           );
         })}

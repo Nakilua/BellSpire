@@ -4980,3 +4980,273 @@ body::after {
   font-weight: 600;
   text-shadow: 0 1px 3px rgba(9, 8, 15, 0.95), 0 0 10px rgba(233, 188, 106, 0.35);
 }
+
+/* ============================================================
+   Waxlight layer — BellSpire's own design language.
+   Pillars (docs/UI_UX_GOALS.md): Cut Stone (chamfered corners),
+   Waxlight (gold = live only), Vellum (story vs void surfaces),
+   Ordinance (strict scales). Overrides everything above.
+   ============================================================ */
+
+:root {
+  --chamfer-sm: polygon(5px 0, calc(100% - 5px) 0, 100% 5px, 100% calc(100% - 5px), calc(100% - 5px) 100%, 5px 100%, 0 calc(100% - 5px), 0 5px);
+  --chamfer-lg: polygon(9px 0, calc(100% - 9px) 0, 100% 9px, 100% calc(100% - 9px), calc(100% - 9px) 100%, 9px 100%, 0 calc(100% - 9px), 0 9px);
+  --edge-hair: rgba(215, 167, 86, 0.22);
+  --edge-live: rgba(215, 167, 86, 0.6);
+}
+
+/* --- Cut Stone: chamfers everywhere ------------------------- */
+
+.panel,
+.profile-card,
+.law-card,
+.available-actions,
+.feed-entry,
+.atlas-dialog-content {
+  border-radius: 0;
+  clip-path: var(--chamfer-lg);
+}
+
+.panel::before,
+.panel::after {
+  display: none;
+}
+
+button.icon-button,
+.action-button,
+.channel-button,
+.hud-tab-trigger,
+.map-layer-button,
+.map-open-button,
+.map-corner-button,
+.save-status,
+.realm-badge,
+.command-input,
+.live-travelers-cartouche {
+  border-radius: 0;
+  clip-path: var(--chamfer-sm);
+}
+
+/* --- Vellum vs void surfaces --------------------------------- */
+
+.feed-entry {
+  background-color: rgba(30, 22, 16, 0.66);
+}
+
+.panel {
+  background-color: rgba(13, 11, 18, 0.82);
+  border-color: rgba(215, 167, 86, 0.14);
+}
+
+/* --- header: the cathedral lintel ----------------------------- */
+
+.app-header {
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px 18px;
+  border-bottom: 1px solid var(--edge-hair);
+}
+
+.app-title {
+  font-size: 1.35rem;
+  line-height: 1;
+}
+
+.app-subtitle {
+  margin-top: 2px;
+  font-size: 0.78rem;
+}
+
+.header-actions .icon-button span {
+  display: none;
+}
+
+.header-actions .icon-button {
+  min-width: 36px;
+  min-height: 36px;
+  justify-content: center;
+}
+
+.hud-stat-cluster {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+/* --- HUD meters as wax channels -------------------------------- */
+
+.hud-meter-track {
+  position: relative;
+  clip-path: var(--chamfer-sm);
+  background: rgba(6, 5, 10, 0.9);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.hud-meter-track::after {
+  position: absolute;
+  inset: 0;
+  content: "";
+  background:
+    linear-gradient(90deg, transparent calc(25% - 1px), rgba(9, 8, 15, 0.65) 25%, transparent calc(25% + 1px)),
+    linear-gradient(90deg, transparent calc(50% - 1px), rgba(9, 8, 15, 0.65) 50%, transparent calc(50% + 1px)),
+    linear-gradient(90deg, transparent calc(75% - 1px), rgba(9, 8, 15, 0.65) 75%, transparent calc(75% + 1px));
+  pointer-events: none;
+}
+
+/* --- right panel: the icon tab deck ----------------------------- */
+
+.hud-tab-list {
+  display: flex;
+  gap: 4px;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--edge-hair);
+  background: rgba(7, 6, 11, 0.85);
+}
+
+.hud-tab-trigger {
+  position: relative;
+  flex: 0 0 auto;
+  min-height: 34px;
+  min-width: 34px;
+  padding: 0 8px;
+  border: 0;
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--bell-fog);
+  transition: color 140ms ease, background-color 140ms ease, flex-grow 180ms ease;
+}
+
+.hud-tab-trigger:hover {
+  color: var(--bell-bone);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.hud-tab-label {
+  display: none;
+  font-family: var(--font-display);
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.hud-tab-trigger[data-state="active"] {
+  flex: 1 1 auto;
+  border: 0;
+  background: rgba(215, 167, 86, 0.09);
+  color: var(--bell-wax);
+  text-shadow: none;
+}
+
+.hud-tab-trigger[data-state="active"] .hud-tab-label {
+  display: inline;
+}
+
+.hud-tab-trigger[data-state="active"]::after {
+  position: absolute;
+  bottom: 0;
+  left: 6px;
+  right: 6px;
+  height: 2px;
+  content: "";
+  background: var(--edge-live);
+  box-shadow: 0 0 8px rgba(215, 167, 86, 0.5);
+}
+
+/* --- channel rail: bell registry --------------------------------- */
+
+.channel-button {
+  position: relative;
+  border: 0;
+  background: transparent;
+  transition: background-color 140ms ease, color 140ms ease;
+}
+
+.channel-button:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.channel-button.active {
+  background: rgba(215, 167, 86, 0.08);
+  box-shadow: inset 2px 0 0 var(--edge-live);
+}
+
+.channel-button.active::after {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  width: 5px;
+  height: 5px;
+  content: "";
+  border-radius: 50%;
+  background: var(--bell-wax);
+  box-shadow: var(--glow-ember);
+  transform: translateY(-50%);
+  animation: candle-flicker 4.2s infinite;
+}
+
+/* --- feed marginalia ---------------------------------------------- */
+
+.feed-header .feed-type {
+  flex: 0 0 68px;
+  text-align: left;
+}
+
+/* --- living maps: medallions own the pins -------------------------- */
+
+.custom-map-plate.living-map .region-pin,
+.custom-map-plate.living-map .map-node > span {
+  display: none;
+}
+
+.custom-map-plate.living-map .topography-region,
+.custom-map-plate.living-map .map-node {
+  transform: translate(-50%, 10px);
+  pointer-events: none;
+}
+
+.custom-map-plate.living-map.expanded .topography-region,
+.custom-map-plate.living-map.expanded .map-node {
+  transform: translate(-50%, 28px);
+}
+
+.custom-map-plate.living-map .map-node.edge-left,
+.custom-map-plate.living-map .map-node.edge-right {
+  transform: translate(-50%, 10px);
+  text-align: center;
+}
+
+.player-marker-core {
+  display: none;
+}
+
+/* dungeon plate: room names live in the route list; annotations only in atlas view */
+.dungeon-ink-map.living-map:not(.expanded) .atlas-annotation {
+  display: none;
+}
+
+.ai-status-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  clip-path: var(--chamfer-sm);
+}
+
+/* PNG plates had painted names, so HTML labels were hidden; the living
+   atlas needs its engraved names back in the expanded view */
+.custom-map-plate.living-map.expanded .topography-region strong,
+.custom-map-plate.living-map.expanded .topography-region small,
+.custom-map-plate.living-map.expanded .map-node small {
+  display: block;
+}
+
+.custom-map-plate.living-map .topography-region strong,
+.custom-map-plate.living-map .topography-region small,
+.custom-map-plate.living-map .map-node small {
+  overflow: visible;
+  min-width: 90px;
+  text-overflow: clip;
+  white-space: normal;
+}

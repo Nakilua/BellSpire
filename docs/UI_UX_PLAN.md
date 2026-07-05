@@ -39,7 +39,7 @@ Phased plan for bringing the whole client up to the Waxlight standard defined in
 
 ## Phase 4: Future (not this pass)
 
-- Dungeon diorama panel (react-three-fiber) reading encounter state.
+- ~~Dungeon diorama~~ DONE: the Bellgrave Diorama (hand-built isometric SVG, no new deps) renders live encounter state inside the combat bubble.
 - Interactive map hover states: medallion tooltips with services/danger readouts.
 - Motion pass: entrance transitions for feed entries and panel swaps under a
   reduced-motion media query.

@@ -5673,3 +5673,53 @@ button.icon-button,
   background: rgba(4, 3, 8, 0.7);
   backdrop-filter: blur(3px);
 }
+
+/* --- the Bellgrave Diorama ------------------------------------- */
+
+.encounter-diorama {
+  margin: 0 0 12px;
+  clip-path: var(--chamfer-lg);
+  border: 1px solid rgba(182, 58, 84, 0.25);
+  background: #0c0708;
+}
+
+.encounter-diorama > svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 320px;
+}
+
+@keyframes telegraph-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.45; }
+}
+
+.diorama-telegraph {
+  animation: telegraph-pulse 1.6s ease-in-out infinite;
+}
+
+.diorama-flicker {
+  animation: candle-flicker 3.4s infinite;
+}
+
+@keyframes guard-ring-turn {
+  from { stroke-dashoffset: 0; }
+  to { stroke-dashoffset: 44; }
+}
+
+.diorama-guard-ring {
+  stroke-dasharray: 5.5 5.5;
+  animation: guard-ring-turn 6s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .diorama-telegraph,
+  .diorama-flicker,
+  .diorama-guard-ring,
+  .player-marker-pulse,
+  .realm-badge::before,
+  .channel-button.active::after {
+    animation: none;
+  }
+}

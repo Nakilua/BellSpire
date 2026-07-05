@@ -1,4 +1,5 @@
 import { ShieldAlert, Swords } from "lucide-react";
+import { EncounterDiorama } from "./atlas/EncounterDiorama";
 import type { GameState } from "../game/types";
 
 interface Props {
@@ -41,6 +42,8 @@ export function EncounterBubble({ state, onCommand }: Props) {
             Round {encounter.round} / {state.character.hp} HP / {state.character.oath} Oath
           </div>
         </div>
+
+        <EncounterDiorama state={state} />
 
         <div className="intent-card">
           <p>Enemy Intent</p>

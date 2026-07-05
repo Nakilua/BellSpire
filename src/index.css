@@ -5723,3 +5723,56 @@ button.icon-button,
     animation: none;
   }
 }
+
+/* --- the character portrait plate -------------------------------- */
+
+.portrait-plate-block {
+  display: grid;
+  gap: 10px;
+}
+
+.portrait-plate {
+  position: relative;
+  overflow: hidden;
+  clip-path: var(--chamfer-lg);
+  border: 1px solid rgba(215, 167, 86, 0.4);
+  background: #0c0708;
+  aspect-ratio: 1;
+  max-width: 220px;
+  margin: 0 auto;
+}
+
+.portrait-plate img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.portrait-plate::after {
+  position: absolute;
+  inset: 0;
+  content: "";
+  background: radial-gradient(ellipse at 50% 40%, transparent 62%, rgba(4, 2, 5, 0.55) 100%);
+  pointer-events: none;
+}
+
+.portrait-actions {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.profile-icon {
+  overflow: hidden;
+  clip-path: var(--chamfer-sm);
+  background: #0c0708;
+  padding: 0;
+}
+
+.profile-icon img {
+  display: block;
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+}

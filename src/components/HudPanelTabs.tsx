@@ -11,6 +11,7 @@ import { MapPanel } from "./MapPanel";
 import { NoticePanel } from "./NoticePanel";
 import { NpcSchedulePanel } from "./NpcSchedulePanel";
 import { PartyPanel } from "./PartyPanel";
+import { PortraitPlate } from "./PortraitPlate";
 import { QuestTracker } from "./QuestTracker";
 import { SaveTools } from "./SaveTools";
 import { SocialLedgerPanel } from "./SocialLedgerPanel";
@@ -30,6 +31,7 @@ interface Props {
   onImportTextChange: (value: string) => void;
   onPickFile: () => void;
   onValidate: () => void;
+  onSetPortrait: (uri?: string) => void;
 }
 
 const tabs = [
@@ -53,7 +55,8 @@ export function HudPanelTabs({
   onImportPasted,
   onImportTextChange,
   onPickFile,
-  onValidate
+  onValidate,
+  onSetPortrait
 }: Props) {
   return (
     <Tabs.Root className="hud-tabs" defaultValue="map">
@@ -76,6 +79,9 @@ export function HudPanelTabs({
           </Tabs.Content>
 
           <Tabs.Content className="hud-tab-content" value="hero">
+            <section className="panel">
+              <PortraitPlate state={state} onSetPortrait={onSetPortrait} />
+            </section>
             <CharacterPanel state={state} />
             <WorldStatePanel state={state} />
           </Tabs.Content>

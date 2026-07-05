@@ -1,4 +1,5 @@
-import { Activity, Castle, Hash, MessageCircle, ScrollText, Shield, Swords } from "lucide-react";
+import { Activity, Castle, Hash, MessageCircle, ScrollText, Swords } from "lucide-react";
+import defaultPortrait from "../assets/portraits/bulwark-default.png";
 import channels from "../data/channels.json";
 import type { GameState } from "../game/types";
 
@@ -22,7 +23,7 @@ export function ChannelRail({ state, onCommand }: Props) {
     <nav className="channel-rail">
       <div className="profile-card">
         <div className="profile-icon">
-          <Shield size={20} />
+          <img src={state.character.portraitUri ?? defaultPortrait} alt="" />
         </div>
         <div className="profile-copy">
           <p>{state.character.name}</p>

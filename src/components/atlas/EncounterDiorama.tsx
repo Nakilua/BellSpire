@@ -1,6 +1,7 @@
 import { Bell } from "lucide-react";
 import type { FC, SVGProps } from "react";
-import { BulwarkCrest, portraitFor } from "./BestiaryArt";
+import defaultPortrait from "../../assets/portraits/bulwark-default.png";
+import { portraitFor } from "./BestiaryArt";
 import type { EncounterState, GameState, Lane } from "../../game/types";
 
 // The Bellgrave Diorama: an isometric stone stage that renders the live
@@ -68,6 +69,7 @@ function Token({
   cy,
   r,
   portrait: Portrait,
+  imageHref,
   clipId,
   ring,
   label,
@@ -77,7 +79,8 @@ function Token({
   cx: number;
   cy: number;
   r: number;
-  portrait: FC<SVGProps<SVGSVGElement>>;
+  portrait?: FC<SVGProps<SVGSVGElement>>;
+  imageHref?: string;
   clipId: string;
   ring: string;
   label: string;
@@ -94,7 +97,18 @@ function Token({
       </clipPath>
       <circle cx={cx} cy={cy} r={r} fill="#120c09" stroke={ring} strokeWidth="0.5" />
       <g clipPath={`url(#${clipId})`}>
-        <Portrait x={cx - portraitSize / 2} y={cy - portraitSize / 2} width={portraitSize} height={portraitSize} aria-hidden="true" />
+        {imageHref ? (
+          <image
+            href={imageHref}
+            x={cx - portraitSize / 2}
+            y={cy - portraitSize / 2}
+            width={portraitSize}
+            height={portraitSize}
+            preserveAspectRatio="xMidYMid slice"
+          />
+        ) : Portrait ? (
+          <Portrait x={cx - portraitSize / 2} y={cy - portraitSize / 2} width={portraitSize} height={portraitSize} aria-hidden="true" />
+        ) : null}
       </g>
       <text x={cx} y={cy + r + 4.4} textAnchor="middle" fill="rgba(240, 228, 208, 0.85)" fontSize="2.1" fontFamily="Cinzel, Georgia, serif" letterSpacing="0.15">
         {label}
@@ -219,7 +233,7 @@ export function EncounterDiorama({ state }: { state: GameState }) {
             cx={(playerSlab.x0 + playerSlab.x1) / 2}
             cy={playerSlab.y + playerSlab.h / 2 - 0.6}
             r={5.6}
-            portrait={BulwarkCrest}
+            imageHref={state.character.portraitUri ?? defaultPortrait}
             clipId="tok-player"
             ring="rgba(233, 188, 106, 0.95)"
             label={state.character.name.toUpperCase()}

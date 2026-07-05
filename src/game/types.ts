@@ -31,6 +31,7 @@ export interface CharacterState {
   lane: Lane;
   guardStance: boolean;
   condition?: string;
+  portraitUri?: string;
 }
 
 export interface InventoryItem {

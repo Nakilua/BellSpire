@@ -16,7 +16,8 @@
     "fixtures:audit": "node scripts/verify-save-fixtures.mjs",
     "assets:audit": "node scripts/check-map-assets.mjs",
     "build": "tsc && rsbuild build",
-    "preview": "rsbuild preview --host 127.0.0.1"
+    "preview": "rsbuild preview --host 127.0.0.1",
+    "forge:portrait": "node scripts/forge-portrait.mjs"
   },
   "dependencies": {
     "@fontsource/cinzel": "^5.2.8",
@@ -39,6 +40,7 @@
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",
     "@xmldom/xmldom": "^0.9.10",
+    "playwright-core": "^1.61.1",
     "typescript": "^5.7.2",
     "unzipper": "^0.12.3"
   }

@@ -43,6 +43,13 @@ const server = createServer(async (request, response) => {
       return;
     }
 
+    if (request.method === "POST" && url.pathname === "/api/ai/portrait") {
+      const payload = await readJsonBody(request);
+      const result = await createPortraitResponse(payload);
+      sendJson(response, result.ok ? 200 : result.status ?? 500, result.body ?? result);
+      return;
+    }
+
     sendJson(response, 404, { ok: false, error: "not_found" });
   } catch (error) {
     sendJson(response, 500, {
@@ -382,4 +389,62 @@ function setCorsHeaders(response) {
 function sendJson(response, status, body) {
   response.writeHead(status, { "Content-Type": "application/json" });
   response.end(JSON.stringify(body));
+}
+
+// Commission a painted character portrait from the OpenAI image API.
+// Costs are estimated flat per image (gpt-image-1 medium ~ $0.04) and the
+// same key/budget rules as the Director apply: no key, no commission.
+async function createPortraitResponse(payload) {
+  if (!apiKey) {
+    return { ok: false, status: 503, body: { ok: false, error: "AI bridge has no key. Add OPENAI_API_KEY to .env.local." } };
+  }
+
+  const name = String(payload?.name ?? "the pilgrim").slice(0, 40);
+  const origin = String(payload?.origin ?? "Saint Veyra Ward").slice(0, 60);
+  const vow = String(payload?.vow ?? "Hold the Line").slice(0, 60);
+  const className = String(payload?.className ?? "Bulwark").slice(0, 30);
+
+  const prompt = [
+    `Gothic oil painting bust portrait of ${name}, a ${className} pilgrim of the Bellspire Concord.`,
+    `Origin: ${origin}. Sworn vow: "${vow}".`,
+    "Hooded traveler lit by warm candlelight from below, cold moonlit rim light above,",
+    "dark vellum and wax-gold palette (deep umber, bone, muted gold #d7a756, blood crimson accents),",
+    "cathedral-shadow background, painterly brushwork, chiaroscuro, somber and resolute expression.",
+    "No text, no watermark, no frame."
+  ].join(" ");
+
+  const response = await fetch("https://api.openai.com/v1/images/generations", {
+    method: "POST",
+    headers: {
+      authorization: `Bearer ${apiKey}`,
+      "content-type": "application/json"
+    },
+    body: JSON.stringify({
+      model: "gpt-image-1",
+      prompt,
+      size: "1024x1024",
+      quality: "medium",
+      n: 1
+    })
+  });
+
+  if (!response.ok) {
+    const raw = await response.text();
+    return { ok: false, status: response.status, body: { ok: false, error: safeOpenAIError(raw) } };
+  }
+
+  const data = await response.json();
+  const b64 = data?.data?.[0]?.b64_json;
+  if (!b64) {
+    return { ok: false, status: 502, body: { ok: false, error: "Image API returned no portrait." } };
+  }
+
+  return {
+    ok: true,
+    body: {
+      ok: true,
+      dataUri: `data:image/png;base64,${b64}`,
+      estimatedCostUsd: 0.04
+    }
+  };
 }

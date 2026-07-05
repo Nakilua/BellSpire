@@ -343,6 +343,17 @@ export default function App() {
     }
   }
 
+  function setPortrait(uri?: string) {
+    stateChangeStatusRef.current = uri ? "Portrait updated" : "Portrait removed";
+    setState((current) => ({
+      ...current,
+      character: {
+        ...current.character,
+        portraitUri: uri
+      }
+    }));
+  }
+
   function resetSave() {
     const next = createInitialState();
     stateChangeStatusRef.current = "New session started";
@@ -433,6 +444,7 @@ export default function App() {
               onImportTextChange={setImportText}
               onPickFile={() => importInputRef.current?.click()}
               onValidate={validateCurrentSave}
+              onSetPortrait={setPortrait}
             />
           </aside>
         </div>

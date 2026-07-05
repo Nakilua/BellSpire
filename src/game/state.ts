@@ -261,7 +261,11 @@ export function sanitizeImportedState(value: unknown): GameState | null {
     profileCreated: typeof maybe.profileCreated === "boolean" ? maybe.profileCreated : true,
     character: {
       ...base.character,
-      ...maybe.character
+      ...maybe.character,
+      portraitUri:
+        typeof maybe.character?.portraitUri === "string" && maybe.character.portraitUri.length < 300000
+          ? maybe.character.portraitUri
+          : undefined
     },
     social: {
       ...base.social,

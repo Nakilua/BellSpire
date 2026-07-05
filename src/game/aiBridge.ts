@@ -34,6 +34,7 @@ export interface LiveDirectorResult {
 }
 
 const AI_ENDPOINT = "http://127.0.0.1:8787/api/ai/director";
+const PORTRAIT_ENDPOINT = "http://127.0.0.1:8787/api/ai/portrait";
 const STATUS_ENDPOINT = "http://127.0.0.1:8787/api/ai/status";
 
 export async function fetchAiStatus() {
@@ -225,4 +226,25 @@ function selectCanonContext(state: GameState, message: string) {
   return canonContextPacks
     .filter((pack) => pack.id === "canon-rules" || pack.keywords.some((keyword) => haystack.includes(keyword)))
     .slice(0, 5);
+}
+
+export interface PortraitResult {
+  ok: boolean;
+  dataUri?: string;
+  estimatedCostUsd?: number;
+  error?: string;
+}
+
+export async function requestPortrait(character: { name: string; origin: string; vow: string; className: string }): Promise<PortraitResult> {
+  const response = await fetch(PORTRAIT_ENDPOINT, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      name: character.name,
+      origin: character.origin,
+      vow: character.vow,
+      className: character.className
+    })
+  });
+  return (await response.json()) as PortraitResult;
 }

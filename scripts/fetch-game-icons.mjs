@@ -6,17 +6,16 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 
+// Chosen after a wide visual search across game-icons.net authors (see
+// docs/ICON_RESEARCH.md for the montage/rationale): each icon was picked by
+// rendering it as an actual in-game medallion token, not by its raw preview.
 const ICONS = {
-  haunting: "lorc/haunting",
-  spectre: "lorc/spectre",
-  "dread-skull": "lorc/dread-skull",
-  "skull-crossed-bones": "lorc/skull-crossed-bones",
-  hook: "delapouite/hook",
-  "grim-reaper": "lorc/grim-reaper",
-  "bell-shield": "lorc/bell-shield",
-  carrion: "lorc/carrion",
-  "bone-knife": "lorc/bone-knife",
-  cultist: "lorc/cultist"
+  cowled: "lorc/cowled",
+  "skull-crack": "lorc/skull-crack",
+  "ringing-bell": "lorc/ringing-bell",
+  "monster-grasp": "lorc/monster-grasp",
+  ribcage: "lorc/ribcage",
+  "crowned-skull": "lorc/crowned-skull"
 };
 
 const outDir = resolve("src/assets/icons/game-icons");

@@ -8,12 +8,12 @@ import type { EncounterState, GameState, Lane } from "../../game/types";
 // Portraits (faces) are reserved for people; monsters get iconography, never
 // a rendered face, per the user's steer away from generated character art.
 const enemyIconKey: Record<string, string> = {
-  "ash-bitten-bones": "skull-crossed-bones",
-  "vowless-pilgrim-shade": "spectre",
-  "bell-ringer-shade": "bell-shield",
-  "bone-hook-crawler": "hook",
-  "bone-rattle-add": "dread-skull",
-  "bellgrave-warden": "grim-reaper"
+  "vowless-pilgrim-shade": "cowled",
+  "ash-bitten-bones": "skull-crack",
+  "bell-ringer-shade": "ringing-bell",
+  "bone-hook-crawler": "monster-grasp",
+  "bone-rattle-add": "ribcage",
+  "bellgrave-warden": "crowned-skull"
 };
 
 // The Bellgrave Diorama: an isometric stone stage that renders the live
@@ -83,6 +83,7 @@ function Token({
   icon,
   iconTone,
   imageHref,
+  imageZoom = 1,
   clipId,
   ring,
   label,
@@ -95,13 +96,20 @@ function Token({
   icon?: string;
   iconTone?: string;
   imageHref?: string;
+  // Small combat tokens need a tighter face crop than a full profile plate:
+  // the shipped portraits compose a whole hood/shoulders scene that reads
+  // fine at Hero-panel size but collapses to a tiny bright dot at ~40px
+  // token scale (confirmed by rendering the source PNG at 56/120/220px in
+  // isolation). imageZoom oversizes the <image> around the same center so
+  // only the lit face fills the clipped circle, like a standard avatar crop.
+  imageZoom?: number;
   clipId: string;
   ring: string;
   label: string;
   sub?: string;
   glow?: boolean;
 }) {
-  const portraitSize = r * 2.02;
+  const portraitSize = r * 2.02 * imageZoom;
   const iconSize = r * 1.15;
   return (
     <g>
@@ -260,6 +268,7 @@ export function EncounterDiorama({ state }: { state: GameState }) {
             cy={playerSlab.y + playerSlab.h / 2 - 0.6}
             r={5.6}
             imageHref={state.character.portraitUri ?? defaultPortrait}
+            imageZoom={2.4}
             clipId="tok-player"
             ring="rgba(233, 188, 106, 0.95)"
             label={state.character.name.toUpperCase()}

@@ -49,27 +49,29 @@ x.beginPath(); x.moveTo(62,500); x.bezierCurveTo(64,392,100,340,168,338); x.stro
 soft(()=>{ x.ellipse(CX,HEADY,150,168,0,0,7); },"#2c1e29",8);
 soft(()=>{ x.ellipse(CX,HEADY-40,138,130,0,Math.PI,2*Math.PI); },"#342433",9);
 // hood cavity
-soft(()=>{ x.ellipse(CX,HEADY+18,96,116,0,0,7); },"#0a0609",7);
+soft(()=>{ x.ellipse(CX,HEADY+18,96,116,0,0,7); },"#181014",7);
 
 // --- face planes, candle-lit from below-left -------------------------
 // jaw and chin (brightest)
-soft(()=>{ x.ellipse(CX-6,HEADY+64,42,34,-0.1,0,7); },"rgba(214,158,108,0.95)",6);
+soft(()=>{ x.ellipse(CX-4,HEADY+34,46,62,-0.04,0,7); },"rgba(196,140,100,0.8)",8);
+soft(()=>{ x.ellipse(CX-6,HEADY+62,42,34,-0.1,0,7); },"rgba(222,166,116,0.95)",6);
 soft(()=>{ x.ellipse(CX-14,HEADY+84,30,17,-0.1,0,7); },"rgba(236,186,128,0.9)",4);
+soft(()=>{ x.ellipse(CX-6,HEADY+92,24,12,-0.05,0,7); },"rgba(226,172,118,0.85)",5);
 // cheek planes
 soft(()=>{ x.ellipse(CX-36,HEADY+34,18,28,0.25,0,7); },"rgba(186,130,88,0.8)",7);
 soft(()=>{ x.ellipse(CX+28,HEADY+38,16,26,-0.25,0,7); },"rgba(150,100,70,0.62)",8);
 // nose column + underlit tip
 soft(()=>{ x.ellipse(CX-4,HEADY+30,10,26,0,0,7); },"rgba(198,140,96,0.85)",4);
 soft(()=>{ x.ellipse(CX-5,HEADY+48,11,8,0,0,7); },"rgba(240,192,132,0.95)",3);
-// hood shadow crescent over the brow
-soft(()=>{ x.ellipse(CX,HEADY-16,74,42,0,0,7); },"rgba(10,6,10,0.95)",8);
-// brow band in shadow
-soft(()=>{ x.ellipse(CX-2,HEADY-2,62,20,0,0,7); },"rgba(24,14,18,0.9)",6);
-// eye sockets darker within the band
-soft(()=>{ x.ellipse(CX-28,HEADY+4,15,9,0.1,0,7); },"rgba(8,5,7,0.95)",3);
-soft(()=>{ x.ellipse(CX+22,HEADY+4,14,9,-0.1,0,7); },"rgba(10,6,8,0.9)",3);
+// forehead, softly lit
+soft(()=>{ x.ellipse(CX-4,HEADY-6,40,26,0,0,7); },"rgba(178,126,92,0.75)",7);
+// gentle hood shadow only at the very crown
+soft(()=>{ x.ellipse(CX,HEADY-34,66,22,0,0,7); },"rgba(16,10,13,0.85)",9);
+// soft eye shading (human, not hollow)
+soft(()=>{ x.ellipse(CX-26,HEADY+8,14,7,0.08,0,7); },"rgba(96,62,52,0.55)",4);
+soft(()=>{ x.ellipse(CX+20,HEADY+8,13,7,-0.08,0,7); },"rgba(88,58,50,0.5)",4);
 // mouth line shadow
-soft(()=>{ x.ellipse(CX-8,HEADY+72,20,3.5,-0.06,0,7); },"rgba(40,20,20,0.8)",2);
+soft(()=>{ x.ellipse(CX-6,HEADY+72,16,2.6,-0.04,0,7); },"rgba(94,52,44,0.7)",2);
 // neck shadow under jaw
 soft(()=>{ x.ellipse(CX-4,HEADY+104,44,20,0,0,7); },"rgba(12,7,10,0.9)",6);
 
@@ -109,13 +111,31 @@ x.restore();
 // warm candle reflection on the hood's lower-left inner edge
 x.save(); x.strokeStyle="rgba(226,164,96,0.35)"; x.lineCap="round"; x.filter="blur(2.5px)";
 x.lineWidth=5; x.beginPath(); x.ellipse(CX,HEADY+16,92,110,0, 1.9, 2.75); x.stroke(); x.restore();
-// ember catchlights deep in the sockets
-x.fillStyle="rgba(233,188,106,0.85)";
-x.beginPath(); x.ellipse(CX-26,HEADY+6,2.6,1.7,0,0,7); x.fill();
-x.beginPath(); x.ellipse(CX+21,HEADY+6,2.3,1.5,0,0,7); x.fill();
-x.fillStyle="rgba(255,236,190,0.9)";
-x.beginPath(); x.arc(CX-27,HEADY+5.4,0.9,0,7); x.fill();
-x.beginPath(); x.arc(CX+20,HEADY+5.4,0.8,0,7); x.fill();
+// human eyes: soft lids, dark iris, one warm candle catchlight each
+function eye(ex,ey,w){
+  x.save(); x.filter="blur(0.7px)";
+  x.fillStyle="rgba(226,196,164,0.88)";
+  x.beginPath(); x.ellipse(ex,ey,w,w*0.46,0,0,7); x.fill();
+  x.fillStyle="rgba(46,30,26,0.95)";
+  x.beginPath(); x.arc(ex,ey+0.3,w*0.38,0,7); x.fill();
+  x.fillStyle="rgba(20,12,12,0.95)";
+  x.beginPath(); x.arc(ex,ey+0.3,w*0.18,0,7); x.fill();
+  x.strokeStyle="rgba(60,38,32,0.8)"; x.lineWidth=1.6; x.lineCap="round";
+  x.beginPath(); x.ellipse(ex,ey-w*0.18,w*1.02,w*0.5,0, Math.PI*1.05, Math.PI*1.95); x.stroke();
+  // relaxed upper lid: shade the top third of the eye
+  x.fillStyle="rgba(120,82,64,0.85)";
+  x.beginPath(); x.ellipse(ex,ey-w*0.3,w*1.0,w*0.28,0,Math.PI,2*Math.PI); x.fill();
+  x.restore();
+  x.fillStyle="rgba(255,232,186,0.95)";
+  x.beginPath(); x.arc(ex-w*0.22,ey-w*0.1,1.1,0,7); x.fill();
+}
+eye(CX-25,HEADY+8,7.6);
+eye(CX+20,HEADY+8,7.2);
+// brows, calm not grim
+x.save(); x.filter="blur(1px)"; x.strokeStyle="rgba(58,38,32,0.75)"; x.lineWidth=3; x.lineCap="round";
+x.beginPath(); x.moveTo(CX-33,HEADY-2); x.quadraticCurveTo(CX-24,HEADY-6,CX-15,HEADY-3); x.stroke();
+x.beginPath(); x.moveTo(CX+11,HEADY-3); x.quadraticCurveTo(CX+20,HEADY-6,CX+28,HEADY-2); x.stroke();
+x.restore();
 // candle key accents: nose tip, lower lip, jaw line
 x.save(); x.filter="blur(2.2px)"; x.strokeStyle="rgba(248,206,148,0.4)"; x.lineCap="round";
 x.lineWidth=3; x.beginPath(); x.moveTo(CX-11,HEADY+56); x.quadraticCurveTo(CX-4,HEADY+59,CX+1,HEADY+56); x.stroke();
@@ -144,11 +164,11 @@ g.addColorStop(0,"rgba(255,190,110,0.28)"); g.addColorStop(1,"rgba(0,0,0,0)");
 x.fillStyle=g; x.fillRect(0,0,W,H);
 x.globalCompositeOperation="multiply";
 g = x.createLinearGradient(0,0,0,H);
-g.addColorStop(0,"rgba(120,124,150,0.82)"); g.addColorStop(0.45,"rgba(255,255,255,1)"); g.addColorStop(1,"rgba(214,190,170,1)");
+g.addColorStop(0,"rgba(142,146,170,0.9)"); g.addColorStop(0.45,"rgba(255,255,255,1)"); g.addColorStop(1,"rgba(214,190,170,1)");
 x.fillStyle=g; x.fillRect(0,0,W,H);
 x.globalCompositeOperation="source-over";
 g = x.createRadialGradient(CX,250,150,CX,250,380);
-g.addColorStop(0,"rgba(0,0,0,0)"); g.addColorStop(1,"rgba(4,2,5,0.68)");
+g.addColorStop(0,"rgba(0,0,0,0)"); g.addColorStop(1,"rgba(4,2,5,0.5)");
 x.fillStyle=g; x.fillRect(0,0,W,H);
 // canvas tooth
 for(let i=0;i<4200;i++){

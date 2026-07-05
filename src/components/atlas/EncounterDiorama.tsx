@@ -1,8 +1,20 @@
 import { Bell } from "lucide-react";
-import type { FC, SVGProps } from "react";
 import defaultPortrait from "../../assets/portraits/bulwark-default.png";
-import { portraitFor } from "./BestiaryArt";
+import { GameIcon } from "./gameIcons";
 import type { EncounterState, GameState, Lane } from "../../game/types";
+
+// Enemy tokens use curated game-icons.net glyphs (CC BY 3.0, see
+// src/assets/icons/ATTRIBUTION.md), recolored into the Waxlight palette.
+// Portraits (faces) are reserved for people; monsters get iconography, never
+// a rendered face, per the user's steer away from generated character art.
+const enemyIconKey: Record<string, string> = {
+  "ash-bitten-bones": "skull-crossed-bones",
+  "vowless-pilgrim-shade": "spectre",
+  "bell-ringer-shade": "bell-shield",
+  "bone-hook-crawler": "hook",
+  "bone-rattle-add": "dread-skull",
+  "bellgrave-warden": "grim-reaper"
+};
 
 // The Bellgrave Diorama: an isometric stone stage that renders the live
 // encounter state — the DM's miniatures table. Pure view: it reads the same
@@ -68,7 +80,8 @@ function Token({
   cx,
   cy,
   r,
-  portrait: Portrait,
+  icon,
+  iconTone,
   imageHref,
   clipId,
   ring,
@@ -79,7 +92,8 @@ function Token({
   cx: number;
   cy: number;
   r: number;
-  portrait?: FC<SVGProps<SVGSVGElement>>;
+  icon?: string;
+  iconTone?: string;
   imageHref?: string;
   clipId: string;
   ring: string;
@@ -88,16 +102,20 @@ function Token({
   glow?: boolean;
 }) {
   const portraitSize = r * 2.02;
+  const iconSize = r * 1.15;
   return (
     <g>
       {glow ? <circle cx={cx} cy={cy} r={r + 2.4} fill="none" stroke="rgba(233, 188, 106, 0.45)" strokeWidth="0.5" className="diorama-guard-ring" /> : null}
       <ellipse cx={cx} cy={cy + r + 1.2} rx={r * 0.9} ry={r * 0.32} fill="rgba(0, 0, 0, 0.55)" />
-      <clipPath id={clipId}>
-        <circle cx={cx} cy={cy} r={r - 0.25} />
-      </clipPath>
+      {imageHref ? (
+        <clipPath id={clipId}>
+          <circle cx={cx} cy={cy} r={r - 0.25} />
+        </clipPath>
+      ) : null}
       <circle cx={cx} cy={cy} r={r} fill="#120c09" stroke={ring} strokeWidth="0.5" />
-      <g clipPath={`url(#${clipId})`}>
-        {imageHref ? (
+      <circle cx={cx} cy={cy} r={r - 0.75} fill="none" stroke={ring} strokeWidth="0.16" opacity="0.7" />
+      {imageHref ? (
+        <g clipPath={`url(#${clipId})`}>
           <image
             href={imageHref}
             x={cx - portraitSize / 2}
@@ -106,10 +124,17 @@ function Token({
             height={portraitSize}
             preserveAspectRatio="xMidYMid slice"
           />
-        ) : Portrait ? (
-          <Portrait x={cx - portraitSize / 2} y={cy - portraitSize / 2} width={portraitSize} height={portraitSize} aria-hidden="true" />
-        ) : null}
-      </g>
+        </g>
+      ) : icon ? (
+        <GameIcon
+          icon={icon}
+          color={iconTone ?? "rgba(226, 141, 160, 0.9)"}
+          x={cx - iconSize / 2}
+          y={cy - iconSize / 2}
+          width={iconSize}
+          height={iconSize}
+        />
+      ) : null}
       <text x={cx} y={cy + r + 4.4} textAnchor="middle" fill="rgba(240, 228, 208, 0.85)" fontSize="2.1" fontFamily="Cinzel, Georgia, serif" letterSpacing="0.15">
         {label}
       </text>
@@ -216,7 +241,8 @@ export function EncounterDiorama({ state }: { state: GameState }) {
                 cx={cx}
                 cy={cy}
                 r={5.2}
-                portrait={portraitFor(enemy.enemyId)}
+                icon={enemyIconKey[enemy.enemyId]}
+                iconTone={enemy.threatSealed ? "rgba(215, 167, 86, 0.85)" : "rgba(226, 141, 160, 0.9)"}
                 clipId={`tok-${enemy.instanceId}`}
                 ring={enemy.threatSealed ? "rgba(215, 167, 86, 0.7)" : "rgba(182, 58, 84, 0.8)"}
                 label={enemy.name.length > 13 ? `${enemy.name.slice(0, 12)}…` : enemy.name}
